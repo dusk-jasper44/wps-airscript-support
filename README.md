@@ -136,3 +136,7 @@ wps-airscript-support/
 - 数据表声明来自社区包，原文件的 JSDoc 注释已损坏，生成时被移除；数据表成员的中文悬停说明因此比多维表格少，但类型签名完整。
 - 浏览器专用 API（`Components`、`Window.ActiveDetailRecord` 等）在 JSDoc 中已注明，只在浏览器环境可用。
 - 扩展只提供静态类型与片段，不连接 WPS，也不执行脚本。
+
+## 许可证
+
+MIT。详见 [LICENSE](LICENSE)。`extension/types/databook/ApiV1.d.ts` 与 `extension/types/v2/ApiV2.d.ts` 来自 `wps-airscript-types`（MIT，happyuz），文件头保留来源说明。
