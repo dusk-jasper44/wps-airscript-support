@@ -1,0 +1,119 @@
+{
+  "scope": "javascript,typescript",
+  "AirScript 1.0（数据表）: 主函数": {
+    "prefix": "airmain",
+    "body": [
+      "/**",
+      " * WPS AirScript 1.0（数据表 / 工作表）",
+      " * 在 WPS 表格的「脚本编辑器」中运行；本地仅用于编辑和类型检查。",
+      " */",
+      "function main() {",
+      "  const sheet = Application.ActiveSheet",
+      "  console.log(sheet.Name)",
+      "  $0",
+      "}",
+      "main()"
+    ],
+    "description": "AirScript 1.0 数据表脚本入口"
+  },
+  "AirScript 1.0（数据表）: 读取字段": {
+    "prefix": "airfields",
+    "body": [
+      "const sheet = Application.ActiveSheet",
+      "const fields = sheet.Field.GetFields()",
+      "console.log(fields.map(function (field) { return field.name + \" (\" + field.type + \")\" }).join(\"\\n\"))"
+    ],
+    "description": "用 sheet.Field.GetFields() 列出字段 id/name/type"
+  },
+  "AirScript 1.0（数据表）: 分页读取记录": {
+    "prefix": "airrecords",
+    "body": [
+      "const sheet = Application.ActiveSheet",
+      "const page = sheet.Record.GetRecords({ PageSize: 100 })",
+      "page.Records.forEach(function (record) {",
+      "  console.log(record.id, record.Fields)",
+      "})",
+      "console.log(\"下一页 Offset：\" + page.Offset)"
+    ],
+    "description": "用 sheet.Record.GetRecords 分页读取记录"
+  },
+  "AirScript 1.0（数据表）: 新增记录": {
+    "prefix": "aircreate",
+    "body": [
+      "const sheet = Application.ActiveSheet",
+      "const created = sheet.Record.CreateRecords({",
+      "  Records: [",
+      "    { Fields: { \"名称\": \"苹果\", \"数量\": 10 } }",
+      "  ]",
+      "})",
+      "console.log(\"新增：\" + created.length)"
+    ],
+    "description": "用 CreateRecords 批量新增记录"
+  },
+  "AirScript 1.0（数据表）: 更新记录": {
+    "prefix": "airupdate",
+    "body": [
+      "const sheet = Application.ActiveSheet",
+      "const updated = sheet.Record.UpdateRecords({",
+      "  Records: [",
+      "    { id: \"记录ID\", Fields: { \"数量\": 20 } }",
+      "  ]",
+      "})",
+      "console.log(\"更新：\" + updated.length)"
+    ],
+    "description": "用 UpdateRecords 按记录 id 更新字段"
+  },
+  "AirScript 1.0（数据表）: 删除记录": {
+    "prefix": "airdelete",
+    "body": [
+      "const sheet = Application.ActiveSheet",
+      "const deleted = sheet.Record.DeleteRecords({ RecordIds: [\"记录ID\"] })",
+      "console.log(\"删除：\" + deleted.length)"
+    ],
+    "description": "用 DeleteRecords 按记录 id 删除"
+  },
+  "AirScript 1.0（数据表）: 附件地址": {
+    "prefix": "airattach",
+    "body": [
+      "const sheet = Application.ActiveSheet",
+      "const url = sheet.Record.GetAttachmentURL({",
+      "  Attachment: \"附件ID\",",
+      "  UploadId: \"上传ID\",",
+      "  Source: \"\"",
+      "})",
+      "console.log(url)"
+    ],
+    "description": "用 GetAttachmentURL 获取附件下载地址"
+  },
+  "AirScript 1.0（数据表）: 读写单元格": {
+    "prefix": "airrange",
+    "body": [
+      "const sheet = Application.ActiveSheet",
+      "sheet.Range(\"A1\").Value = \"Hello AirScript 1.0\"",
+      "console.log(sheet.Range(\"A1\").Text)"
+    ],
+    "description": "用 Sheet.Range 读写工作表单元格"
+  },
+  "AirScript 1.0（数据表）: 新建工作表": {
+    "prefix": "airnewsheet",
+    "body": [
+      "Application.ActiveWorkbook.Sheets.Add()",
+      "const sheet = Application.ActiveSheet",
+      "sheet.Name = \"新工作表\"",
+      "console.log(sheet.Name)"
+    ],
+    "description": "新增工作表并重命名"
+  },
+  "AirScript 1.0（数据表）: HTTP 请求": {
+    "prefix": "airhttp",
+    "body": [
+      "const response = HTTP.fetch(\"https://example.com/api\", {",
+      "  method: \"GET\",",
+      "  timeout: 10000",
+      "})",
+      "console.log(response.status(), response.statusText())",
+      "console.log(response.text())"
+    ],
+    "description": "用 HTTP.fetch 发起请求并读取文本"
+  }
+}

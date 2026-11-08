@@ -1,0 +1,667 @@
+// WPS AirScript 支持扩展（多维表格 1.0 / 数据表 1.0 / 表格 2.0）
+// 负责把类型声明安装到工作区，并生成/合并 jsconfig.json，
+// 让 VSCode 内置的 JavaScript/TypeScript 语言服务为 AirScript 提供补全与检查。
+
+const vscode = require('vscode');
+const fs = require('fs');
+const path = require('path');
+
+const API_VERSION_KEY = 'airscript.apiVersion';
+const API_V1 = '1.0';
+const API_DATABOOK = '1.0-databook';
+const API_V2 = '2.0';
+
+// API 1.0 有两套彼此独立的模型：
+//   1.0          = 多维表格（dbSheet）：Sheets / Views / Records / Fields
+//   1.0-databook = 数据表 / 工作表：Sheet.Field / Sheet.Record / Range / Workbook
+// API 2.0 = 表格的 Excel 对象模型（仅工作表，没有多维表格对象）。
+const TYPE_SETS = {
+  [API_V1]: [
+    { source: 'airscript.d.ts', target: 'airscript.d.ts' },
+    { source: 'airscript-services.d.ts', target: 'airscript-services.d.ts' },
+    { source: 'airscript-builtins.d.ts', target: 'airscript-builtins.d.ts' }
+  ],
+  [API_DATABOOK]: [
+    { source: 'databook/ApiV1.d.ts', target: 'ApiV1.d.ts' }
+  ],
+  [API_V2]: [
+    { source: 'v2/ApiV2.d.ts', target: 'ApiV2.d.ts' },
+    { source: 'v2/lib.kso.d.ts', target: 'lib.kso.d.ts' }
+  ]
+};
+const ALL_TYPE_TARGETS = [
+  'airscript.d.ts',
+  'airscript-services.d.ts',
+  'airscript-builtins.d.ts',
+  'ApiV1.d.ts',
+  'ApiV2.d.ts',
+  'lib.kso.d.ts'
+];
+const GLOBALS_INCLUDE = '.airscript/globals.d.ts';
+const LEGACY_TYPES_INCLUDE = '.airscript/**/*.d.ts';
+const DOCS_URL =
+  'https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/AirScript/AirScript-instro';
+const DOCS_URL_V2 = 'https://airsheet.wps.cn/docs/apiV2/overview.html';
+
+let output;
+let statusBar;
+
+function log(message) {
+  if (output) {
+    output.appendLine(`[${new Date().toLocaleTimeString()}] ${message}`);
+  }
+}
+
+function versionLabel(version) {
+  if (version === API_DATABOOK) return '数据表 1.0';
+  if (version === API_V2) return '表格 2.0';
+  return '多维表格 1.0';
+}
+
+function normalizeVersion(value) {
+  const raw = String(value || '').trim().toLowerCase();
+  if (raw === '2.0' || raw === '2' || raw === 'worksheet' || raw === 'excel') {
+    return API_V2;
+  }
+  if (
+    raw === '1.0-databook' ||
+    raw === 'databook' ||
+    raw === 'data-table' ||
+    raw === 'datasheet' ||
+    raw === 'sheet'
+  ) {
+    return API_DATABOOK;
+  }
+  return API_V1;
+}
+
+/** 读取工作区的 API 版本；读取失败时回退到 1.0。 */
+function getApiVersion(folder) {
+  try {
+    const config = vscode.workspace.getConfiguration('airscript', folder?.uri);
+    return normalizeVersion(config.get(API_VERSION_KEY, API_V1));
+  } catch (error) {
+    log(`读取 API 版本失败：${error}`);
+    return API_V1;
+  }
+}
+
+async function setApiVersion(folder, version) {
+  const target =
+    vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 1
+      ? vscode.ConfigurationTarget.WorkspaceFolder
+      : vscode.ConfigurationTarget.Workspace;
+  await vscode.workspace
+    .getConfiguration('airscript', folder.uri)
+    .update(API_VERSION_KEY, version, target);
+}
+
+/** 选择要操作的工作区文件夹；多根工作区让用户选择。 */
+async function pickFolder() {
+  const folders = vscode.workspace.workspaceFolders;
+  if (!folders || folders.length === 0) {
+    vscode.window.showErrorMessage('AirScript: 请先打开一个文件夹，再执行初始化。');
+    return undefined;
+  }
+  if (folders.length === 1) {
+    return folders[0];
+  }
+
+  // 优先使用当前文件所在的工作区。
+  const activeUri = vscode.window.activeTextEditor?.document.uri;
+  if (activeUri) {
+    const owner = folders.find((folder) => {
+      const root = folder.uri.fsPath;
+      return activeUri.fsPath === root || activeUri.fsPath.startsWith(root + path.sep);
+    });
+    if (owner) {
+      return owner;
+    }
+  }
+
+  const picked = await vscode.window.showQuickPick(
+    folders.map((folder) => ({
+      label: folder.name,
+      description: folder.uri.fsPath,
+      folder
+    })),
+    { placeHolder: '选择要初始化 AirScript 的工作区文件夹' }
+  );
+  return picked?.folder;
+}
+
+/** 去掉 JSONC 中的注释与尾逗号，便于 JSON.parse。字符串内的内容保持不变。 */
+function stripJsonComments(text) {
+  let result = '';
+  let inString = false;
+  let quote = '';
+  let escaped = false;
+  let i = 0;
+
+  while (i < text.length) {
+    const ch = text[i];
+    const next = text[i + 1];
+
+    if (inString) {
+      result += ch;
+      if (escaped) {
+        escaped = false;
+      } else if (ch === '\\') {
+        escaped = true;
+      } else if (ch === quote) {
+        inString = false;
+      }
+      i += 1;
+      continue;
+    }
+
+    if (ch === '"' || ch === "'") {
+      inString = true;
+      quote = ch;
+      result += ch;
+      i += 1;
+      continue;
+    }
+
+    if (ch === '/' && next === '/') {
+      while (i < text.length && text[i] !== '\n') {
+        i += 1;
+      }
+      continue;
+    }
+
+    if (ch === '/' && next === '*') {
+      i += 2;
+      while (i < text.length && !(text[i] === '*' && text[i + 1] === '/')) {
+        i += 1;
+      }
+      i += 2;
+      continue;
+    }
+
+    result += ch;
+    i += 1;
+  }
+
+  return result.replace(/,\s*([}\]])/g, '$1');
+}
+
+function readExistingJsonc(filePath) {
+  const raw = fs.readFileSync(filePath, 'utf8');
+  const text = stripJsonComments(raw).trim();
+  if (!text) {
+    return {};
+  }
+  return JSON.parse(text);
+}
+
+/** 合并 include，不覆盖用户已有配置。 */
+function addInclude(config, pattern) {
+  if (!Array.isArray(config.include)) {
+    config.include = [];
+  }
+  if (!config.include.includes(pattern)) {
+    config.include.push(pattern);
+  }
+}
+
+function removeInclude(config, pattern) {
+  if (Array.isArray(config.include)) {
+    config.include = config.include.filter((item) => item !== pattern);
+  }
+}
+
+function buildMergedConfig(existing) {
+  const config = existing && typeof existing === 'object' ? existing : {};
+  config.compilerOptions = config.compilerOptions || {};
+  const co = config.compilerOptions;
+
+  if (co.checkJs === undefined) co.checkJs = true;
+  if (co.allowJs === undefined) co.allowJs = true;
+  if (co.noEmit === undefined) co.noEmit = true;
+  if (!co.target) co.target = 'ES2020';
+  if (!co.module) co.module = 'ESNext';
+
+  if (co.lib === undefined) {
+    co.lib = ['ES2020'];
+  } else if (Array.isArray(co.lib) && !co.lib.includes('ES2020')) {
+    // AirScript 是服务端同步运行时，至少需要 ES2020；用户原有的 lib 保留。
+    co.lib.push('ES2020');
+  }
+
+  // 新建配置时禁用自动引入 @types，避免 @types/node 的 Buffer/Crypto/console
+  // 与 AirScript 内置声明冲突。已有配置不动这一项。
+  if (co.types === undefined && !existing) {
+    co.types = [];
+  }
+
+  addInclude(config, '**/*.js');
+  addInclude(config, '**/*.ts');
+  // 只引用 globals.d.ts，而不是整个 .airscript/**/*.d.ts：
+  // 这样在 lib 含 DOM 的项目里可以有选择地不加载 builtins（console/Crypto）。
+  removeInclude(config, LEGACY_TYPES_INCLUDE);
+  addInclude(config, GLOBALS_INCLUDE);
+
+  if (!Array.isArray(config.exclude)) {
+    config.exclude = ['node_modules', '**/node_modules/*'];
+  }
+  return config;
+}
+
+/** 拷贝 d.ts；返回拷贝的文件名列表。切换版本时会删除另一套类型文件。 */
+function installTypes(extensionPath, rootPath, version) {
+  const sourceDir = path.join(extensionPath, 'types');
+  const targetDir = path.join(rootPath, '.airscript', 'types');
+  fs.mkdirSync(targetDir, { recursive: true });
+
+  const selected = TYPE_SETS[version] || TYPE_SETS[API_V1];
+  const keep = new Set(selected.map((item) => item.target));
+  for (const name of ALL_TYPE_TARGETS) {
+    if (keep.has(name)) continue;
+    const stale = path.join(targetDir, name);
+    if (fs.existsSync(stale)) {
+      fs.rmSync(stale, { force: true });
+    }
+  }
+
+  const copied = [];
+  for (const item of selected) {
+    const source = path.join(sourceDir, item.source);
+    if (!fs.existsSync(source)) {
+      log(`缺少类型文件：${source}`);
+      continue;
+    }
+    fs.copyFileSync(source, path.join(targetDir, item.target));
+    copied.push(item.target);
+  }
+  return copied;
+}
+
+/** 把当前 API 版本的片段写入工作区 .vscode/airscript.code-snippets。 */
+function installSnippets(extensionPath, rootPath, version) {
+  const name =
+    version === API_V2
+      ? 'airscript-v2.json'
+      : version === API_DATABOOK
+        ? 'airscript-databook.json'
+        : 'airscript.json';
+  const source = path.join(extensionPath, 'snippets', name);
+  if (!fs.existsSync(source)) {
+    log(`缺少片段文件：${source}`);
+    return false;
+  }
+  const targetDir = path.join(rootPath, '.vscode');
+  fs.mkdirSync(targetDir, { recursive: true });
+  fs.copyFileSync(source, path.join(targetDir, 'airscript.code-snippets'));
+  return true;
+}
+
+function writeGlobals(rootPath, version, includeBuiltins) {
+  const lines = [
+    '// 由 WPS AirScript Support 生成，请勿手动修改。',
+    '// 该文件把 AirScript 的类型声明引入当前 TS/JS 项目。'
+  ];
+  if (version === API_V2) {
+    // ApiV2.d.ts 自己引用 lib.kso.d.ts，且已包含 HTTP/KSDrive，
+    // 不能再引用 v1 的 services/builtins，否则 console/HTTP 会重复声明。
+    lines.push('/// <reference path="./types/ApiV2.d.ts" />');
+  } else if (version === API_DATABOOK) {
+    // ApiV1.d.ts 是完整的 1.0 表格/数据表声明，已包含 console/HTTP/SMTP/KSDrive。
+    lines.push('/// <reference path="./types/ApiV1.d.ts" />');
+  } else {
+    lines.push('/// <reference path="./types/airscript.d.ts" />');
+    lines.push('/// <reference path="./types/airscript-services.d.ts" />');
+    if (includeBuiltins) {
+      lines.push('/// <reference path="./types/airscript-builtins.d.ts" />');
+    }
+  }
+  fs.writeFileSync(path.join(rootPath, '.airscript', 'globals.d.ts'), lines.join('\n') + '\n', 'utf8');
+}
+
+/** lib 是否包含 DOM（含 DOM.Iterable 等）。未配置 lib 时 TS 默认包含 DOM。 */
+function libHasDom(config) {
+  const lib = config?.compilerOptions?.lib;
+  if (!Array.isArray(lib)) {
+    return true;
+  }
+  return lib.some((item) => typeof item === 'string' && item.toUpperCase().startsWith('DOM'));
+}
+
+function exampleContent(version) {
+  if (version === API_DATABOOK) {
+    return `/**
+ * WPS AirScript 1.0（数据表 / 工作表）示例。
+ *
+ * 在 WPS 表格的「脚本编辑器」中运行；本地仅用于编辑和类型检查。
+ * 数据表通过 sheet.Field 与 sheet.Record 访问，工作表单元格通过 sheet.Range 访问。
+ */
+function main() {
+  const sheet = Application.ActiveSheet
+
+  // 数据表：字段与记录
+  const fields = sheet.Field.GetFields()
+  console.log("字段：" + fields.map(function (field) { return field.name }).join("、"))
+
+  const page = sheet.Record.GetRecords({ PageSize: 10 })
+  console.log("本页记录数：" + page.Records.length)
+
+  // 工作表：单元格
+  sheet.Range("A1").Value = "Hello AirScript 1.0"
+  console.log("A1 = " + sheet.Range("A1").Text)
+}
+main()
+`;
+  }
+  if (version === API_V2) {
+    return `/**
+ * WPS AirScript 2.0（表格 / Excel 对象模型）示例。
+ *
+ * 在 WPS 表格的「脚本编辑器」中运行；本地仅用于编辑和类型检查。
+ * API 2.0 与 DOM lib 冲突（Range/console/URL），jsconfig 不要包含 DOM。
+ */
+function main() {
+  const sheet = Application.ActiveSheet
+  const range = sheet.Range("A1")
+  range.Value2 = "Hello AirScript 2.0"
+  console.log(sheet.Name + " -> " + range.Address)
+  console.log("工作表数量：" + Application.ActiveWorkbook.Worksheets.Count)
+}
+main()
+`;
+  }
+  return `/**
+ * WPS 多维表格 AirScript 示例。
+ *
+ * 这个文件只用于在 VSCode 中编辑与类型检查；真正的运行方式是：
+ * 多维表格 → 脚本编辑器 → 粘贴代码 → 运行。
+ * AirScript 在服务端同步执行，不支持 async/await 与 Promise。
+ */
+function main() {
+  const sheet = Application.ActiveSheet
+  const view = sheet.Views(1)
+  const records = view.Records
+
+  console.log('当前表：' + sheet.Name)
+  console.log('记录数：' + records.Count)
+}
+main()
+`;
+}
+
+function writeExample(rootPath, version) {
+  const examplePath = path.join(rootPath, 'airscript-example.js');
+  const content = exampleContent(version);
+  let existed = false;
+  if (fs.existsSync(examplePath)) {
+    existed = true;
+    const text = fs.readFileSync(examplePath, 'utf8');
+    // 示例是本扩展生成的才覆盖；用户改过的文件保持不动。
+    const generated =
+      text.includes('WPS 多维表格 AirScript 示例') ||
+      text.includes('WPS AirScript 1.0（数据表') ||
+      text.includes('WPS AirScript 2.0（表格') ||
+      text.startsWith('// @airscript-example');
+    if (!generated) {
+      return false;
+    }
+  }
+  fs.writeFileSync(examplePath, content, 'utf8');
+  return !existed;
+}
+
+function writeConfig(rootPath, existingPath) {
+  let existing;
+  if (fs.existsSync(existingPath)) {
+    existing = readExistingJsonc(existingPath);
+    // 只在首次合并时备份，保留用户最初手写的配置。
+    const backupPath = path.join(rootPath, '.airscript', 'jsconfig.backup.json');
+    if (!fs.existsSync(backupPath)) {
+      fs.copyFileSync(existingPath, backupPath);
+    }
+  }
+
+  const merged = buildMergedConfig(existing);
+  fs.writeFileSync(existingPath, JSON.stringify(merged, null, 2) + '\n', 'utf8');
+  return { created: !existing, config: merged };
+}
+
+async function initialize(folder, options = {}) {
+  const rootPath = folder.uri.fsPath;
+  const airscriptDir = path.join(rootPath, '.airscript');
+  fs.mkdirSync(airscriptDir, { recursive: true });
+
+  const extensionPath = folder.extensionPath || options.extensionPath;
+  if (!extensionPath) {
+    vscode.window.showErrorMessage('AirScript: 找不到扩展安装目录，无法复制类型声明。');
+    return;
+  }
+
+  const version = normalizeVersion(options.version || getApiVersion(folder));
+  const copied = installTypes(extensionPath, rootPath, version);
+  const snippets = installSnippets(extensionPath, rootPath, version);
+
+  const jsconfigPath = path.join(rootPath, 'jsconfig.json');
+  let result;
+  try {
+    result = writeConfig(rootPath, jsconfigPath);
+  } catch (error) {
+    vscode.window.showErrorMessage(
+      `AirScript: 无法解析已有的 jsconfig.json（${error.message}）。` +
+        '已保留原文件，请修复 JSON 后重试。'
+    );
+    log(`jsconfig 解析失败：${error}`);
+    return;
+  }
+
+  // DOM 自己声明了 console 与 Crypto，加载 builtins 会报 TS2451。
+  // 此时改用 DOM 的声明（console 完整，Crypto 没有 createHash）。
+  const hasDom = libHasDom(result.config);
+  writeGlobals(rootPath, version, !hasDom);
+
+  const createdExample = writeExample(rootPath, version);
+  log(
+    `初始化完成：${rootPath}；${versionLabel(version)}（${version}）；类型 ${copied.length} 个；` +
+      `片段 ${snippets ? '已写入' : '缺失'}；` +
+      `jsconfig ${result.created ? '新建' : '合并'}；示例 ${createdExample ? '新建' : '已存在'}` +
+      (hasDom ? '；检测到 DOM lib' : '')
+  );
+
+  if (hasDom && !options.silent) {
+    const detail =
+      version === API_V2
+        ? 'API 2.0 的 Range/console/URL 会与 DOM 冲突（TS2451/TS2300），' +
+          '请把 jsconfig 的 lib 改为 ["ES2020"]，或把这个脚本放到独立工作区。'
+        : version === API_DATABOOK
+          ? 'API 1.0 数据表的 Range/console/URL 会与 DOM 冲突（TS2451/TS2300），' +
+            '请把 jsconfig 的 lib 改为 ["ES2020"]，或把这个脚本放到独立工作区。'
+          : 'console/Crypto 将使用 DOM 的声明，Crypto.createHash 没有类型提示。' +
+            '需要完整提示时，请从 lib 移除 DOM，或把脚本放到独立工作区后重新初始化。';
+    vscode.window.showWarningMessage(
+      `AirScript ${versionLabel(version)}: jsconfig.json 的 lib 含 DOM。${detail}`
+    );
+  }
+
+  if (!options.silent) {
+    const actions = ['打开示例脚本', '打开官方文档'];
+    const picked = await vscode.window.showInformationMessage(
+      `AirScript ${versionLabel(version)} 工作区已就绪：.airscript/ 类型声明 + jsconfig.json。`,
+      ...actions
+    );
+    if (picked === actions[0]) {
+      const doc = await vscode.workspace.openTextDocument(path.join(rootPath, 'airscript-example.js'));
+      await vscode.window.showTextDocument(doc);
+    } else if (picked === actions[1]) {
+      vscode.env.openExternal(vscode.Uri.parse(DOCS_URL));
+    }
+  }
+
+  updateStatusBar(folder);
+}
+
+function updateStatusBar(folder) {
+  if (!statusBar) return;
+  if (!folder) {
+    statusBar.text = '$(symbol-method) AirScript';
+    statusBar.tooltip = '打开一个工作区后初始化 AirScript';
+    statusBar.command = 'airscript.init';
+    return;
+  }
+
+  const version = getApiVersion(folder);
+  const expected =
+    version === API_V2 ? 'ApiV2.d.ts' : version === API_DATABOOK ? 'ApiV1.d.ts' : 'airscript.d.ts';
+  const configured = fs.existsSync(path.join(folder.uri.fsPath, '.airscript', 'types', expected));
+  statusBar.text = configured
+    ? `$(symbol-method) AirScript ${versionLabel(version)}`
+    : '$(symbol-method) AirScript 未初始化';
+  statusBar.tooltip = configured
+    ? `WPS AirScript ${versionLabel(version)} 类型已安装：${folder.uri.fsPath}\n点击切换 API 模型`
+    : '点击初始化 AirScript 工作区';
+  statusBar.command = configured ? 'airscript.switchApi' : 'airscript.init';
+}
+
+async function newScript() {
+  const folder = await pickFolder();
+  if (!folder) return;
+
+  const name = await vscode.window.showInputBox({
+    prompt: '输入脚本文件名（.js）',
+    value: 'airscript-script.js',
+    validateInput: (value) => {
+      const trimmed = value.trim();
+      if (!trimmed) return '文件名不能为空';
+      if (trimmed.includes('/') || trimmed.includes('\\')) {
+        return '文件名不能包含路径分隔符';
+      }
+      if (trimmed === '.' || trimmed === '..') return '文件名无效';
+      if (!/\.js$/i.test(trimmed)) return '请使用 .js 扩展名';
+      return undefined;
+    }
+  });
+  if (!name) return;
+
+  const target = path.join(folder.uri.fsPath, name.trim());
+  if (fs.existsSync(target)) {
+    vscode.window.showErrorMessage(`AirScript: 文件已存在：${name.trim()}`);
+    return;
+  }
+
+  const version = getApiVersion(folder);
+  let content;
+  if (version === API_V2) {
+    content = `/**
+ * WPS AirScript 2.0（表格）脚本
+ * 在 WPS 表格的「脚本编辑器」中运行；本地仅用于编辑和类型检查。
+ */
+function main() {
+  const sheet = Application.ActiveSheet
+  console.log(sheet.Name)
+}
+main()
+`;
+  } else if (version === API_DATABOOK) {
+    content = `/**
+ * WPS AirScript 1.0（数据表 / 工作表）脚本
+ * 在 WPS 表格的「脚本编辑器」中运行；本地仅用于编辑和类型检查。
+ */
+function main() {
+  const sheet = Application.ActiveSheet
+  console.log(sheet.Name)
+  console.log(sheet.Field.GetFields().length)
+}
+main()
+`;
+  } else {
+    content = `/**
+ * WPS 多维表格 AirScript 脚本
+ * 在 WPS 多维表格的「脚本编辑器」中运行；本地仅用于编辑和类型检查。
+ */
+function main() {
+  const sheet = Application.ActiveSheet
+  console.log(sheet.Name)
+}
+main()
+`;
+  }
+  fs.writeFileSync(target, content, 'utf8');
+  const doc = await vscode.workspace.openTextDocument(target);
+  await vscode.window.showTextDocument(doc);
+}
+
+async function switchApi(extensionPath) {
+  const folder = await pickFolder();
+  if (!folder) return;
+
+  const current = getApiVersion(folder);
+  const items = [
+    {
+      label: 'API 1.0 · 多维表格',
+      description: 'Application.ActiveSheet / Views / Records / Fields',
+      version: API_V1
+    },
+    {
+      label: 'API 1.0 · 数据表 / 工作表',
+      description: 'Sheet.Field / Sheet.Record / Range / ActiveWorkbook',
+      version: API_DATABOOK
+    },
+    {
+      label: 'API 2.0 · 表格（Excel 对象模型）',
+      description: 'Application.ActiveWorkbook / Worksheets / Range',
+      version: API_V2
+    }
+  ];
+  const picked = await vscode.window.showQuickPick(items, {
+    placeHolder: `选择 AirScript API 版本（当前 ${current}）`
+  });
+  if (!picked || picked.version === current) return;
+
+  await setApiVersion(folder, picked.version);
+  await initialize(folder, { extensionPath, version: picked.version });
+}
+
+function activate(context) {
+  output = vscode.window.createOutputChannel('AirScript');
+  statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
+  statusBar.command = 'airscript.init';
+  statusBar.show();
+  context.subscriptions.push(output, statusBar);
+
+  const initCommand = vscode.commands.registerCommand('airscript.init', async () => {
+    const folder = await pickFolder();
+    if (!folder) return;
+    await initialize(folder, { extensionPath: context.extensionPath });
+  });
+
+  const newCommand = vscode.commands.registerCommand('airscript.newScript', newScript);
+
+  const switchCommand = vscode.commands.registerCommand('airscript.switchApi', () =>
+    switchApi(context.extensionPath)
+  );
+
+  const docsCommand = vscode.commands.registerCommand('airscript.openDocs', () => {
+    vscode.env.openExternal(vscode.Uri.parse(DOCS_URL));
+  });
+
+  const docsV2Command = vscode.commands.registerCommand('airscript.openDocsV2', () => {
+    vscode.env.openExternal(vscode.Uri.parse(DOCS_URL_V2));
+  });
+
+  context.subscriptions.push(initCommand, newCommand, switchCommand, docsCommand, docsV2Command);
+
+  // 已初始化的项目在扩展升级后静默刷新类型，避免旧声明残留。
+  const folders = vscode.workspace.workspaceFolders || [];
+  for (const folder of folders) {
+    if (fs.existsSync(path.join(folder.uri.fsPath, '.airscript'))) {
+      initialize(folder, { extensionPath: context.extensionPath, silent: true }).catch((error) => {
+        log(`自动更新失败：${error}`);
+      });
+    }
+  }
+  updateStatusBar(folders[0]);
+}
+
+function deactivate() {
+  // 无需清理；output 与 statusBar 已注册到 subscriptions。
+}
+
+module.exports = { activate, deactivate };

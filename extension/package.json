@@ -1,0 +1,90 @@
+{
+  "name": "wps-airscript-support",
+  "displayName": "WPS AirScript 支持",
+  "description": "WPS AirScript（多维表格 1.0 / 数据表 1.0 / 表格 2.0）的 API 类型声明、代码片段与工作区初始化，提供补全、悬停文档和 checkJs 类型检查。",
+  "version": "2.3.0",
+  "publisher": "airscript-tools",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets",
+    "Other"
+  ],
+  "keywords": [
+    "wps",
+    "airscript",
+    "多维表格",
+    "数据表",
+    "dbsheet",
+    "databook",
+    "javascript",
+    "snippets",
+    "typescript"
+  ],
+  "icon": "icon.png",
+  "homepage": "https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/AirScript/AirScript-instro",
+  "main": "./extension.js",
+  "activationEvents": [
+    "onCommand:airscript.init",
+    "onCommand:airscript.newScript",
+    "onCommand:airscript.openDocs",
+    "onCommand:airscript.openDocsV2",
+    "onCommand:airscript.switchApi",
+    "workspaceContains:.airscript/types/airscript.d.ts",
+    "workspaceContains:.airscript/types/ApiV1.d.ts",
+    "workspaceContains:.airscript/types/ApiV2.d.ts"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "airscript.init",
+        "title": "初始化 / 更新工作区",
+        "category": "AirScript"
+      },
+      {
+        "command": "airscript.newScript",
+        "title": "新建脚本文件",
+        "category": "AirScript"
+      },
+      {
+        "command": "airscript.switchApi",
+        "title": "切换 API 模型（多维表格 / 数据表 / 表格）",
+        "category": "AirScript"
+      },
+      {
+        "command": "airscript.openDocs",
+        "title": "打开 API 1.0 文档",
+        "category": "AirScript"
+      },
+      {
+        "command": "airscript.openDocsV2",
+        "title": "打开 API 2.0 文档",
+        "category": "AirScript"
+      }
+    ],
+    "configuration": {
+      "title": "AirScript",
+      "properties": {
+        "airscript.apiVersion": {
+          "type": "string",
+          "enum": [
+            "1.0",
+            "1.0-databook",
+            "2.0"
+          ],
+          "enumDescriptions": [
+            "多维表格（dbSheet）对象模型：Application.ActiveSheet / Views / Records / Fields",
+            "数据表 / 工作表对象模型：Sheet.Field / Sheet.Record / Range / ActiveWorkbook",
+            "AirScript 2.0 表格对象模型：Application.ActiveWorkbook / Worksheets / Range"
+          ],
+          "default": "1.0",
+          "scope": "resource",
+          "description": "选择工作区使用的 AirScript API 版本。切换后会自动重新安装对应类型声明。"
+        }
+      }
+    }
+  }
+}

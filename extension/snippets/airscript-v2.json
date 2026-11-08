@@ -1,0 +1,94 @@
+{
+  "scope": "javascript,typescript",
+  "AirScript 2.0: 主函数": {
+    "prefix": "airmain",
+    "body": [
+      "/**",
+      " * WPS AirScript 2.0（表格 / Excel 对象模型）",
+      " * 在 WPS 表格的「脚本编辑器」中运行；本地仅用于编辑和类型检查。",
+      " */",
+      "function main() {",
+      "  const sheet = Application.ActiveSheet",
+      "  console.log(sheet.Name + \" / \" + sheet.UsedRange.Address)",
+      "  $0",
+      "}",
+      "main()"
+    ],
+    "description": "AirScript 2.0 脚本入口"
+  },
+  "AirScript 2.0: 读写单元格": {
+    "prefix": "airrange",
+    "body": [
+      "const sheet = Application.ActiveSheet",
+      "const range = sheet.Range(\"A1:B2\")",
+      "range.Value2 = [",
+      "  [\"名称\", \"数量\"],",
+      "  [\"苹果\", 10]",
+      "]",
+      "console.log(range.Text)"
+    ],
+    "description": "用 Range.Value2 批量写入并读取显示文本"
+  },
+  "AirScript 2.0: 遍历数据行": {
+    "prefix": "airloop",
+    "body": [
+      "const sheet = Application.ActiveSheet",
+      "const used = sheet.UsedRange",
+      "const lastRow = used.Row + used.Rows.Count - 1",
+      "for (let r = 2; r <= lastRow; r++) {",
+      "  const name = sheet.Range(\"A\" + r).Text",
+      "  const qty = sheet.Range(\"B\" + r).Value2",
+      "  console.log(name, qty)",
+      "}"
+    ],
+    "description": "按 UsedRange 计算末行并逐行读取"
+  },
+  "AirScript 2.0: 工作簿信息": {
+    "prefix": "airsheet",
+    "body": [
+      "const wb = Application.ActiveWorkbook",
+      "console.log(wb.Name + \"：\" + wb.Worksheets.Count + \" 个工作表\")",
+      "console.log(Application.ActiveSheet.Name)"
+    ],
+    "description": "读取工作簿名称、工作表数量与当前表名"
+  },
+  "AirScript 2.0: 新建工作表": {
+    "prefix": "airnewsheet",
+    "body": [
+      "Application.Worksheets.Add()",
+      "const sheet = Application.ActiveSheet",
+      "sheet.Name = \"新工作表\"",
+      "console.log(sheet.Name)"
+    ],
+    "description": "在工作簿末尾新建工作表并命名"
+  },
+  "AirScript 2.0: HTTP GET": {
+    "prefix": "airhttp",
+    "body": [
+      "const resp = HTTP.fetch(\"https://open.iciba.com/dsapi/\", { method: \"GET\", timeout: 5000 })",
+      "if (resp.status() === 200) {",
+      "  // 2.0 的 status/text/json/binary 都是方法",
+      "  console.log(resp.json())",
+      "} else {",
+      "  console.log(resp.status(), resp.statusText())",
+      "}"
+    ],
+    "description": "用 HTTP.fetch 请求 JSON 接口"
+  },
+  "AirScript 2.0: 提示框": {
+    "prefix": "airmsg",
+    "body": [
+      "const result = MsgBox(\"处理完成\")",
+      "console.log(result)"
+    ],
+    "description": "显示消息框并读取返回值"
+  },
+  "AirScript 2.0: 输入框": {
+    "prefix": "airinput",
+    "body": [
+      "const value = InputBox(\"请输入名称\", \"输入\")",
+      "console.log(value)"
+    ],
+    "description": "弹出输入框并读取用户输入"
+  }
+}

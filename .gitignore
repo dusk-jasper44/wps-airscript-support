@@ -1,0 +1,26 @@
+# Node / build tooling
+extension/node_modules/
+extension/package-lock.json
+
+# WPS 官方文档原文：仅本地生成使用，不随仓库分发
+docs/
+
+# 抓取/调试过程产物
+tools/docapp.js
+tools/useDocuments-*.js
+tools/documents-*.js
+tools/export.html
+tools/probe_chunks.py
+tools/dbg_add.py
+tools/diff_add.py
+tools/scan_*.py
+tools/show_sheet.py
+tools/__pycache__/
+tools/site-missing-pages.txt
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini

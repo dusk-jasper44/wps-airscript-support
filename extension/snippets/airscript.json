@@ -1,0 +1,232 @@
+{
+  "scope": "javascript,typescript",
+  "AirScript: 主函数": {
+    "prefix": "airmain",
+    "body": [
+      "/**",
+      " * WPS 多维表格 AirScript 脚本",
+      " * 在 WPS 多维表格的「脚本编辑器」中运行；本地仅用于编辑和类型检查。",
+      " */",
+      "function main() {",
+      "  $0",
+      "}",
+      "main()"
+    ],
+    "description": "AirScript 脚本入口"
+  },
+  "AirScript: 获取当前数据表": {
+    "prefix": "airsheet",
+    "body": [
+      "const sheet = Application.ActiveSheet",
+      "const sheetName = sheet.Name",
+      "const sheetId = sheet.Id",
+      "console.log(sheetName, sheetId)"
+    ],
+    "description": "获取当前激活的数据表及其名称、Id"
+  },
+  "AirScript: 获取当前视图": {
+    "prefix": "airview",
+    "body": [
+      "const view = Application.ActiveView",
+      "console.log(view.Name, view.Type)",
+      "// 表格视图可用 RowHeight，日历/甘特/表单/看板/查询视图有各自的扩展属性",
+      "if (view.Type === 'Grid') {",
+      "  console.log(view.RowHeight)",
+      "}"
+    ],
+    "description": "获取当前视图并读取通用属性"
+  },
+  "AirScript: 遍历字段": {
+    "prefix": "airfields",
+    "body": [
+      "const view = Application.ActiveSheet.Views(1)",
+      "const fields = view.Fields",
+      "for (let i = 1; i <= fields.Count; i++) {",
+      "  const field = fields.Item(i)",
+      "  console.log(field.Name, field.Type)",
+      "}"
+    ],
+    "description": "遍历当前视图的字段"
+  },
+  "AirScript: 遍历记录": {
+    "prefix": "airrecords",
+    "body": [
+      "const view = Application.ActiveSheet.Views(1)",
+      "const records = view.Records",
+      "for (let i = 1; i <= records.Count; i++) {",
+      "  const record = records.Item(i)",
+      "  console.log(record.Id, record.Text)",
+      "}"
+    ],
+    "description": "遍历当前视图中的记录"
+  },
+  "AirScript: 记录区间": {
+    "prefix": "airrange",
+    "body": [
+      "// 第 1 条记录，只取「名称」「数量」两列",
+      "const range = Application.RecordRange(1, [\"@名称\", \"@数量\"])",
+      "console.log(range.Value)",
+      "// 读取连续区间：第 1 到第 100 条",
+      "const rows = Application.ActiveSheet.RecordRange(\"1:100\", [\"@名称\"])",
+      "console.log(rows.Count)"
+    ],
+    "description": "用 RecordRange 读取指定记录/字段"
+  },
+  "AirScript: 新增记录": {
+    "prefix": "airadd",
+    "body": [
+      "const view = Application.ActiveSheet.Views(1)",
+      "view.Records.Add()",
+      "// 新增后把最后一条记录的「名称」字段填上值",
+      "const last = view.Records.Count",
+      "view.Records.Item(last).Item(\"@名称\").Value = \"新记录\""
+    ],
+    "description": "在视图末尾新增一条记录并赋值"
+  },
+  "AirScript: 批量写入": {
+    "prefix": "airset",
+    "body": [
+      "// 从第 2 行开始写入两行数据；字段顺序与第二个参数一致",
+      "const range = Application.RecordRange(\"2:3\", [\"@名称\", \"@数量\"])",
+      "const result = range.SetValues([",
+      "  [\"苹果\", 10],",
+      "  [\"香蕉\", 20]",
+      "])",
+      "if (result.Code !== 0) {",
+      "  console.log(result.Message)",
+      "}"
+    ],
+    "description": "用 SetValues 批量写入记录"
+  },
+  "AirScript: 事件监听": {
+    "prefix": "airevent",
+    "body": [
+      "const sheet = Application.ActiveSheet",
+      "const ctx = sheet.OnRename((data) => {",
+      "  console.log(\"表名从\", data.originValue, \"改为\", data.value)",
+      "})",
+      "// 不需要监听时销毁，避免重复回调",
+      "// ctx.Destroy()"
+    ],
+    "description": "监听数据表重命名事件（事件返回 EventContext）"
+  },
+  "AirScript: 枚举值": {
+    "prefix": "airenum",
+    "body": [
+      "// 字段类型枚举",
+      "const fieldType = Enum.DbSheetFieldType.Lookup",
+      "// 字段值类型枚举",
+      "const valueType = Enum.DbFieldValueType.Fvt_Text",
+      "// 条件运算符枚举",
+      "const op = Enum.DbFilterCriteriaOpType.Equals",
+      "console.log(fieldType, valueType, op)"
+    ],
+    "description": "使用 Enum 命名空间中的枚举值"
+  },
+  "AirScript: HTTP GET": {
+    "prefix": "airhttp",
+    "body": [
+      "const resp = HTTP.get(\"https://open.iciba.com/dsapi/\", { timeout: 5000 })",
+      "if (resp.status === 200) {",
+      "  // 注意：text()/json()/binary() 只有第一次调用能拿到响应体",
+      "  const data = resp.json()",
+      "  console.log(data)",
+      "} else {",
+      "  console.log(resp.status, resp.statusText)",
+      "}"
+    ],
+    "description": "用 HTTP.get 请求 JSON 接口"
+  },
+  "AirScript: HTTP POST JSON": {
+    "prefix": "airhttppost",
+    "body": [
+      "const resp = HTTP.post(",
+      "  \"https://example.com/api/items\",",
+      "  { name: \"morpheus\", job: \"leader\" },",
+      "  { headers: { \"Content-Type\": \"application/json\" }, timeout: 5000 }",
+      ")",
+      "console.log(resp.status, resp.json())"
+    ],
+    "description": "用 HTTP.post 发送 JSON 请求体"
+  },
+  "AirScript: 发送邮件": {
+    "prefix": "airmail",
+    "body": [
+      "const mailer = SMTP.login({",
+      "  host: \"smtp.qq.com\",",
+      "  port: 465,",
+      "  secure: true,",
+      "  username: \"1000000000@qq.com\",",
+      "  password: \"SMTP授权码\"",
+      "})",
+      "mailer.send({",
+      "  from: \"管理员 <admin@example.com>\",",
+      "  to: [\"user1@example.com\", \"User2 <user2@example.com>\"],",
+      "  subject: \"AirScript 邮件\",",
+      "  text: \"纯文本正文\",",
+      "  html: \"<p>HTML 正文</p>\"",
+      "})"
+    ],
+    "description": "通过 SMTP 发送邮件"
+  },
+  "AirScript: 查询数据库": {
+    "prefix": "airsql",
+    "body": [
+      "const conn = SQL.connect(SQL.Drivers.MySQL, {",
+      "  host: \"127.0.0.1\",",
+      "  port: 3306,",
+      "  username: \"root\",",
+      "  password: \"123456\",",
+      "  database: \"mydb\"",
+      "})",
+      "try {",
+      "  const result = conn.queryAll(\"SELECT * FROM test WHERE id = ?\", [1])",
+      "  console.log(result.affectRowCount, result.rows)",
+      "} finally {",
+      "  conn.close()",
+      "}"
+    ],
+    "description": "连接 MySQL 并执行查询"
+  },
+  "AirScript: 打开云文档": {
+    "prefix": "airksdrive",
+    "body": [
+      "const file = KSDrive.openFile(\"https://www.kdocs.cn/l/xxxxxxxxxxxx\")",
+      "try {",
+      "  console.log(file.Application.Range(\"A1\").Text)",
+      "} finally {",
+      "  // 必须关闭，否则无法再次 openFile",
+      "  file.close()",
+      "}"
+    ],
+    "description": "用 KSDrive 打开云文档并读取单元格"
+  },
+  "AirScript: 摘要 / HMAC": {
+    "prefix": "aircrypto",
+    "body": [
+      "const md5 = Crypto.createHash(\"md5\").update(\"abc\").digest(\"hex\")",
+      "const sha256 = Crypto.createHash(\"sha256\").update(\"abc\").digest(\"hex\")",
+      "const hmac = Crypto.createHmac(\"sha256\", \"secret\").update(\"abc\").digest(\"hex\")",
+      "console.log(md5, sha256, hmac)"
+    ],
+    "description": "计算 MD5 / SHA256 / HMAC"
+  },
+  "AirScript: 延时": {
+    "prefix": "airtime",
+    "body": [
+      "// AirScript 是同步执行模型，没有 setTimeout，只能阻塞等待",
+      "Time.sleep(1000)"
+    ],
+    "description": "阻塞等待指定毫秒"
+  },
+  "AirScript: 读取脚本参数": {
+    "prefix": "airargs",
+    "body": [
+      "// 脚本参数 / Webhook 参数；支持 a.b 形式的层级读取",
+      "const name = Arguments.get(\"name\", \"默认值\")",
+      "const nested = Arguments.get(\"user.id\", 0)",
+      "console.log(name, nested)"
+    ],
+    "description": "读取 Arguments 中的脚本参数"
+  }
+}

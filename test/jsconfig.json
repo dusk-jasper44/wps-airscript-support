@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["ES2020"],
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "checkJs": true,
+    "allowJs": true,
+    "noEmit": true,
+    "strict": false,
+    "skipLibCheck": false,
+    "types": []
+  },
+  "include": [
+    "check.js",
+    "../extension/types/airscript.d.ts",
+    "../extension/types/airscript-services.d.ts",
+    "../extension/types/airscript-builtins.d.ts"
+  ]
+}

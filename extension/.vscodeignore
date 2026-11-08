@@ -1,0 +1,8 @@
+.vscode/**
+.vscode-test/**
+node_modules/**
+package-lock.json
+*.vsix
+**/*.map
+**/.DS_Store
+test/**
