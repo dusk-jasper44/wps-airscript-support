@@ -5,6 +5,8 @@
 const vscode = require('vscode');
 const fs = require('fs');
 const path = require('path');
+// 仅用于保留用户 jsconfig/tsconfig 中的注释和格式；MIT，见 vendor/jsonc-parser/LICENSE.md。
+const jsonc = require('./vendor/jsonc-parser/main.js');
 
 // getConfiguration('airscript') 返回的是 section 子树，get/update 必须使用相对键；
 // 传完整键会被拼成 airscript.airscript.apiVersion。
@@ -243,17 +245,61 @@ function removeTrailingCommas(text) {
   return result;
 }
 
-function readExistingJsonc(filePath) {
-  let raw = fs.readFileSync(filePath, 'utf8');
+function parseJsoncText(raw) {
+  let text = raw;
   // Windows PowerShell 的 UTF-8 输出可能带 BOM；JSON.parse 不接受它。
-  if (raw.charCodeAt(0) === 0xfeff) {
-    raw = raw.slice(1);
+  if (text.charCodeAt(0) === 0xfeff) {
+    text = text.slice(1);
   }
-  const text = stripJsonComments(raw).trim();
+  text = stripJsonComments(text).trim();
   if (!text) {
     return {};
   }
   return JSON.parse(text);
+}
+
+function readExistingJsonc(filePath) {
+  return parseJsoncText(fs.readFileSync(filePath, 'utf8'));
+}
+
+function sameJson(a, b) {
+  return JSON.stringify(a) === JSON.stringify(b);
+}
+
+/**
+ * 用 jsonc-parser 逐项修改已有配置，保留用户写的注释和缩进。
+ * 新配置不经过这里（直接 JSON.stringify）。
+ */
+function mergeConfigText(text, original, merged) {
+  const eol = text.includes('\r\n') ? '\r\n' : '\n';
+  const formattingOptions = { insertSpaces: true, tabSize: 2, eol };
+  let output = text;
+
+  const beforeOptions = original.compilerOptions;
+  const afterOptions = merged.compilerOptions || {};
+  if (!beforeOptions || typeof beforeOptions !== 'object' || Array.isArray(beforeOptions)) {
+    if (!sameJson(beforeOptions, afterOptions)) {
+      const edits = jsonc.modify(output, ['compilerOptions'], afterOptions, { formattingOptions });
+      output = jsonc.applyEdits(output, edits);
+    }
+  } else {
+    for (const key of Object.keys(afterOptions)) {
+      if (!sameJson(beforeOptions[key], afterOptions[key])) {
+        const edits = jsonc.modify(output, ['compilerOptions', key], afterOptions[key], {
+          formattingOptions
+        });
+        output = jsonc.applyEdits(output, edits);
+      }
+    }
+  }
+
+  for (const key of ['include', 'exclude']) {
+    if (!sameJson(original[key], merged[key])) {
+      const edits = jsonc.modify(output, [key], merged[key], { formattingOptions });
+      output = jsonc.applyEdits(output, edits);
+    }
+  }
+  return output;
 }
 
 /** 合并 include，不覆盖用户已有配置。 */
@@ -535,6 +581,7 @@ function writeExample(rootPath, version) {
 
 function writeConfig(rootPath, existingPath, options = {}) {
   let existing;
+  let raw = null;
   let before = null;
   if (fs.existsSync(existingPath)) {
     // 先备份再解析：即使配置损坏，也留下用户原始文件。
@@ -543,13 +590,15 @@ function writeConfig(rootPath, existingPath, options = {}) {
     if (!fs.existsSync(backupPath)) {
       fs.copyFileSync(existingPath, backupPath);
     }
-    existing = readExistingJsonc(existingPath);
+    raw = fs.readFileSync(existingPath, 'utf8');
+    existing = parseJsoncText(raw);
     if (existing === null || typeof existing !== 'object' || Array.isArray(existing)) {
       throw new Error('配置根必须是 JSON 对象');
     }
     before = JSON.stringify(existing);
   }
 
+  const original = existing ? JSON.parse(JSON.stringify(existing)) : null;
   const merged = buildMergedConfig(existing, options);
   // 内容没有变化时不要重写：保留用户配置里的注释、格式和键顺序。
   if (before !== null && before === JSON.stringify(merged)) {
@@ -561,7 +610,20 @@ function writeConfig(rootPath, existingPath, options = {}) {
     };
   }
 
-  fs.writeFileSync(existingPath, JSON.stringify(merged, null, 2) + '\n', 'utf8');
+  let output;
+  if (original && raw !== null) {
+    let text = raw;
+    if (text.charCodeAt(0) === 0xfeff) {
+      text = text.slice(1);
+    }
+    output = mergeConfigText(text, original, merged);
+    if (!output.endsWith('\n')) {
+      output += '\n';
+    }
+  } else {
+    output = JSON.stringify(merged, null, 2) + '\n';
+  }
+  fs.writeFileSync(existingPath, output, 'utf8');
   return {
     created: !existing,
     changed: true,

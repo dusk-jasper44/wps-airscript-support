@@ -77,11 +77,12 @@ Module._load = function (request) {
 };
 
 const extension = require(path.join(extensionDir, 'extension.js'));
+const jsonc = require(path.join(extensionDir, 'vendor/jsonc-parser/main.js'));
 const context = { extensionPath: extensionDir, subscriptions: [] };
 extension.activate(context);
 
 function readJson(file) {
-  return JSON.parse(fs.readFileSync(file, 'utf8'));
+  return jsonc.parse(fs.readFileSync(file, 'utf8'), [], { allowTrailingComma: true });
 }
 
 (async () => {
@@ -316,10 +317,33 @@ function readJson(file) {
     'tsconfig backup is verbatim'
   );
 
+  // 2g2. 需要修改已有配置时，也必须保留注释和格式。
+  const tsconfigComments = `{
+  // 顶层注释必须保留
+  "compilerOptions": {
+    "strict": true, // 行尾注释
+    "lib": ["ES2020"]
+  },
+  /* 块注释也必须保留 */
+  "include": ["src/**/*.ts"]
+}
+`;
+  fs.writeFileSync(path.join(workspace, 'tsconfig.json'), tsconfigComments);
+  fs.rmSync(path.join(workspace, 'jsconfig.json'), { force: true });
+  await commands['airscript.init']();
+  const tsconfigWithComments = fs.readFileSync(path.join(workspace, 'tsconfig.json'), 'utf8');
+  assert.ok(tsconfigWithComments.includes('顶层注释必须保留'), 'top comment kept after merge');
+  assert.ok(tsconfigWithComments.includes('行尾注释'), 'trailing comment kept after merge');
+  assert.ok(tsconfigWithComments.includes('块注释也必须保留'), 'block comment kept after merge');
+  const mergedCommentTs = readJson(path.join(workspace, 'tsconfig.json'));
+  assert.strictEqual(mergedCommentTs.compilerOptions.strict, true, 'strict kept after comment merge');
+  assert.strictEqual(mergedCommentTs.compilerOptions.checkJs, true, 'checkJs added with comments');
+  assert.ok(mergedCommentTs.include.includes('**/*.js'), 'include added with comments');
+
   // 2h. airscript.checkJs=false 只影响新建配置。
   settings.checkJs = false;
   fs.rmSync(path.join(workspace, 'tsconfig.json'));
-  fs.rmSync(path.join(workspace, 'jsconfig.json'));
+  fs.rmSync(path.join(workspace, 'jsconfig.json'), { force: true });
   await commands['airscript.init']();
   assert.strictEqual(
     readJson(path.join(workspace, 'jsconfig.json')).compilerOptions.checkJs,

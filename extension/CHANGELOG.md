@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.4.6
+
+- 合并已有 `jsconfig.json` / `tsconfig.json` 时保留用户的注释、缩进与键顺序：内置 `jsonc-parser`（MIT），只修改 `compilerOptions`、`include`、`exclude` 的必要节点。
+- 修复“需要改动配置时仍会整体 `JSON.stringify`、注释和尾逗号被抹掉”的已知限制。
+- 新增 smoke 用例：带行注释、块注释、尾逗号的配置在补充 `checkJs` / `include` 后，注释仍然存在。
+- 保持 VS Code 1.77.0+、TypeScript 4.9.5 / 5.9.2、Node 16 兼容；类型声明不变。
+
 ## 2.4.5
 
 - 用户自定义 `.vscode/airscript.code-snippets` 后，初始化/切换模型不再覆盖它；首次检测到自定义内容时仍备份为 `.bak`，之后只保留原文件。
