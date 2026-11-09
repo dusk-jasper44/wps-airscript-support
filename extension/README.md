@@ -21,6 +21,7 @@
 - **事件按方法建模**：`sheet.OnRename(data => { ... }).Destroy()` 有完整回调参数提示。
 - **枚举**：`Enum.DbSheetFieldType.Lookup`、`Enum.DbButtonIcon.CalendarCheckIn` 等；数据表提供 `Enum.XlSheetType` 等 Excel 枚举。
 - **2.4.2 类型增强**：`Sheet.Type` / `Permission.VisitorProtectType` / `Sheet.Export` / `Storage` / `Misc` / `ViewShare` 的枚举与返回值已按官方文档收窄，并补齐 `Enum.DbProtectTypeNum` 等常量。
+- **2.4.3 片段保护**：写入 `.vscode/airscript.code-snippets` 前检测用户修改，先备份为 `.bak`，避免自定义片段被初始化/切换模型静默覆盖。
 - **高级服务**（1.0 多维表格）：`HTTP`、`SQL`、`SMTP`、`KSDrive`、`Context` 的声明与注释；数据表声明也内置 `HTTP`、`SMTP`、`KSDrive`。
 - **内置能力**（1.0 多维表格）：`Crypto`、`Buffer`、`Time`、`Arguments`、`console`。
 - **按版本写入代码片段**：初始化/切换时生成 `.vscode/airscript.code-snippets`，多维表格 18 个、数据表 10 个、2.0 表格 8 个。
@@ -33,9 +34,9 @@
 
 > 要求 VS Code **1.77.0** 或更高版本。
 
-1. 安装 `wps-airscript-support-2.4.2.vsix`：
+1. 安装 `wps-airscript-support-2.4.3.vsix`：
    - VSCode 扩展面板右上角 `...` → **从 VSIX 安装**；或
-   - 命令行：`code --install-extension wps-airscript-support-2.4.2.vsix`
+   - 命令行：`code --install-extension wps-airscript-support-2.4.3.vsix`
 2. 打开你的脚本项目文件夹。
 3. 执行命令 **AirScript: 初始化 / 更新工作区**（`Ctrl+Shift+P`）。
 4. 打开任意 `.js` 文件，输入 `Application.` 即可看到补全；把鼠标悬停在成员上可查看中文说明。
@@ -149,7 +150,7 @@ wps-airscript-support/
 - 如果 `jsconfig.json` 的 `lib` 含 `DOM`（1.0），扩展会跳过 `airscript-builtins.d.ts`（DOM 自带 `console`/`Crypto`），避免全项目 `TS2451`；代价是 `Crypto.createHash` 没有类型提示。
 - 官方文档站个别页面拼写错误（如 `RatingFeild`）已按文件名纠正；如果官方后续修复，重新生成即可。
 - 浏览器专用 API（`Components`、`Window.ActiveDetailRecord` 等）在 JSDoc 中已注明，只在浏览器环境可用。
-- `.vscode/airscript.code-snippets` 由扩展生成，初始化/切换 API 模型时会覆盖；如需自定义，请改用别的文件名。
+- `.vscode/airscript.code-snippets` 由扩展生成，初始化/切换 API 模型时会更新；如果检测到用户改过该文件，会先备份为 `airscript.code-snippets.bak` 再写入。自定义片段建议放在独立的 `.code-snippets` 文件中。
 - 本扩展只提供静态类型与片段，不会连接 WPS，也不会执行脚本。
 
 ## License

@@ -225,6 +225,29 @@ function readJson(file) {
     'user-edited example preserved'
   );
 
+  // 2f2b. 用户自定义片段不能被静默覆盖，首次写入前备份为 .bak。
+  const snippetsPath = path.join(workspace, '.vscode/airscript.code-snippets');
+  const customSnippets = `{
+  "custom": { "prefix": "myair", "body": ["custom body"] }
+}
+`;
+  fs.writeFileSync(snippetsPath, customSnippets);
+  await commands['airscript.init']();
+  assert.strictEqual(
+    fs.readFileSync(snippetsPath + '.bak', 'utf8'),
+    customSnippets,
+    'custom snippets backed up'
+  );
+  assert.ok(
+    !fs.readFileSync(snippetsPath, 'utf8').includes('custom body'),
+    'generated snippets replace the managed file'
+  );
+  await commands['airscript.init']();
+  assert.ok(
+    fs.readFileSync(snippetsPath + '.bak', 'utf8').includes('custom body'),
+    'existing snippet backup is preserved'
+  );
+
   // 2f3. 字符串里的 ",}" 不能被当成尾逗号删掉。
   fs.writeFileSync(
     path.join(workspace, 'jsconfig.json'),

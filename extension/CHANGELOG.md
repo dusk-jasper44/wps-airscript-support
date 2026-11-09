@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.4.3
+
+- 初始化/切换模型写入 `.vscode/airscript.code-snippets` 前，检测该文件是否被用户改过；非扩展生成的内容先备份为 `airscript.code-snippets.bak`，避免自定义片段被静默覆盖。已有 `.bak` 不会被再次覆盖。
+- 保持 VS Code 1.77.0+、三套模型与 TypeScript 4.9.5 / 5.9.2 兼容；仅涉及扩展运行时逻辑，类型声明未变。
+
 ## 2.4.2
 
 - 类型增强：`Sheet.Type` 现在为 `BaseSheetType`（`xlEtDataBaseSheet` / `xlDbDashBoardSheet` / `xlEtFlexPaperSheet`），不再是 `any`。

@@ -359,6 +359,28 @@ function installTypes(extensionPath, rootPath, version) {
 }
 
 /** 把当前 API 版本的片段写入工作区 .vscode/airscript.code-snippets。 */
+// 片段文件放在工作区 .vscode 下，用户可能已经改过。写入前把“非扩展生成”
+// 的内容备份一次，避免初始化/切换模型时静默丢失自定义片段。
+function backupCustomSnippets(extensionPath, targetPath) {
+  if (!fs.existsSync(targetPath)) {
+    return false;
+  }
+  const current = normalizeExampleText(fs.readFileSync(targetPath, 'utf8'));
+  const generated = ['airscript.json', 'airscript-v2.json', 'airscript-databook.json']
+    .map((name) => path.join(extensionPath, 'snippets', name))
+    .filter((file) => fs.existsSync(file))
+    .some((file) => normalizeExampleText(fs.readFileSync(file, 'utf8')) === current);
+  if (generated) {
+    return false;
+  }
+  const backupPath = targetPath + '.bak';
+  if (!fs.existsSync(backupPath)) {
+    fs.copyFileSync(targetPath, backupPath);
+    log(`已备份自定义片段：${backupPath}`);
+  }
+  return true;
+}
+
 function installSnippets(extensionPath, rootPath, version) {
   const name =
     version === API_V2
@@ -373,7 +395,9 @@ function installSnippets(extensionPath, rootPath, version) {
   }
   const targetDir = path.join(rootPath, '.vscode');
   fs.mkdirSync(targetDir, { recursive: true });
-  fs.copyFileSync(source, path.join(targetDir, 'airscript.code-snippets'));
+  const target = path.join(targetDir, 'airscript.code-snippets');
+  backupCustomSnippets(extensionPath, target);
+  fs.copyFileSync(source, target);
   return true;
 }
 
