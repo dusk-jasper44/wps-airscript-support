@@ -572,14 +572,25 @@ async function initialize(folder, options = {}) {
     log(`安装类型声明失败：${error}`);
     return false;
   }
-  const snippets = installSnippets(extensionPath, rootPath, version);
-
   // DOM 自己声明了 console 与 Crypto，加载 builtins 会报 TS2451。
   // 此时改用 DOM 的声明（console 完整，Crypto 没有 createHash）。
   const hasDom = libHasDom(result.config);
-  writeGlobals(rootPath, version, !hasDom);
 
-  const createdExample = writeExample(rootPath, version);
+  let snippets = false;
+  let createdExample = false;
+  try {
+    snippets = installSnippets(extensionPath, rootPath, version);
+    writeGlobals(rootPath, version, !hasDom);
+    createdExample = writeExample(rootPath, version);
+  } catch (error) {
+    vscode.window.showErrorMessage(
+      `AirScript: 类型已复制，但写入工作区文件失败（${error.message}）。` +
+        '请检查目录是否只读或磁盘是否已满。'
+    );
+    log(`写入工作区文件失败：${error}`);
+    updateStatusBar(folder);
+    return false;
+  }
   log(
     `初始化完成：${rootPath}；${versionLabel(version)}（${version}）；类型 ${copied.length} 个；` +
       `片段 ${snippets ? '已写入' : '缺失'}；` +
@@ -712,7 +723,15 @@ function main() {
 main()
 `;
   }
-  fs.writeFileSync(target, content, 'utf8');
+  try {
+    fs.writeFileSync(target, content, 'utf8');
+  } catch (error) {
+    vscode.window.showErrorMessage(
+      `AirScript: 无法创建 ${name.trim()}（${error.message}）。请检查目录是否只读或文件是否被占用。`
+    );
+    log(`创建脚本失败：${error}`);
+    return;
+  }
   const doc = await vscode.workspace.openTextDocument(target);
   await vscode.window.showTextDocument(doc);
 }

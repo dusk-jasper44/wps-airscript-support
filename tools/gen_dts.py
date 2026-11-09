@@ -108,6 +108,41 @@ EXTRA_ENUM_TYPES = {
         "'Cascade' | 'Automations' | 'AutoNumber' | 'CreatedBy' | 'CreatedTime' | "
         "'LastModifiedBy' | 'LastModifiedTime' | 'Formula'"
     ),
+    # Used by newer pages but not published as standalone Enum pages.
+    "BaseSheetType": "'xlEtDataBaseSheet' | 'xlDbDashBoardSheet' | 'xlEtFlexPaperSheet'",
+    "ExportType": "'exportAsPdf' | 'exportAsImage' | 'CopyAsImage'",
+    "DbProtectType": "'Admin' | 'Editor' | 'Reader' | 'ReaderSubmitter' | 'NoPermissions'",
+    "DbProtectTypeNum": "0 | 1 | 2 | 3 | 4",
+    "DbPermissionUserType": "'user' | 'dept' | 'group'",
+}
+
+# Values for enums that have no page.  Kept in sync with the docs examples
+# (Application.Enum.DbProtectType.Reader, ...User, ...exportAsPdf).
+EXTRA_ENUM_CONSTANTS = {
+    "DbProtectType": {
+        "Admin": "Admin",
+        "Editor": "Editor",
+        "Reader": "Reader",
+        "ReaderSubmitter": "ReaderSubmitter",
+        "NoPermissions": "NoPermissions",
+    },
+    "DbProtectTypeNum": {
+        "Admin": 0,
+        "Editor": 1,
+        "Reader": 2,
+        "ReaderSubmitter": 3,
+        "NoPermissions": 4,
+    },
+    "DbPermissionUserType": {
+        "User": "user",
+        "Dept": "dept",
+        "Group": "group",
+    },
+    "ExportType": {
+        "exportAsPdf": "exportAsPdf",
+        "exportAsImage": "exportAsImage",
+        "copyAsImage": "CopyAsImage",
+    },
 }
 
 # Interfaces that are referenced from docs pages but whose own page 404s.
@@ -168,6 +203,8 @@ MANUAL_TYPES = {
 PARAM_TYPE_OVERRIDES = {
     ("Sheets", "Add", "Type"): "SheetType",
     ("Sheets", "Add", "Config"): "SheetAddConfig",
+    ("ViewShare", "AddContact", "UserType"): "DbPermissionUserType",
+    ("ViewShare", "DeleteContact", "UserType"): "DbPermissionUserType",
 }
 
 # Some newer pages document an object argument in the example
@@ -175,14 +212,14 @@ PARAM_TYPE_OVERRIDES = {
 # lists the object's properties positionally.  Keep the documented call
 # shape here.
 SIGNATURE_OVERRIDES = {
-    ("Sheet", "Export"): ("options: { Type: string }", "any"),
+    ("Sheet", "Export"): ("options: { Type: ExportType }", "Promise<boolean>"),
     ("Storage", "GetValue"): ("options: { StorageKey: string }", "string"),
     ("Storage", "GetValue_Plugin"): ("options: { StorageKey: string; PluginInstanceId: string }", "string"),
-    ("Storage", "SetValue"): ("options: { StorageKey: string; StorageValue?: string | null }", "any"),
-    ("Storage", "SetValue_Plugin"): ("options: { StorageKey: string; StorageValue?: string | null; PluginInstanceId: string }", "any"),
-    ("Permission", "AddUser"): ("options: { Type: number; UserIds: string[] }", "ApiResult"),
-    ("Permission", "DeleteUser"): ("options: { Type: number; UserId: string }", "ApiResult"),
-    ("Misc", "GetAttachmentUrl"): ("options?: { fileName?: string; source?: string; fileId?: string; linkUrl?: string; uploadId?: string; type?: string; fileType?: string; noCache?: boolean }", "any"),
+    ("Storage", "SetValue"): ("options: { StorageKey: string; StorageValue?: string | null }", "Promise<void>"),
+    ("Storage", "SetValue_Plugin"): ("options: { StorageKey: string; StorageValue?: string | null; PluginInstanceId: string }", "Promise<void>"),
+    ("Permission", "AddUser"): ("options: { Type: DbProtectTypeNum; UserIds: string[] }", "ApiResult"),
+    ("Permission", "DeleteUser"): ("options: { Type: DbProtectTypeNum; UserId: string }", "ApiResult"),
+    ("Misc", "GetAttachmentUrl"): ("options?: { fileName?: string; source?: string; fileId?: string; linkUrl?: string; uploadId?: string; type?: string; fileType?: string; noCache?: boolean }", "Promise<string | null>"),
 }
 
 # Aliases used in prose / return values.
@@ -229,6 +266,9 @@ TYPE_OVERRIDES = {
     ("Record", "Value"): "any",
     ("ApiResult", "Code"): "number",
     ("ApiResult", "Message"): "string",
+    # The return section only says “写入无返回值”，the accepted values are in
+    # the description: Enum.DbProtectType.
+    ("Permission", "VisitorProtectType"): "DbProtectType",
 }
 
 # Application-level members.  Some are documented only through examples, there
@@ -1157,7 +1197,7 @@ def main() -> int:
     out.append("declare const Application: AirScript.Application;")
     out.append("")
 
-    if enums:
+    if enums or EXTRA_ENUM_CONSTANTS:
         out.append("declare const Enum: {")
         for name in sorted(enums):
             values = enums[name]
@@ -1168,6 +1208,17 @@ def main() -> int:
                 if desc:
                     out.append(f"    /** {desc} */")
                 out.append(f"    readonly {member}: '{literal.replace(chr(39), chr(92) + chr(39))}';")
+            out.append("  };")
+        for name in sorted(EXTRA_ENUM_CONSTANTS):
+            if name in enums:
+                continue
+            out.append(f"  readonly {name}: {{")
+            for member, value in EXTRA_ENUM_CONSTANTS[name].items():
+                if isinstance(value, int):
+                    rendered = str(value)
+                else:
+                    rendered = "'" + value.replace("'", "\\'") + "'"
+                out.append(f"    readonly {member}: {rendered};")
             out.append("  };")
         out.append("  [key: string]: any;")
         out.append("};")

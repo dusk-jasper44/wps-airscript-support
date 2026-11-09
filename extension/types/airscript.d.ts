@@ -107,6 +107,16 @@ declare namespace AirScript {
   type DbFieldDefaultValueType = string;
   /** DbSheetFieldType（文档未列出具体取值）。 */
   type DbSheetFieldType = 'ID' | 'Phone' | 'Email' | 'Url' | 'Checkbox' | 'SingleSelect' | 'MultipleSelect' | 'Rating' | 'Complete' | 'CellPicture' | 'Contact' | 'Attachment' | 'Note' | 'Link' | 'OneWayLink' | 'Lookup' | 'Address' | 'Cascade' | 'Automations' | 'AutoNumber' | 'CreatedBy' | 'CreatedTime' | 'LastModifiedBy' | 'LastModifiedTime' | 'Formula';
+  /** BaseSheetType（文档未列出具体取值）。 */
+  type BaseSheetType = 'xlEtDataBaseSheet' | 'xlDbDashBoardSheet' | 'xlEtFlexPaperSheet';
+  /** ExportType（文档未列出具体取值）。 */
+  type ExportType = 'exportAsPdf' | 'exportAsImage' | 'CopyAsImage';
+  /** DbProtectType（文档未列出具体取值）。 */
+  type DbProtectType = 'Admin' | 'Editor' | 'Reader' | 'ReaderSubmitter' | 'NoPermissions';
+  /** DbProtectTypeNum（文档未列出具体取值）。 */
+  type DbProtectTypeNum = 0 | 1 | 2 | 3 | 4;
+  /** DbPermissionUserType（文档未列出具体取值）。 */
+  type DbPermissionUserType = 'user' | 'dept' | 'group';
 
   /** 任意视图类型：视图可能是表格、日历、表单、甘特、看板或查询视图。 */
   type AnyView = View & CalendarView & FormView & GanttView & GridView & KanbanView & QueryView;
@@ -3483,7 +3493,7 @@ declare namespace AirScript {
      * ```
      * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Misc/Methods/GetAttachmentUrl
      */
-    GetAttachmentUrl(options?: { fileName?: string; source?: string; fileId?: string; linkUrl?: string; uploadId?: string; type?: string; fileType?: string; noCache?: boolean }): any;
+    GetAttachmentUrl(options?: { fileName?: string; source?: string; fileId?: string; linkUrl?: string; uploadId?: string; type?: string; fileType?: string; noCache?: boolean }): Promise<string | null>;
   }
 
 /**
@@ -3554,7 +3564,7 @@ declare namespace AirScript {
      * ```
      * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Permission/Properties/VisitorProtectType
      */
-    VisitorProtectType: any;
+    VisitorProtectType: DbProtectType;
 
     /**
      * 将用户 ID 列表加入指定类型的权限组。`Type` 为 `Enum.DbProtectTypeNum`（0 管理员～4 无权限）；`Type` 为无权限组或当前用户无管理权限时失败。
@@ -3575,7 +3585,7 @@ declare namespace AirScript {
      * ```
      * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Permission/Methods/AddUser
      */
-    AddUser(options: { Type: number; UserIds: string[] }): ApiResult;
+    AddUser(options: { Type: DbProtectTypeNum; UserIds: string[] }): ApiResult;
     /**
      * 判断当前用户是否具备管理当前数据表的权限。分享视图、保护模式、自定义角色、只读等场景下可能返回失败，`Message` 为 `Cannot Manage Sheet`。
      *
@@ -3627,7 +3637,7 @@ declare namespace AirScript {
      * ```
      * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Permission/Methods/DeleteUser
      */
-    DeleteUser(options: { Type: number; UserId: string }): ApiResult;
+    DeleteUser(options: { Type: DbProtectTypeNum; UserId: string }): ApiResult;
     /**
      * 检查当前用户是否拥有编辑自动化任务的权限。
      *
@@ -5362,7 +5372,7 @@ declare namespace AirScript {
      * ```
      * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheet/Properties/Type
      */
-    readonly Type: any;
+    readonly Type: BaseSheetType;
     /**
      * 返回当前数据表的视图集合
      *
@@ -5516,7 +5526,7 @@ declare namespace AirScript {
      * ```
      * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheet/Methods/Export
      */
-    Export(options: { Type: string }): any;
+    Export(options: { Type: ExportType }): Promise<boolean>;
     /**
      * 通过字段名称来获取字段Id
      *
@@ -6056,7 +6066,7 @@ declare namespace AirScript {
      * ```
      * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Storage/Methods/SetValue
      */
-    SetValue(options: { StorageKey: string; StorageValue?: string | null }): any;
+    SetValue(options: { StorageKey: string; StorageValue?: string | null }): Promise<void>;
     /**
      * 与 `SetValue` 相同，但键名会加上插件实例前缀：`{PluginInstanceId}_{StorageKey}`。
      *
@@ -6074,7 +6084,7 @@ declare namespace AirScript {
      * ```
      * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Storage/Methods/SetValue_Plugin
      */
-    SetValue_Plugin(options: { StorageKey: string; StorageValue?: string | null; PluginInstanceId: string }): any;
+    SetValue_Plugin(options: { StorageKey: string; StorageValue?: string | null; PluginInstanceId: string }): Promise<void>;
   }
 
 /**
@@ -7050,7 +7060,7 @@ declare namespace AirScript {
      * ```
      * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/ViewShare/Methods/AddContact
      */
-    AddContact(UserId: string, UserType?: string): ApiResult;
+    AddContact(UserId: string, UserType?: DbPermissionUserType): ApiResult;
     /**
      * 修改分享视图的权限
      *
@@ -7091,7 +7101,7 @@ declare namespace AirScript {
      * ```
      * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/ViewShare/Methods/DeleteContact
      */
-    DeleteContact(UserId: string, UserType?: string): ApiResult;
+    DeleteContact(UserId: string, UserType?: DbPermissionUserType): ApiResult;
     /**
      * 切换当前视图的分享视图开关
      *
@@ -7734,6 +7744,30 @@ declare const Enum: {
     readonly anyone: 'anyone';
     readonly company: 'company';
     readonly onlylinkcreator: 'onlylinkcreator';
+  };
+  readonly DbPermissionUserType: {
+    readonly User: 'user';
+    readonly Dept: 'dept';
+    readonly Group: 'group';
+  };
+  readonly DbProtectType: {
+    readonly Admin: 'Admin';
+    readonly Editor: 'Editor';
+    readonly Reader: 'Reader';
+    readonly ReaderSubmitter: 'ReaderSubmitter';
+    readonly NoPermissions: 'NoPermissions';
+  };
+  readonly DbProtectTypeNum: {
+    readonly Admin: 0;
+    readonly Editor: 1;
+    readonly Reader: 2;
+    readonly ReaderSubmitter: 3;
+    readonly NoPermissions: 4;
+  };
+  readonly ExportType: {
+    readonly exportAsPdf: 'exportAsPdf';
+    readonly exportAsImage: 'exportAsImage';
+    readonly copyAsImage: 'CopyAsImage';
   };
   [key: string]: any;
 };

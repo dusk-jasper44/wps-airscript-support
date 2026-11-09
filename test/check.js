@@ -152,19 +152,27 @@ function main() {
 
   // Newly published APIs (2.1.0): legacy permissions, storage, misc, auto task.
   Application.Permissions.Open();
-  Application.Permissions.AddUser({ Type: 1, UserIds: ["u1"] });
-  Application.Permissions.DeleteUser({ Type: 2, UserId: "u1" });
+  Application.Permissions.AddUser({ Type: Application.Enum.DbProtectTypeNum.Editor, UserIds: ["u1"] });
+  Application.Permissions.DeleteUser({ Type: Application.Enum.DbProtectTypeNum.Reader, UserId: "u1" });
   Application.Permissions.VisitorProtectType = Application.Enum.DbProtectType.Reader;
+  /** @type {AirScript.DbProtectType} */ const protectType = Application.Permissions.VisitorProtectType;
   /** @type {string} */ const stored = Application.Storage.GetValue({ StorageKey: "k" });
   Application.Storage.SetValue({ StorageKey: "k", StorageValue: "v" });
   Application.Misc.GetAttachmentUrl({ fileId: "f1" });
   const canEditAuto = Application.AutoTask.HasEditPermission();
   Application.AutoTask.OpenPanel();
-  const exported = activeSheet.Export({ Type: "exportAsPdf" });
-  /** @type {string} */ const sheetType = activeSheet.Type;
+  const exported = activeSheet.Export({ Type: Application.Enum.ExportType.exportAsImage });
+  /** @type {AirScript.BaseSheetType} */ const sheetType = activeSheet.Type;
   activeSheet.Description = "desc";
   /** @type {string} */ const companyId = user.CompanyId;
   /** @type {any[] | null} */ const districts = Application.DBCellValue("x").districts;
+
+  // Share contacts accept the documented enum, not an arbitrary string.
+  const share = view.ViewShare;
+  share.AddContact("283091702", Application.Enum.DbPermissionUserType.User);
+  share.DeleteContact("283091702", Application.Enum.DbPermissionUserType.Dept);
+  // @ts-expect-error 不是 DbPermissionUserType
+  share.AddContact("283091702", "owner");
 
   console.log(
     s1, s2, s3, s4, n1, n2, b1, anyArg, activeSheet.Name, selection, user.Name,

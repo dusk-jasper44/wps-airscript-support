@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.4.2
+
+- 类型增强：`Sheet.Type` 现在为 `BaseSheetType`（`xlEtDataBaseSheet` / `xlDbDashBoardSheet` / `xlEtFlexPaperSheet`），不再是 `any`。
+- 类型增强：`Permission.VisitorProtectType` 现在为 `DbProtectType`（`Admin` / `Editor` / `Reader` / `ReaderSubmitter` / `NoPermissions`）。
+- `Sheet.Export` 的参数改为 `{ Type: ExportType }`，返回 `Promise<boolean>`；`Storage.SetValue` 返回 `Promise<void>`，`Misc.GetAttachmentUrl` 返回 `Promise<string | null>`。
+- `Permission.AddUser` / `DeleteUser` 的 `Type` 改为 `DbProtectTypeNum`；`ViewShare.AddContact` / `DeleteContact` 的 `UserType` 改为 `DbPermissionUserType`。
+- 新增 `ExportType`、`DbProtectType`、`DbProtectTypeNum`、`DbPermissionUserType` 的 `Enum` 常量，支持 `Application.Enum.DbProtectTypeNum.Editor` 等写法。
+- 继续要求 VS Code 1.77.0+，TypeScript 4.9.5 / 5.9.2 下三套模型 `tsc` 与 `--strict` 均为 0 error。
+
 ## 2.4.1
 
 - 修复 `airscript.apiVersion` 读取/写入使用完整键的问题：`getConfiguration('airscript')` 只接受相对键 `apiVersion`。此前切换模型在真实 VS Code 中可能永远回退到 1.0，并写入 `airscript.airscript.apiVersion`。
@@ -34,7 +43,7 @@
 ## 2.3.0
 
 - 新增第三套模型 **API 1.0 · 数据表 / 工作表**，设置值 `1.0-databook`：`Application.ActiveSheet.Field` / `.Record`、`Range`、`ActiveWorkbook`、`Workbook`、`HTTP`、`SMTP`、`KSDrive`。
-- 数据表声明 `types/databook/ApiV1.d.ts` 来自 `wps-airscript-types@1.0.0` 的 `ApiV1.d.ts`，由 `tools/prepare_databook.py` 清洗：去掉双重编码损坏的注释、`Record` 接口改名 `DBRecord`（`sheet.Record` 属性名不变）、补 `declare enum ESaveResult` / `declare namespace Enum`、补 `URL` / `Buffer` 环境类型。
+- 数据表声明 `types/databook/ApiV1.d.ts` 来自 `wps-airscript-types@1.0.0` 的 `ApiV1.d.ts`，由 `tools/prepare_databook.py` 清洗：当时误判上游注释损坏而删除（2.4.0 已恢复完整 JSDoc）、`Record` 接口改名 `DBRecord`（`sheet.Record` 属性名不变）、补 `declare enum ESaveResult` / `declare namespace Enum`、补 `URL` / `Buffer` 环境类型。
 - 切换命令改为三选一：**多维表格 1.0** / **数据表 1.0** / **表格 2.0**；状态栏显示当前模型。
 - 切换时只保留当前模型的声明，自动删除另外两套；新增 `workspaceContains:.airscript/types/ApiV1.d.ts` 激活事件。
 - 新增数据表片段 10 个（`airfields`、`airrecords`、`aircreate`、`airupdate`、`airdelete`、`airattach`、`airrange`、`airnewsheet`、`airhttp`、`airmain`），写入 `.vscode/airscript.code-snippets`。
