@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.4.5
+
+- 用户自定义 `.vscode/airscript.code-snippets` 后，初始化/切换模型不再覆盖它；首次检测到自定义内容时仍备份为 `.bak`，之后只保留原文件。
+- Doctor 增加 `allowJs: false` 与 `exclude` 排除所有文件的检查。
+- 仍支持 VS Code 1.77.0+（`engines.vscode` 不变）。
+
 ## 2.4.4
 
 - 读取 `jsconfig.json` / `tsconfig.json` 时去除 UTF-8 BOM；Windows PowerShell 的 `Set-Content -Encoding utf8` 会写 BOM，此前会导致配置解析失败、初始化中止。

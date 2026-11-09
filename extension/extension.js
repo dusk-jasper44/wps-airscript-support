@@ -400,7 +400,12 @@ function installSnippets(extensionPath, rootPath, version) {
   const targetDir = path.join(rootPath, '.vscode');
   fs.mkdirSync(targetDir, { recursive: true });
   const target = path.join(targetDir, 'airscript.code-snippets');
-  backupCustomSnippets(extensionPath, target);
+  if (backupCustomSnippets(extensionPath, target)) {
+    // 当前文件不是扩展生成的：说明用户自定义过。只备份一次，绝不覆盖，
+    // 否则用户后续的修改会在下次启动/切换模型时被静默丢掉。
+    log(`检测到自定义片段，保留原文件：${target}`);
+    return true;
+  }
   fs.copyFileSync(source, target);
   return true;
 }
@@ -799,6 +804,9 @@ async function doctor() {
       if (co.checkJs !== true) {
         issues.push(`${configName} 的 compilerOptions.checkJs 不是 true，JS 文件不会做类型检查。`);
       }
+      if (co.allowJs === false) {
+        issues.push(`${configName} 的 compilerOptions.allowJs 为 false，JS 文件不会进入类型检查。`);
+      }
       if (Array.isArray(co.types) && co.types.includes('node')) {
         issues.push(`${configName} 的 compilerOptions.types 含 "node"，会与 Buffer/Crypto 声明冲突。`);
       }
@@ -844,6 +852,9 @@ async function doctor() {
       };
       if (!fileHasGlobals && exclude.some(excludesAirscript)) {
         issues.push(`${configName} 的 exclude 排除了 .airscript，类型声明不会生效。`);
+      }
+      if (exclude.some((pattern) => ['*', '**', '**/*'].includes(pattern))) {
+        issues.push(`${configName} 的 exclude 排除了所有文件，类型声明不会生效。`);
       }
     }
   }

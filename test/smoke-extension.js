@@ -239,13 +239,17 @@ function readJson(file) {
     'custom snippets backed up'
   );
   assert.ok(
-    !fs.readFileSync(snippetsPath, 'utf8').includes('custom body'),
-    'generated snippets replace the managed file'
+    fs.readFileSync(snippetsPath, 'utf8').includes('custom body'),
+    'custom snippets are preserved, not overwritten'
   );
   await commands['airscript.init']();
   assert.ok(
     fs.readFileSync(snippetsPath + '.bak', 'utf8').includes('custom body'),
     'existing snippet backup is preserved'
+  );
+  assert.ok(
+    fs.readFileSync(snippetsPath, 'utf8').includes('custom body'),
+    'custom snippets stay preserved after re-init'
   );
 
   // 2f3. 字符串里的 ",}" 不能被当成尾逗号删掉。
@@ -395,6 +399,27 @@ function readJson(file) {
     outputLines.some((line) => line.includes('include/files')),
     'doctor output mentions include/files'
   );
+
+  // 2j2. Doctor 能发现 allowJs:false 和 exclude 排除所有文件。
+  const badAllow = readJson(jsconfigPath);
+  badAllow.include = ['**/*.js', '.airscript/globals.d.ts'];
+  badAllow.exclude = ['**/*'];
+  badAllow.compilerOptions.allowJs = false;
+  fs.writeFileSync(jsconfigPath, JSON.stringify(badAllow));
+  const warningsBeforeAllow = warnings.length;
+  await commands['airscript.doctor']();
+  assert.ok(warnings.length > warningsBeforeAllow, 'doctor reports allowJs/exclude');
+  assert.ok(
+    outputLines.some((line) => line.includes('allowJs')),
+    'doctor output mentions allowJs'
+  );
+  assert.ok(
+    outputLines.some((line) => line.includes('exclude') && line.includes('所有文件')),
+    'doctor output mentions exclude everything'
+  );
+  badAllow.exclude = ['node_modules', '**/node_modules/*'];
+  badAllow.compilerOptions.allowJs = true;
+  fs.writeFileSync(jsconfigPath, JSON.stringify(badAllow));
   await commands['airscript.init']();
 
   // 2k. Windows 非法文件名与保留名在输入框阶段被拒绝。
