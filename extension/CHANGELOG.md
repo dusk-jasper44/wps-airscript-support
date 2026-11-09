@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.4.1
+
+- 修复 `airscript.apiVersion` 读取/写入使用完整键的问题：`getConfiguration('airscript')` 只接受相对键 `apiVersion`。此前切换模型在真实 VS Code 中可能永远回退到 1.0，并写入 `airscript.airscript.apiVersion`。
+- 修复 JSONC 尾逗号删除误伤字符串的问题（例如 `"a,}.js"`）；改为字符串感知的状态机。
+- 修复初始化/启动更新会覆盖用户修改过的 `airscript-example.js`；现在只覆盖与内置模板完全一致的文件。
+- 成功提示与 DOM 警告使用实际配置文件（`tsconfig.json` 或 `jsconfig.json`），不再硬编码 jsconfig。
+- Doctor 增加 `include`/`files`/`exclude` 对 `.airscript/globals.d.ts` 的检查。
+- 多根工作区路径判断改用 `path.relative`，修复 Windows 大小写与盘符根误判。
+- 配置解析前先备份；配置内容不变时不再重写，保留用户注释与格式。
+- 类型文件缺失时先报错，不再写入引用缺失文件的 globals；切换模型失败会回滚设置。
+- 新建脚本拒绝 Windows 非法字符、保留名和空基名。
+- 生成器转义示例代码中的 `*/`，避免 JSDoc 提前结束。
+- 继续要求 VS Code 1.77.0+，测试覆盖 TypeScript 4.9.5 / 5.9.2。
+
 ## 2.4.0
 
 - 类型声明为成员补充官方「脚本编辑器示例」`@example` 与官方文档页 `@see` 链接；枚举 union 也带文档链接。

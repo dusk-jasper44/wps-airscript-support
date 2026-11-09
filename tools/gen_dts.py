@@ -374,8 +374,13 @@ def clean_javadoc(text: str) -> str:
     return "\n".join(lines)
 
 
+def escape_jsdoc(text: str) -> str:
+    # 注释正文里的 "*/" 会提前结束 JSDoc，转义为 "*\/"。
+    return text.replace("*/", "*\\/")
+
+
 def make_jsdoc(text: str, tags: list[str] | None = None) -> str:
-    text = clean_javadoc(text)
+    text = escape_jsdoc(clean_javadoc(text))
     tags = tags or []
     if not text and not tags:
         return ""
@@ -636,7 +641,10 @@ def example_from_sections(secs: "OrderedDict[str, str]") -> str:
 def example_tag(code: str) -> str:
     if not code:
         return ""
-    body = "\n".join(" * " + line if line.strip() else " *" for line in code.splitlines())
+    body = "\n".join(
+        " * " + line if line.strip() else " *"
+        for line in escape_jsdoc(code).splitlines()
+    )
     return "@example\n * ```javascript\n" + body + "\n * ```"
 
 

@@ -9,36 +9,50 @@ const extensionDir = path.resolve(__dirname, '..', 'extension');
 const workspace = fs.mkdtempSync(path.join(os.tmpdir(), 'airscript-smoke-'));
 const errors = [];
 const warnings = [];
+const infos = [];
+const outputLines = [];
 const commands = {};
 const settings = { apiVersion: '1.0' };
+let inputBox = async () => 'demo-script.js';
 
 const vscode = {
   workspace: {
     workspaceFolders: [{ name: 'demo', uri: { fsPath: workspace } }],
     openTextDocument: async (p) => ({ uri: { fsPath: p } }),
-    getConfiguration: () => ({
+    getConfiguration: (section) => ({
       get(key, fallback) {
-        const name = key.replace(/^airscript\./, '');
-        return settings[name] === undefined ? fallback : settings[name];
+        // 真实 VSCode 的 getConfiguration(section) 返回 section 子树，get 只接受相对键。
+        if (section && key.startsWith(`${section}.`)) {
+          throw new Error(`get 使用了相对 section 的完整键：${key}`);
+        }
+        return settings[key] === undefined ? fallback : settings[key];
       },
       async update(key, value) {
-        settings[key.replace(/^airscript\./, '')] = value;
+        if (section && key.startsWith(`${section}.`)) {
+          throw new Error(`update 使用了相对 section 的完整键：${key}`);
+        }
+        settings[key] = value;
       }
     })
   },
   window: {
     activeTextEditor: undefined,
     createOutputChannel: () => ({
-      appendLine() {},
+      appendLine(line) {
+        outputLines.push(line);
+      },
       clear() {},
       show() {},
       dispose() {}
     }),
     createStatusBarItem: () => ({ show() {}, dispose() {}, text: '', tooltip: '' }),
-    showInformationMessage: async () => undefined,
+    showInformationMessage: async (message) => {
+      infos.push(message);
+      return undefined;
+    },
     showWarningMessage: (message) => warnings.push(message),
     showErrorMessage: (message) => errors.push(message),
-    showInputBox: async () => 'demo-script.js',
+    showInputBox: (options) => inputBox(options),
     showTextDocument: async () => undefined,
     showQuickPick: async () => undefined
   },
@@ -202,6 +216,30 @@ function readJson(file) {
   assert.strictEqual(settings.apiVersion, '1.0-databook', 'switch command selects databook');
   assert.ok(fs.existsSync(path.join(workspace, '.airscript/types/ApiV1.d.ts')), 'switch installs ApiV1');
 
+  // 2f2. 用户编辑示例正文后，初始化（含启动自动更新）不能覆盖。
+  const examplePath = path.join(workspace, 'airscript-example.js');
+  fs.appendFileSync(examplePath, '\n// user custom code\n');
+  await commands['airscript.init']();
+  assert.ok(
+    fs.readFileSync(examplePath, 'utf8').includes('// user custom code'),
+    'user-edited example preserved'
+  );
+
+  // 2f3. 字符串里的 ",}" 不能被当成尾逗号删掉。
+  fs.writeFileSync(
+    path.join(workspace, 'jsconfig.json'),
+    JSON.stringify({
+      compilerOptions: { lib: ['ES2020'] },
+      include: ['src/a,}.js']
+    })
+  );
+  await commands['airscript.init']();
+  const commaConfig = readJson(path.join(workspace, 'jsconfig.json'));
+  assert.ok(
+    commaConfig.include.includes('src/a,}.js'),
+    'comma inside JSON string preserved'
+  );
+
   settings.apiVersion = '1.0';
   settings.checkJs = true;
   await commands['airscript.init']();
@@ -213,12 +251,22 @@ function readJson(file) {
 }
 `;
   fs.writeFileSync(path.join(workspace, 'tsconfig.json'), tsconfigUser);
+  const infosBeforeTsconfig = infos.length;
   await commands['airscript.init']();
   const mergedTs = readJson(path.join(workspace, 'tsconfig.json'));
   assert.strictEqual(mergedTs.compilerOptions.strict, true, 'tsconfig user option kept');
   assert.strictEqual(mergedTs.compilerOptions.checkJs, true, 'tsconfig checkJs added');
   assert.ok(mergedTs.include.includes('src/**/*.ts'), 'tsconfig user include kept');
   assert.ok(mergedTs.include.includes('**/*.js'), 'tsconfig JS include added');
+  const tsconfigInfos = infos.slice(infosBeforeTsconfig);
+  assert.ok(
+    tsconfigInfos.some((message) => message.includes('tsconfig.json')),
+    'success message names tsconfig.json'
+  );
+  assert.ok(
+    !tsconfigInfos.some((message) => message.includes('jsconfig.json')),
+    'success message does not name jsconfig.json'
+  );
   assert.ok(
     fs.existsSync(path.join(workspace, '.airscript/tsconfig.backup.json')),
     'tsconfig backup written'
@@ -243,11 +291,90 @@ function readJson(file) {
   fs.rmSync(path.join(workspace, 'jsconfig.json'));
   await commands['airscript.init']();
 
+  // 2h2. 配置内容未变化时不要重写，保留用户注释与格式。
+  const commentConfig = `{
+  // 用户注释必须保留
+  "compilerOptions": {
+    "checkJs": true,
+    "allowJs": true,
+    "noEmit": true,
+    "target": "ES2020",
+    "module": "ESNext",
+    "lib": ["ES2020"]
+  },
+  "include": ["**/*.js", "**/*.ts", ".airscript/globals.d.ts"],
+  "exclude": ["node_modules", "**/node_modules/*"]
+}
+`;
+  fs.writeFileSync(path.join(workspace, 'jsconfig.json'), commentConfig);
+  await commands['airscript.init']();
+  assert.strictEqual(
+    fs.readFileSync(path.join(workspace, 'jsconfig.json'), 'utf8'),
+    commentConfig,
+    'unchanged config keeps comments'
+  );
+  // 后续用例需要纯 JSON 配置。
+  fs.writeFileSync(
+    path.join(workspace, 'jsconfig.json'),
+    JSON.stringify({
+      compilerOptions: {
+        checkJs: true,
+        allowJs: true,
+        noEmit: true,
+        target: 'ES2020',
+        module: 'ESNext',
+        lib: ['ES2020']
+      },
+      include: ['**/*.js', '**/*.ts', '.airscript/globals.d.ts'],
+      exclude: ['node_modules', '**/node_modules/*']
+    })
+  );
+
   // 2i. Doctor 命令已注册，正常配置不报问题。
   assert.strictEqual(commands['airscript.doctor'] instanceof Function, true, 'doctor registered');
   const warningsBeforeDoctor = warnings.length;
   await commands['airscript.doctor']();
   assert.strictEqual(warnings.length, warningsBeforeDoctor, 'doctor passes clean workspace');
+
+  // 2j. Doctor 能发现 exclude 排除 .airscript、include 漏掉 globals。
+  const jsconfigPath = path.join(workspace, 'jsconfig.json');
+  const brokenDoctorConfig = readJson(jsconfigPath);
+  brokenDoctorConfig.exclude = ['.airscript'];
+  fs.writeFileSync(jsconfigPath, JSON.stringify(brokenDoctorConfig));
+  const warningsBeforeExclude = warnings.length;
+  await commands['airscript.doctor']();
+  assert.ok(warnings.length > warningsBeforeExclude, 'doctor reports .airscript exclude');
+  assert.ok(
+    outputLines.some((line) => line.includes('exclude') && line.includes('.airscript')),
+    'doctor output mentions exclude'
+  );
+
+  const missingGlobalsConfig = readJson(jsconfigPath);
+  delete missingGlobalsConfig.exclude;
+  missingGlobalsConfig.include = ['src/**/*.js'];
+  fs.writeFileSync(jsconfigPath, JSON.stringify(missingGlobalsConfig));
+  const warningsBeforeInclude = warnings.length;
+  await commands['airscript.doctor']();
+  assert.ok(warnings.length > warningsBeforeInclude, 'doctor reports missing globals include');
+  assert.ok(
+    outputLines.some((line) => line.includes('include/files')),
+    'doctor output mentions include/files'
+  );
+  await commands['airscript.init']();
+
+  // 2k. Windows 非法文件名与保留名在输入框阶段被拒绝。
+  let inputOptions;
+  const normalInputBox = inputBox;
+  inputBox = async (options) => {
+    inputOptions = options;
+    return undefined;
+  };
+  await commands['airscript.newScript']();
+  assert.ok(inputOptions.validateInput('bad:name.js'), 'invalid character rejected');
+  assert.ok(inputOptions.validateInput('CON.js'), 'Windows reserved name rejected');
+  assert.ok(inputOptions.validateInput('.js'), 'empty base name rejected');
+  assert.strictEqual(inputOptions.validateInput('good-name.js'), undefined, 'normal name accepted');
+  inputBox = normalInputBox;
 
   // 3. 新建脚本命令
   await commands['airscript.newScript']();
@@ -255,8 +382,10 @@ function readJson(file) {
   assert.ok(fs.existsSync(script), 'new script written');
   assert.ok(fs.readFileSync(script, 'utf8').includes('function main()'), 'script template');
 
-  // 4. 损坏的 jsconfig：保留原文件并提示
+  // 4. 损坏的 jsconfig：先备份原文件、保留原文件并提示
   const broken = '{ "compilerOptions": { "checkJs": true, } ';
+  const brokenBackup = path.join(workspace, '.airscript/jsconfig.backup.json');
+  fs.rmSync(brokenBackup, { force: true });
   fs.writeFileSync(path.join(workspace, 'jsconfig.json'), broken);
   await commands['airscript.init']();
   assert.strictEqual(
@@ -265,6 +394,11 @@ function readJson(file) {
     'broken config untouched'
   );
   assert.ok(errors.some((message) => message.includes('无法解析')), 'parse error reported');
+  assert.strictEqual(
+    fs.readFileSync(brokenBackup, 'utf8'),
+    broken,
+    'broken config backed up before parse'
+  );
 
   // 恢复成可解析配置，便于随后用 tsc 检查扩展实际生成的文件。
   fs.writeFileSync(
