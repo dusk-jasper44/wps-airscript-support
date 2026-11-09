@@ -23,16 +23,18 @@
 - **高级服务**（1.0 多维表格）：`HTTP`、`SQL`、`SMTP`、`KSDrive`、`Context` 的声明与注释；数据表声明也内置 `HTTP`、`SMTP`、`KSDrive`。
 - **内置能力**（1.0 多维表格）：`Crypto`、`Buffer`、`Time`、`Arguments`、`console`。
 - **按版本写入代码片段**：初始化/切换时生成 `.vscode/airscript.code-snippets`，多维表格 18 个、数据表 10 个、2.0 表格 8 个。
-- **一键初始化**：自动安装声明、生成 `jsconfig.json`（已存在则合并并备份）、创建示例脚本。
-- **模型切换**：状态栏显示当前模型，点击即可在多维表格 / 数据表 / 2.0 表格之间切换。
+- **悬浮文档带示例**：成员 JSDoc 优先收录官方「脚本编辑器示例」，并附官方文档页链接（`@see`）。
+- **一键初始化**：自动安装声明、生成或合并 `tsconfig.json` / `jsconfig.json`（先备份）、创建示例脚本。
+- **模型切换**：状态栏显示当前模型，点击即可在多维表格 / 数据表 / 2.0 表格之间切换；切换后提示重新加载窗口。
+- **配置检查**：`AirScript: 检查工作区配置（Doctor）` 检查配置解析、`checkJs`、DOM/Node 类型冲突、类型文件与片段。
 
 ## 安装与首次使用
 
 > 要求 VS Code **1.77.0** 或更高版本。
 
-1. 安装 `wps-airscript-support-2.3.1.vsix`：
+1. 安装 `wps-airscript-support-2.4.0.vsix`：
    - VSCode 扩展面板右上角 `...` → **从 VSIX 安装**；或
-   - 命令行：`code --install-extension wps-airscript-support-2.3.1.vsix`
+   - 命令行：`code --install-extension wps-airscript-support-2.4.0.vsix`
 2. 打开你的脚本项目文件夹。
 3. 执行命令 **AirScript: 初始化 / 更新工作区**（`Ctrl+Shift+P`）。
 4. 打开任意 `.js` 文件，输入 `Application.` 即可看到补全；把鼠标悬停在成员上可查看中文说明。
@@ -51,24 +53,26 @@
 │   │   ├── ApiV2.d.ts                # 2.0 表格对象模型
 │   │   └── lib.kso.d.ts              # 2.0 依赖的环境类型桩
 │   ├── globals.d.ts                  # 引用当前版本的类型声明
-│   └── jsconfig.backup.json          # 仅当原 jsconfig.json 被合并时生成
-├── jsconfig.json                     # checkJs + 类型声明 include
+│   ├── jsconfig.backup.json          # 仅当原 jsconfig.json 被合并时生成
+│   └── tsconfig.backup.json          # 仅当原 tsconfig.json 被合并时生成
+├── jsconfig.json / tsconfig.json     # checkJs + 类型声明 include（优先已有 tsconfig）
 └── airscript-example.js              # 示例脚本（不覆盖用户改过的文件）
 ```
 
-已有 `jsconfig.json` 不会被直接覆盖：扩展会先备份，再补齐 `include` 与必要的 `compilerOptions`。如果不想改动原配置，也可以只把 `.airscript/types/*.d.ts` 复制到自己的项目里，再在 `tsconfig/jsconfig` 中 include 它们。
+已有 `jsconfig.json` / `tsconfig.json` 不会被直接覆盖：扩展会先备份，再补齐 `include` 与必要的 `compilerOptions`。两者同时存在时优先使用 `tsconfig.json`。如果不想改动原配置，也可以只把 `.airscript/types/*.d.ts` 复制到自己的项目里，再在 `tsconfig/jsconfig` 中 include 它们。
 
 ## 命令
 
 | 命令 | 说明 |
 |---|---|
-| `AirScript: 初始化 / 更新工作区` | 安装/更新类型声明，生成或合并 `jsconfig.json` |
+| `AirScript: 初始化 / 更新工作区` | 安装/更新类型声明，生成或合并 `tsconfig.json` / `jsconfig.json` |
 | `AirScript: 新建脚本文件` | 新建带 `main()` 的 `.js` 脚本（按当前 API 版本生成模板） |
-| `AirScript: 切换 API 模型（多维表格 / 数据表 / 表格）` | 切换后自动重装对应声明、片段并刷新状态栏 |
+| `AirScript: 切换 API 模型（多维表格 / 数据表 / 表格）` | 切换后自动重装对应声明、片段并刷新状态栏；提示重新加载窗口 |
 | `AirScript: 打开 API 1.0 文档` | 打开 WPS 开放平台多维表格 AirScript 文档 |
 | `AirScript: 打开 API 2.0 文档` | 打开 AirScript 2.0 文档站 |
+| `AirScript: 检查工作区配置（Doctor）` | 检查配置解析、`checkJs`、DOM/Node 类型冲突、类型文件、globals 与片段 |
 
-多根工作区会先询问目标文件夹；如果当前编辑器里的文件属于某个根目录，则优先使用该根目录。`airscript.apiVersion` 是资源级设置，可为每个工作区单独选择版本。
+多根工作区会先询问目标文件夹；如果当前编辑器里的文件属于某个根目录，则优先使用该根目录。`airscript.apiVersion` 是资源级设置，可为每个工作区单独选择版本；`airscript.checkJs` 控制新建配置时是否启用 `checkJs`（默认开启）。
 
 ## 类型覆盖说明
 
@@ -78,10 +82,11 @@
 - `## 返回值` 映射为类型：`Boolean` → `boolean`、`Self` → `this`、`DbSheet[]` → `Sheet[]`、Markdown 链接去链接、多类型拆成联合类型。
 - 属性说明首行的 `可读写 / 可读 / 只读` 转换为是否 `readonly`，说明全文保留在 JSDoc 中。
 - 事件页的 `## 事件返回数据` 表格 → `<对象><事件>EventData` interface；事件本身生成 `OnX(callback): EventContext`。
+- 每个成员优先收录官方「脚本编辑器示例」（兼容 `脚本编辑器示例` / `脚本编辑器 示例` 两种标题），并附 `@see` 官方文档页链接；浏览器示例（`instance.ready()` / `async`）会被忽略。
 - 文档没有返回值或无法识别类型的成员会退化为 `any`，这是为了优先保证不误报；这类成员在悬停注释里仍保留原始说明。
 - `Window` 只在 `AirScript` 命名空间内声明，不污染浏览器的 `Window` 类型；`Record` 也不再与 TypeScript 内置的 `Record` 工具类型重名。
 
-数据表 1.0 声明（`types/databook/ApiV1.d.ts`）同样来自 [`wps-airscript-types`](https://www.npmjs.com/package/wps-airscript-types) 的 `types/ApiV1.d.ts`。原文件的注释是 UTF-8/GBK 双重编码，换行被吞掉后会触发 `TS1046`；`tools/prepare_databook.py` 会去掉损坏注释、把 `Record` 接口改名为 `DBRecord`（`sheet.Record` 属性名不变）、给 `ESaveResult` / `Enum` 补 `declare`，并补 `URL` / `Buffer` 环境类型。生成后的文件约 36 KB，`Application`、`Sheet.Field`、`Sheet.Record`、`Range`、`Workbook`、`HTTP`、`SMTP`、`KSDrive` 均可直接使用。
+数据表 1.0 声明（`types/databook/ApiV1.d.ts`）同样来自 [`wps-airscript-types`](https://www.npmjs.com/package/wps-airscript-types) 的 `types/ApiV1.d.ts`。原文件注释本身是合法 UTF-8；`tools/prepare_databook.py` 保留完整 JSDoc，只把 `Record` 接口改名为 `DBRecord`（`sheet.Record` 属性名不变）、给 `ESaveResult` / `Enum` 补 `declare`，并补 `URL` / `Buffer` 环境类型。生成后的文件约 177 KB，`Application`、`Sheet.Field`、`Sheet.Record`、`Range`、`Workbook`、`HTTP`、`SMTP`、`KSDrive` 均可直接使用，悬停有上游中文说明。
 
 2.0 声明来自同一开源包（MIT，作者 happyuz），并做了三处修补：补上缺失的 `lib.kso.d.ts`、给两个顶层枚举加 `declare`、提供 `URL`/`Default`/`Buffer` 环境类型。原包没有提供 `lib.kso.d.ts`，直接使用会报找不到引用文件。
 

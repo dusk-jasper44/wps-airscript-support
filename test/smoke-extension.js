@@ -28,7 +28,12 @@ const vscode = {
   },
   window: {
     activeTextEditor: undefined,
-    createOutputChannel: () => ({ appendLine() {}, dispose() {} }),
+    createOutputChannel: () => ({
+      appendLine() {},
+      clear() {},
+      show() {},
+      dispose() {}
+    }),
     createStatusBarItem: () => ({ show() {}, dispose() {}, text: '', tooltip: '' }),
     showInformationMessage: async () => undefined,
     showWarningMessage: (message) => warnings.push(message),
@@ -198,7 +203,51 @@ function readJson(file) {
   assert.ok(fs.existsSync(path.join(workspace, '.airscript/types/ApiV1.d.ts')), 'switch installs ApiV1');
 
   settings.apiVersion = '1.0';
+  settings.checkJs = true;
   await commands['airscript.init']();
+
+  // 2g. 已有 tsconfig.json：优先合并 tsconfig，而不是另建 jsconfig。
+  const tsconfigUser = `{
+  "compilerOptions": { "strict": true },
+  "include": ["src/**/*.ts"]
+}
+`;
+  fs.writeFileSync(path.join(workspace, 'tsconfig.json'), tsconfigUser);
+  await commands['airscript.init']();
+  const mergedTs = readJson(path.join(workspace, 'tsconfig.json'));
+  assert.strictEqual(mergedTs.compilerOptions.strict, true, 'tsconfig user option kept');
+  assert.strictEqual(mergedTs.compilerOptions.checkJs, true, 'tsconfig checkJs added');
+  assert.ok(mergedTs.include.includes('src/**/*.ts'), 'tsconfig user include kept');
+  assert.ok(mergedTs.include.includes('**/*.js'), 'tsconfig JS include added');
+  assert.ok(
+    fs.existsSync(path.join(workspace, '.airscript/tsconfig.backup.json')),
+    'tsconfig backup written'
+  );
+  assert.strictEqual(
+    fs.readFileSync(path.join(workspace, '.airscript/tsconfig.backup.json'), 'utf8'),
+    tsconfigUser,
+    'tsconfig backup is verbatim'
+  );
+
+  // 2h. airscript.checkJs=false 只影响新建配置。
+  settings.checkJs = false;
+  fs.rmSync(path.join(workspace, 'tsconfig.json'));
+  fs.rmSync(path.join(workspace, 'jsconfig.json'));
+  await commands['airscript.init']();
+  assert.strictEqual(
+    readJson(path.join(workspace, 'jsconfig.json')).compilerOptions.checkJs,
+    false,
+    'checkJs setting applied to new config'
+  );
+  settings.checkJs = true;
+  fs.rmSync(path.join(workspace, 'jsconfig.json'));
+  await commands['airscript.init']();
+
+  // 2i. Doctor 命令已注册，正常配置不报问题。
+  assert.strictEqual(commands['airscript.doctor'] instanceof Function, true, 'doctor registered');
+  const warningsBeforeDoctor = warnings.length;
+  await commands['airscript.doctor']();
+  assert.strictEqual(warnings.length, warningsBeforeDoctor, 'doctor passes clean workspace');
 
   // 3. 新建脚本命令
   await commands['airscript.newScript']();

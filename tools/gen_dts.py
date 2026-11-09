@@ -590,7 +590,7 @@ class TypeMapper:
 
 
 class Member:
-    __slots__ = ("obj", "name", "kind", "desc", "params", "ret", "readonly", "payload", "origin")
+    __slots__ = ("obj", "name", "kind", "desc", "params", "ret", "readonly", "payload", "origin", "example")
 
     def __init__(self, obj: str, name: str, kind: str, origin: str):
         self.obj = obj
@@ -602,9 +602,50 @@ class Member:
         self.ret = "any"
         self.readonly = False
         self.payload: list[tuple[str, str, str]] = []
+        self.example = ""
 
 
 NEW_PREFIX = "app-integration-dev__guide__dbsheet__Api__Api__"
+DOC_BASE = "https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api"
+FENCE_RE = re.compile(r"```[ \t]*(?:javascript|js|typescript|ts)?[ \t]*\r?\n(.*?)```", re.S)
+
+
+def example_from_sections(secs: "OrderedDict[str, str]") -> str:
+    """Return the first script-editor example code block, if any.
+
+    Most pages use ``## 脚本编辑器示例`` but a large minority use
+    ``## 脚本编辑器 示例`` (with a space); both normalize to the same key.
+    The browser example is deliberately ignored: it uses ``instance.ready()``
+    and ``async``, which AirScript does not support.
+    """
+    for key, body in secs.items():
+        norm = key.replace(" ", "")
+        if norm.startswith("脚本编辑器") and "示例" in norm:
+            match = FENCE_RE.search(body)
+            code = match.group(1) if match else body
+            code = code.strip("\n").rstrip()
+            if not code:
+                continue
+            lines = code.splitlines()
+            if len(lines) > 40:
+                lines = lines[:40] + ["// ...（完整示例见官方文档）"]
+            return "\n".join(lines)
+    return ""
+
+
+def example_tag(code: str) -> str:
+    if not code:
+        return ""
+    body = "\n".join(" * " + line if line.strip() else " *" for line in code.splitlines())
+    return "@example\n * ```javascript\n" + body + "\n * ```"
+
+
+def doc_url(origin: str) -> str:
+    if origin.startswith(NEW_PREFIX) and origin.endswith(".md"):
+        seg = origin[len(NEW_PREFIX):-3].split("__")
+        if len(seg) == 3 and seg[1] in ("Methods", "Properties", "Events"):
+            return f"{DOC_BASE}/{seg[0]}/{seg[1]}/{seg[2]}"
+    return ""
 
 
 def filename_member(fn: str) -> tuple[str, str, str] | None:
@@ -652,6 +693,7 @@ def parse_member(path: str, text: str) -> Member | None:
 
     desc = (secs.get("说明") or "").strip()
     member.desc = desc
+    member.example = example_from_sections(secs)
 
     if kind == "property":
         first = first_line(desc)
@@ -791,6 +833,8 @@ def main() -> int:
     objects: set[str] = set()
     object_desc: dict[str, str] = {}
     enums: dict[str, list[tuple[str, str, str]]] = {}
+    enum_origins: dict[str, str] = {}
+    enum_descs: dict[str, str] = {}
     members: list[Member] = []
     unknown: Counter[str] = Counter()
 
@@ -803,6 +847,8 @@ def main() -> int:
         enum_info = parse_enum(path, text)
         if enum_info:
             enums[enum_info[0]] = enum_info[1]
+            enum_origins[enum_info[0]] = fn
+            enum_descs[enum_info[0]] = (get_section(text, "说明") or "").strip()
             continue
 
         if fn.startswith(NEW_PREFIX):
@@ -867,7 +913,14 @@ def main() -> int:
         grouped.setdefault(m.obj, []).append(m)
 
     def member_line(m: Member) -> str:
-        doc = make_jsdoc(m.desc)
+        extra: list[str] = []
+        example = example_tag(m.example)
+        if example:
+            extra.append(example)
+        see = doc_url(m.origin)
+        if see:
+            extra.append("@see " + see)
+        doc = make_jsdoc(m.desc, extra)
         if m.kind == "property":
             if m.name == "Count":
                 ret = "number"
@@ -887,14 +940,15 @@ def main() -> int:
             else:
                 cb = "() => void"
                 tags = ["@param callback 事件回调"]
-            doc = make_jsdoc(m.desc, tags)
+            doc = make_jsdoc(m.desc, tags + extra)
             line = f"{m.name}(callback: {cb}): EventContext;"
         else:
             override = SIGNATURE_OVERRIDES.get((m.obj, m.name))
             if override:
                 params_str, ret = override
                 sig = f"{m.name}({params_str}): {ret};"
-                doc = make_jsdoc(m.desc, ["@param options 参数对象"] if "options" in params_str else [])
+                tags = ["@param options 参数对象"] if "options" in params_str else []
+                doc = make_jsdoc(m.desc, tags + extra)
                 return (doc + "\n" if doc else "") + sig
             params: list[str] = []
             tags: list[str] = []
@@ -933,7 +987,7 @@ def main() -> int:
             sig = f"{m.name}({', '.join(params)}): {ret};"
             if ret not in ("void", "any"):
                 tags.append(f"@returns {tm.map(ret_raw) if ret_raw else ret}")
-            doc = make_jsdoc(m.desc, tags)
+            doc = make_jsdoc(m.desc, tags + extra)
             line = sig
         return (doc + "\n" if doc else "") + line
 
@@ -985,8 +1039,14 @@ def main() -> int:
             values = enums[name]
             if not values:
                 continue
-            doc = f"  /** {name} 枚举值。 */"
-            out.append(doc)
+            desc = enum_descs.get(name) or f"{name} 枚举值。"
+            out.append("  /**")
+            for line in desc.splitlines():
+                out.append("   * " + line if line.strip() else "   *")
+            origin = enum_origins.get(name, "")
+            if origin.endswith(".md"):
+                out.append(f"   * @see {DOC_BASE}/Enum/{name}")
+            out.append("   */")
             union = " | ".join("'" + v[1].replace("'", "\\'") + "'" for v in values)
             out.append(f"  type {name} = {union};")
             if name == "RoleBuiltInType":

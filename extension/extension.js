@@ -211,12 +211,32 @@ function removeInclude(config, pattern) {
   }
 }
 
-function buildMergedConfig(existing) {
+function findConfigPath(rootPath) {
+  // Prefer tsconfig.json: it is what tsc and VS Code use when both exist.
+  const tsconfig = path.join(rootPath, 'tsconfig.json');
+  if (fs.existsSync(tsconfig)) {
+    return tsconfig;
+  }
+  return path.join(rootPath, 'jsconfig.json');
+}
+
+function getCheckJs(folder) {
+  try {
+    return (
+      vscode.workspace.getConfiguration('airscript', folder && folder.uri).get('checkJs', true) !==
+      false
+    );
+  } catch {
+    return true;
+  }
+}
+
+function buildMergedConfig(existing, options = {}) {
   const config = existing && typeof existing === 'object' ? existing : {};
   config.compilerOptions = config.compilerOptions || {};
   const co = config.compilerOptions;
 
-  if (co.checkJs === undefined) co.checkJs = true;
+  if (co.checkJs === undefined) co.checkJs = options.checkJs !== false;
   if (co.allowJs === undefined) co.allowJs = true;
   if (co.noEmit === undefined) co.noEmit = true;
   if (!co.target) co.target = 'ES2020';
@@ -409,20 +429,21 @@ function writeExample(rootPath, version) {
   return !existed;
 }
 
-function writeConfig(rootPath, existingPath) {
+function writeConfig(rootPath, existingPath, options = {}) {
   let existing;
   if (fs.existsSync(existingPath)) {
     existing = readExistingJsonc(existingPath);
     // 只在首次合并时备份，保留用户最初手写的配置。
-    const backupPath = path.join(rootPath, '.airscript', 'jsconfig.backup.json');
+    const backupName = path.basename(existingPath).replace(/\.json$/i, '.backup.json');
+    const backupPath = path.join(rootPath, '.airscript', backupName);
     if (!fs.existsSync(backupPath)) {
       fs.copyFileSync(existingPath, backupPath);
     }
   }
 
-  const merged = buildMergedConfig(existing);
+  const merged = buildMergedConfig(existing, options);
   fs.writeFileSync(existingPath, JSON.stringify(merged, null, 2) + '\n', 'utf8');
-  return { created: !existing, config: merged };
+  return { created: !existing, config: merged, file: path.basename(existingPath) };
 }
 
 async function initialize(folder, options = {}) {
@@ -440,16 +461,16 @@ async function initialize(folder, options = {}) {
   const copied = installTypes(extensionPath, rootPath, version);
   const snippets = installSnippets(extensionPath, rootPath, version);
 
-  const jsconfigPath = path.join(rootPath, 'jsconfig.json');
+  const configPath = findConfigPath(rootPath);
   let result;
   try {
-    result = writeConfig(rootPath, jsconfigPath);
+    result = writeConfig(rootPath, configPath, { checkJs: getCheckJs(folder) });
   } catch (error) {
     vscode.window.showErrorMessage(
-      `AirScript: 无法解析已有的 jsconfig.json（${error.message}）。` +
+      `AirScript: 无法解析已有的 ${path.basename(configPath)}（${error.message}）。` +
         '已保留原文件，请修复 JSON 后重试。'
     );
-    log(`jsconfig 解析失败：${error}`);
+    log(`${path.basename(configPath)} 解析失败：${error}`);
     return;
   }
 
@@ -462,7 +483,7 @@ async function initialize(folder, options = {}) {
   log(
     `初始化完成：${rootPath}；${versionLabel(version)}（${version}）；类型 ${copied.length} 个；` +
       `片段 ${snippets ? '已写入' : '缺失'}；` +
-      `jsconfig ${result.created ? '新建' : '合并'}；示例 ${createdExample ? '新建' : '已存在'}` +
+      `${result.file} ${result.created ? '新建' : '合并'}；示例 ${createdExample ? '新建' : '已存在'}` +
       (hasDom ? '；检测到 DOM lib' : '')
   );
 
@@ -588,6 +609,100 @@ main()
   await vscode.window.showTextDocument(doc);
 }
 
+function expectedTypeFiles(version) {
+  return (TYPE_SETS[version] || TYPE_SETS[API_V1]).map((item) => item.target);
+}
+
+/** 检查工作区配置，输出可操作的问题列表。 */
+async function doctor() {
+  const folder = await pickFolder();
+  if (!folder) return;
+
+  const rootPath = folder.uri.fsPath;
+  const version = getApiVersion(folder);
+  const lines = [
+    `AirScript Doctor`,
+    `工作区：${rootPath}`,
+    `模型：${versionLabel(version)}（${version}）`
+  ];
+  const issues = [];
+
+  const configPath = findConfigPath(rootPath);
+  const configName = path.basename(configPath);
+  if (!fs.existsSync(configPath)) {
+    issues.push(`未找到 ${configName}，请运行「AirScript: 初始化 / 更新工作区」。`);
+  } else {
+    let config;
+    try {
+      config = readExistingJsonc(configPath);
+      lines.push(`${configName}：可解析`);
+    } catch (error) {
+      issues.push(`${configName} 无法解析：${error.message}`);
+    }
+    if (config) {
+      const co = config.compilerOptions || {};
+      if (co.checkJs !== true) {
+        issues.push(`${configName} 的 compilerOptions.checkJs 不是 true，JS 文件不会做类型检查。`);
+      }
+      if (Array.isArray(co.types) && co.types.includes('node')) {
+        issues.push(`${configName} 的 compilerOptions.types 含 "node"，会与 Buffer/Crypto 声明冲突。`);
+      }
+      if (libHasDom(config) && version !== API_V1) {
+        issues.push(
+          `${configName} 的 compilerOptions.lib 含 DOM；${versionLabel(version)} 会报 TS2451/TS2300。` +
+            '请改为 ["ES2020"] 或使用独立工作区。'
+        );
+      }
+    }
+  }
+
+  const typeDir = path.join(rootPath, '.airscript', 'types');
+  for (const target of expectedTypeFiles(version)) {
+    if (!fs.existsSync(path.join(typeDir, target))) {
+      issues.push(`缺少类型文件 .airscript/types/${target}`);
+    }
+  }
+
+  const globalsPath = path.join(rootPath, '.airscript', 'globals.d.ts');
+  if (!fs.existsSync(globalsPath)) {
+    issues.push('缺少 .airscript/globals.d.ts');
+  } else {
+    const refs = fs.readFileSync(globalsPath, 'utf8');
+    const necessary =
+      version === API_V2 ? 'ApiV2.d.ts' : version === API_DATABOOK ? 'ApiV1.d.ts' : 'airscript.d.ts';
+    if (!refs.includes(necessary)) {
+      issues.push(`.airscript/globals.d.ts 未引用 ${necessary}`);
+    }
+  }
+
+  const snippetsPath = path.join(rootPath, '.vscode', 'airscript.code-snippets');
+  if (!fs.existsSync(snippetsPath)) {
+    issues.push('缺少 .vscode/airscript.code-snippets（代码片段未安装）');
+  }
+
+  lines.push('');
+  if (issues.length) {
+    lines.push('发现的问题：');
+    for (const issue of issues) {
+      lines.push('  - ' + issue);
+    }
+  } else {
+    lines.push('检查通过：类型、globals、配置与片段均正常。');
+  }
+
+  output.clear();
+  for (const line of lines) {
+    output.appendLine(line);
+  }
+  output.show(true);
+
+  if (issues.length) {
+    vscode.window.showWarningMessage(`AirScript Doctor：发现 ${issues.length} 个问题，详见输出面板。`);
+  } else {
+    vscode.window.showInformationMessage('AirScript Doctor：检查通过。');
+  }
+}
+
 async function switchApi(extensionPath) {
   const folder = await pickFolder();
   if (!folder) return;
@@ -617,6 +732,15 @@ async function switchApi(extensionPath) {
 
   await setApiVersion(folder, picked.version);
   await initialize(folder, { extensionPath, version: picked.version });
+
+  const reload = '重新加载窗口';
+  const choice = await vscode.window.showInformationMessage(
+    `已切换到 ${versionLabel(picked.version)}。重新加载窗口后类型提示会完全生效。`,
+    reload
+  );
+  if (choice === reload) {
+    await vscode.commands.executeCommand('workbench.action.reloadWindow');
+  }
 }
 
 function activate(context) {
@@ -646,7 +770,16 @@ function activate(context) {
     vscode.env.openExternal(vscode.Uri.parse(DOCS_URL_V2));
   });
 
-  context.subscriptions.push(initCommand, newCommand, switchCommand, docsCommand, docsV2Command);
+  const doctorCommand = vscode.commands.registerCommand('airscript.doctor', doctor);
+
+  context.subscriptions.push(
+    initCommand,
+    newCommand,
+    switchCommand,
+    docsCommand,
+    docsV2Command,
+    doctorCommand
+  );
 
   // 已初始化的项目在扩展升级后静默刷新类型，避免旧声明残留。
   const folders = vscode.workspace.workspaceFolders || [];

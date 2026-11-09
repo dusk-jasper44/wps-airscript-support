@@ -2,12 +2,15 @@
   "name": "wps-airscript-support",
   "displayName": "WPS AirScript 支持",
   "description": "WPS AirScript（多维表格 1.0 / 数据表 1.0 / 表格 2.0）的 API 类型声明、代码片段与工作区初始化，提供补全、悬停文档和 checkJs 类型检查。",
-  "version": "2.3.1",
+  "version": "2.4.0",
   "publisher": "airscript-tools",
   "license": "MIT",
   "engines": {
     "vscode": "^1.77.0"
   },
+  "extensionKind": [
+    "workspace"
+  ],
   "categories": [
     "Programming Languages",
     "Snippets",
@@ -33,6 +36,7 @@
     "onCommand:airscript.openDocs",
     "onCommand:airscript.openDocsV2",
     "onCommand:airscript.switchApi",
+    "onCommand:airscript.doctor",
     "workspaceContains:.airscript/types/airscript.d.ts",
     "workspaceContains:.airscript/types/ApiV1.d.ts",
     "workspaceContains:.airscript/types/ApiV2.d.ts"
@@ -63,6 +67,11 @@
         "command": "airscript.openDocsV2",
         "title": "打开 API 2.0 文档",
         "category": "AirScript"
+      },
+      {
+        "command": "airscript.doctor",
+        "title": "检查工作区配置（Doctor）",
+        "category": "AirScript"
       }
     ],
     "configuration": {
@@ -83,6 +92,12 @@
           "default": "1.0",
           "scope": "resource",
           "description": "选择工作区使用的 AirScript API 版本。切换后会自动重新安装对应类型声明。"
+        },
+        "airscript.checkJs": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "description": "初始化时在新建的 tsconfig.json / jsconfig.json 中启用 checkJs（仅当配置里尚未显式设置 checkJs 时写入）。"
         }
       }
     }

@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.4.0
+
+- 类型声明为成员补充官方「脚本编辑器示例」`@example` 与官方文档页 `@see` 链接；枚举 union 也带文档链接。
+- 支持已有 `tsconfig.json`：优先合并 tsconfig，其次 jsconfig；备份名分别为 `.airscript/tsconfig.backup.json` / `.airscript/jsconfig.backup.json`。
+- 新增 `airscript.checkJs` 设置（默认 `true`），控制新建/未显式设置 checkJs 的配置。
+- 新增「AirScript: 检查工作区配置（Doctor）」命令：检查配置解析、checkJs、DOM/Node 类型冲突、类型文件、globals 引用与片段。
+- 切换模型后提示「重新加载窗口」，让新类型立即生效。
+- 数据表 `ApiV1.d.ts` 恢复上游完整 JSDoc（不再删除注释），仅修正 `Record` 重名与 `declare` 修饰符。
+- `package.json` 增加 `extensionKind: ["workspace"]`，保持 VS Code 1.77.0 兼容。
+- 用 TypeScript 4.9.5 / 5.9.2 对三套模型做 `tsc` 与 `--strict` 验证。
+
 ## 2.3.1
 
 - 将 `engines.vscode` 从 `^1.80.0` 下调到 `^1.77.0`，支持 VS Code 1.77.0 安装。

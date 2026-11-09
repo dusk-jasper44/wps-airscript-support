@@ -32,33 +32,72 @@ declare namespace AirScript {
   // ---------------------------------------------------------------------
   // Enums (string literal unions)
   // ---------------------------------------------------------------------
-  /** DbAutomationPresetType 枚举值。 */
+  /**
+   * DbAutomationPresetType 枚举值。
+   * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Enum/DbAutomationPresetType
+   */
   type DbAutomationPresetType = 'CheckedNotifyContact' | 'UpdatedNotifyContact' | 'DueDateNotifyContact';
-  /** DbButtonIcon 枚举值。 */
+  /**
+   * DbButtonIcon 枚举值。
+   * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Enum/DbButtonIcon
+   */
   type DbButtonIcon = 'gesture_thumb' | 'paper_plane' | 'insert' | 'star' | 'stamp' | 'camera' | 'bubble' | 'bubble_two' | 'bell' | 'bulb' | 'heart' | 'gift' | 'people_double' | 'info' | 'successful' | 'stick' | 'cell' | 'calendar_check_in' | 'print' | 'none';
-  /** DbFieldValueType 枚举值。 */
+  /**
+   * DbFieldValueType 枚举值。
+   * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Enum/DbFieldValueType
+   */
   type DbFieldValueType = 'Fvt_Text' | 'Fvt_Number' | 'Fvt_Contact' | 'Fvt_Date' | 'Fvt_Time' | 'Fvt_Logic';
-  /** DbFilterCriteriaOpType 枚举值。 */
+  /**
+   * DbFilterCriteriaOpType 枚举值。
+   * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Enum/DbFilterCriteriaOpType
+   */
   type DbFilterCriteriaOpType = 'Null' | 'Equals' | 'NotEqu' | 'Greater' | 'GreaterEqu' | 'Less' | 'LessEqu' | 'GreaterEquAndLessEqu' | 'LessOrGreater' | 'BeginWith' | 'NotBeginWith' | 'EndWith' | 'NotEndWith' | 'Contains' | 'NotContains' | 'Intersected' | 'NotIntersected' | 'SubsetOf' | 'SupersetOf' | 'Empty' | 'NotEmpty';
-  /** DbGroupUnit 枚举值。 */
+  /**
+   * DbGroupUnit 枚举值。
+   * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Enum/DbGroupUnit
+   */
   type DbGroupUnit = 'Text' | 'Year' | 'Month' | 'Week' | 'Day' | 'Hour' | 'Minute' | 'Second';
-  /** DbLookupFunction 枚举值。 */
+  /**
+   * DbLookupFunction 枚举值。
+   * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Enum/DbLookupFunction
+   */
   type DbLookupFunction = 'Origin' | 'Sum' | 'Counta' | 'Average' | 'Max' | 'Min' | 'Unique' | 'CountaUnique' | 'ToString';
-  /** DbPermissionType 枚举值。 */
+  /**
+   * DbPermissionType 枚举值。
+   * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Enum/DbPermissionType
+   */
   type DbPermissionType = 'Permission_Edit' | 'Permission_View' | 'Permission_Manage' | 'Permission_NoPermission' | 'Permission_Custom';
-  /** DbSharedCriteriaType 枚举值。 */
+  /**
+   * DbSharedCriteriaType 枚举值。
+   * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Enum/DbSharedCriteriaType
+   */
   type DbSharedCriteriaType = 'Custom' | 'All' | 'None' | 'Self';
-  /** EditableAndViewableRecordsConfigType 枚举值。 */
+  /**
+   * EditableAndViewableRecordsConfigType 枚举值。
+   * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Enum/EditableAndViewableRecordsConfigType
+   */
   type EditableAndViewableRecordsConfigType = 'All' | 'Self' | 'Custom';
-  /** FilterOpType 枚举值。 */
+  /**
+   * FilterOpType 枚举值。
+   * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Enum/FilterOpType
+   */
   type FilterOpType = 'Or' | 'And';
-  /** RoleBuiltInType 枚举值。 */
+  /**
+   * RoleBuiltInType 枚举值。
+   * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Enum/RoleBuiltInType
+   */
   type RoleBuiltInType = 'Custom' | 'Manage' | 'View' | 'Edit' | 'NoPermission';
   /** @deprecated 文档中的旧拼写，等同于 RoleBuiltInType。 */
   type RoleBuildInType = RoleBuiltInType;
-  /** SharedLinkPermissionType 枚举值。 */
+  /**
+   * SharedLinkPermissionType 枚举值。
+   * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Enum/SharedLinkPermissionType
+   */
   type SharedLinkPermissionType = 'edit' | 'read' | 'addAndDel';
-  /** SharedLinkToType 枚举值。 */
+  /**
+   * SharedLinkToType 枚举值。
+   * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Enum/SharedLinkToType
+   */
   type SharedLinkToType = 'assigned' | 'anyone' | 'company' | 'onlylinkcreator';
   /** DbAttachmentDisplayStyle（文档未列出具体取值）。 */
   type DbAttachmentDisplayStyle = string;
@@ -81,10 +120,34 @@ declare namespace AirScript {
   interface AddressField {
     /**
      * 地址字段是否需要填写详细地址
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *    const fieldDescriptor = Application.Sheets("数据表").FieldDescriptors("@地址")
+     *    const prop = fieldDescriptor.Address
+     *    prop.IsDetailedAddress = false
+     *    fieldDescriptor.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/AddressField/Properties/IsDetailedAddress
      */
     IsDetailedAddress: boolean;
     /**
      * 地址字段 是否预设指定地址,当设置了IsUsePresetAddress为false后，PresetAddress不生效
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *    const fieldDescriptor = Application.Sheets("数据表").FieldDescriptors("@地址")
+     *    const prop = fieldDescriptor.Address
+     *    prop.IsUsePresetAddress = false
+     *    fieldDescriptor.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/AddressField/Properties/IsUsePresetAddress
      */
     IsUsePresetAddress: boolean;
     /**
@@ -96,10 +159,35 @@ declare namespace AirScript {
      * |3  | 省/市/区 - 详细地址|
      * |4  | 省/市/区/街道 - 详细地址|
      * |5  | 省/市/区/街道/社区 - 详细地址|
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *    const fieldDescriptor = Application.Sheets("数据表").FieldDescriptors("@地址")
+     *    const prop = fieldDescriptor.Address
+     *    prop.Level = 5
+     *    fieldDescriptor.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/AddressField/Properties/Level
      */
     Level: number;
     /**
      * 地址字段的默认值,当设置了IsUsePresetAddress为false后，PresetAddress不生效
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *    const fieldDescriptor = Application.Sheets("数据表").FieldDescriptors("@地址")
+     *    const prop = fieldDescriptor.Address
+     *    prop.IsUsePresetAddress = true
+     *    prop.PresetAddress = {detail:"", districts:["广东省","江门市"]}
+     *    fieldDescriptor.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/AddressField/Properties/PresetAddress
      */
     PresetAddress: any;
   }
@@ -110,10 +198,36 @@ declare namespace AirScript {
   interface ApiResult {
     /**
      * API调用返回执行结果
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const field = Application.Sheets(1).Views(1).Fields(1)
+     *     const result = field.Move(3) 
+     *     if(result.Code !== 0) {
+     *         console.log(result.Message)
+     *     }
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/ApiResult/Properties/Code
      */
     readonly Code: number;
     /**
      * API调用返回执行结果
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const field = Application.Sheets(1).Views(1).Fields(1)
+     *     const result = field.Move(3) 
+     *     if(result.Code !== 0) {
+     *         console.log(result.Message)
+     *     }
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/ApiResult/Properties/Message
      */
     readonly Message: string;
     /**
@@ -132,34 +246,122 @@ declare namespace AirScript {
   interface Attachment {
     /**
      * 返回附件字段的Id
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const value = ActiveView.RecordRange(1, "@图片和附件").Value
+     *   const attments = value.Value
+     *   console.log(attments[0].FileId)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Attachment/Properties/FileId
      */
     readonly FileId: string;
     /**
      * 返回附件名称
+     *
+     * @example
+     * ```javascript
+     * function main(){
+     *   const value = ActiveView.RecordRange(1, "@图片和附件").Value
+     *   const attments = value.Value
+     *   console.log(attments[0].FileName)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Attachment/Properties/FileName
      */
     readonly FileName: string;
     /**
      * 返回附件大小
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const value = ActiveView.RecordRange(1, "@图片和附件").Value
+     *   const attments = value.Value
+     *   console.log(attments[0].FileSize)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Attachment/Properties/FileSize
      */
     readonly FileSize: number;
     /**
      * 返回附件类型
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const value = ActiveView.RecordRange(1, "@图片和附件").Value
+     *   const attments = value.Value
+     *   console.log(attments[0].FileType)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Attachment/Properties/FileType
      */
     readonly FileType: string;
     /**
      * 返回图片的尺寸
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const value = ActiveView.RecordRange(1, "@图片和附件").Value
+     *   const attments = value.Value
+     *   console.log(attments[0].ImgSize)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Attachment/Properties/ImgSize
      */
     readonly ImgSize: string;
     /**
      * 返回附件的链接地址，如果是云文档则返回云文档的地址，如果是图片则返回图片的下载地址
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const value = ActiveView.RecordRange(1, "@图片和附件").Value
+     *   const attments = value.Value
+     *   console.log(attments[0].LinkUrl)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Attachment/Properties/LinkUrl
      */
     readonly LinkUrl: string;
     /**
      * 返回附件字段的源
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const value = ActiveView.RecordRange(1, "@图片和附件").Value
+     *   const attments = value.Value
+     *   console.log(attments[0].Source)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Attachment/Properties/Source
      */
     readonly Source: string;
     /**
      * 返回附件字段的缩略图Url
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const value = ActiveView.RecordRange(1, "@图片和附件").Value
+     *   const attments = value.Value
+     *   console.log(attments[0].ThumbnailsUrl)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Attachment/Properties/ThumbnailsUrl
      */
     readonly ThumbnailsUrl: string;
 
@@ -167,6 +369,16 @@ declare namespace AirScript {
      * 返回附件主要字段的字符串描述，便于日志输出。
      *
      * @returns string
+     * @example
+     * ```javascript
+     * function main() {
+     *     const value = Application.ActiveView.RecordRange(1, "@图片和附件").Value;
+     *     const attachments = value.Value;
+     *     console.log(attachments[0].toString());
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Attachment/Methods/toString
      */
     toString(): string;
   }
@@ -177,10 +389,34 @@ declare namespace AirScript {
   interface AttachmentField {
     /**
      * 图片和附件字段的显示样式，是以缩略图样式显示还是以列表的样式显示
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const field = Application.Sheets(1).FieldDescriptors("@图片和附件")
+     *   const prop = field.Attachment
+     *   prop.DisplayStyle = "List"
+     *   field.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/AttachmentField/Properties/DisplayStyle
      */
     DisplayStyle: DbAttachmentDisplayStyle;
     /**
      * 图片和附件字段是否仅可通过移动端拍摄上传
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const field = Application.Sheets(1).FieldDescriptors("@图片和附件")
+     *   const prop = field.Attachment
+     *   prop.IsOnlyCameraUpload = true
+     *   field.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/AttachmentField/Properties/IsOnlyCameraUpload
      */
     IsOnlyCameraUpload: boolean;
   }
@@ -191,26 +427,92 @@ declare namespace AirScript {
   interface AutoLinkCondition {
     /**
      * 自动匹配条件日期指定值的特殊参数
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const group = Application.Sheets(1).FieldDescriptors(2).AutoLinkGroups(1)
+     *   const condition = group.Conditions(1)
+     *   console.log(condition.DateIntersectedValues)
+     *  }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/AutoLinkCondition/Properties/DateIntersectedValues
      */
     DateIntersectedValues: any[];
     /**
      * 自动匹配条件，供“指定值”用的显示文本
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const group = Application.Sheets(1).FieldDescriptors(2).AutoLinkGroups(1)
+     *   const condition = group.Conditions(1)
+     *   console.log(condition.IntersectedConds) 
+     *  }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/AutoLinkCondition/Properties/IntersectedConds
      */
     IntersectedConds: any[];
     /**
      * 单向关联和双向关联字段的自动匹配条件，关联的数据表字段Id
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const group = Application.Sheets(1).FieldDescriptors(2).AutoLinkGroups(1)
+     *   const condition = group.Conditions(1)
+     *   console.log(condition.LinkSheetFieldId) 
+     *  }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/AutoLinkCondition/Properties/LinkSheetFieldId
      */
     LinkSheetFieldId: string;
     /**
      * 自动匹配条件的操作符
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const group = Application.Sheets(1).FieldDescriptors(2).AutoLinkGroups(1)
+     *   const condition = group.Conditions(1)
+     *   console.log(condition.OpType) 
+     *  }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/AutoLinkCondition/Properties/OpType
      */
     OpType: DbFilterCriteriaOpType;
     /**
      * 单向关联和双向关联字段的自动匹配条件
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const group = Application.Sheets(1).FieldDescriptors(2).AutoLinkGroups(1)
+     *   const condition = group.Conditions(1)
+     *   console.log(condition.SheetCondContents) 
+     *  }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/AutoLinkCondition/Properties/SheetCondContents
      */
     SheetCondContents: any[];
     /**
      * 单向关联和双向关联字段的自动匹配条件
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const group = Application.Sheets(1).FieldDescriptors(2).AutoLinkGroups(1)
+     *   const condition = group.Conditions(1)
+     *   console.log(condition.SheetCondType) 
+     *  }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/AutoLinkCondition/Properties/SheetCondType
      */
     SheetCondType: DbAutolinkCondType;
   }
@@ -223,6 +525,17 @@ declare namespace AirScript {
     (Index?: number | string): AutoLinkCondition;
     /**
      * 单向关联和双向关联字段的匹配条件集合数
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const group = Application.Sheets(1).FieldDescriptors(2).AutoLinkGroups(1)
+     *   const Conditions = group.Conditions
+     *   console.log(Conditions.Count)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/AutoLinkConditions/Properties/Count
      */
     readonly Count: number;
 
@@ -236,12 +549,40 @@ declare namespace AirScript {
      * @param IntersectedConds 供“指定值”用的显示文本
      * @param DateIntersectedValues 日期指定值的特殊参数
      * @returns AutoLinkCondition
+     * @example
+     * ```javascript
+     * function main(){
+     *   const sheet = Application.Sheets(1)
+     *   const linkField = sheet.FieldDescriptors(3)
+     *   const linkGroups = Application.AutoLinkGroups()
+     *   const group = linkGroups.Add()
+     *   const conditions = group.Conditions
+     *   const fieldId =  sheet.FieldId("状态")
+     *   const condition = conditions.Add(fieldId, [fieldId], "Field", "Equals")
+     *   linkField.AutoLinkGroups = linkGroups
+     *   linkField.IsAutoLink = true
+     *   const result = linkField.Apply()
+     *   console.log("####", result)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/AutoLinkConditions/Methods/Add
      */
     Add(LinkSheetFieldId: string, SheetCondContents?: string, SheetCondType?: DbAutolinkCondType, OpType?: DbFilterCriteriaOpType, IntersectedConds?: { type: string; value: string; content: string; year: number; mon: number; mday: number; hour: number; min: number; sec: number }, DateIntersectedValues?: { type: string; value: string; content: string; year: number; mon: number; mday: number; hour: number; min: number; sec: number }): AutoLinkCondition;
     /**
      * 删除单向关联和双向关联字段自动匹配条件
      *
      * @param Index 索引
+     * @example
+     * ```javascript
+     * function main() {
+     *   const group = Application.Sheets(1).FieldDescriptors(2).AutoLinkGroups(1)
+     *   const conditions = groups.Conditions
+     *   conditions.Delete(1)
+     *  }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/AutoLinkConditions/Methods/Delete
      */
     Delete(Index?: number): void;
     /**
@@ -249,6 +590,16 @@ declare namespace AirScript {
      *
      * @param Index 索引
      * @returns AutoLinkCondition
+     * @example
+     * ```javascript
+     * function main() {
+     *   const group = Application.Sheets(1).FieldDescriptors(2).AutoLinkGroups(1)
+     *   const condition = group.Conditions.Item(1)
+     *   console.log(condition)
+     *  }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/AutoLinkConditions/Methods/Item
      */
     Item(Index?: number): AutoLinkCondition;
   }
@@ -259,6 +610,17 @@ declare namespace AirScript {
   interface AutoLinkGroup {
     /**
      * 关联字段自动匹配条件集合
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const group = Application.Sheets(1).FieldDescriptors(2).AutoLinkGroups(1)
+     *   const Conditions = groups.Conditions
+     *   console.log(Conditions.Count)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/AutoLinkGroup/Properties/Conditions
      */
     Conditions: AutoLinkConditions;
   }
@@ -271,6 +633,16 @@ declare namespace AirScript {
     (Index?: number | string): AutoLinkGroup;
     /**
      * 关联字段自动匹配条件组的数量
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const autoLinkGroups = Applicaiton.Sheets(1).FieldDescriptors(2).AutoLinkGroups
+     *   const count = autoLinkGroups.Count
+     *  }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/AutoLinkGroups/Properties/Count
      */
     readonly Count: number;
 
@@ -278,12 +650,33 @@ declare namespace AirScript {
      * 增加关联字段匹配条件组
      *
      * @returns AutoLinkGroup
+     * @example
+     * ```javascript
+     * function main() {
+     *   const autoLinkGroups = Application.AutoLinkGroups()
+     *   const count = autoLinkGroups.Count
+     *   if (count === 0) {
+     *     const group = autoLinkGroups.Add()
+     *   }
+     *  }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/AutoLinkGroups/Methods/Add
      */
     Add(): AutoLinkGroup;
     /**
      * 删除关系字段自动匹配条件组
      *
      * @param Index 索引值
+     * @example
+     * ```javascript
+     * function main() {
+     *   const groups = Application.Sheets(1).FieldDescriptors(2).AutoLinkGroups
+     *   groups.Delete(1)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/AutoLinkGroups/Methods/Delete
      */
     Delete(Index?: any): void;
     /**
@@ -291,6 +684,18 @@ declare namespace AirScript {
      *
      * @param Index 索引值
      * @returns AutoLinkGroup
+     * @example
+     * ```javascript
+     * function main() {
+     *  const autoLinkGroups =  Application.Sheets(1).FieldDescriptors(2).AutoLinkGroups
+     *   const count = autoLinkGroups.Count
+     *   if (count > 1) {
+     *     const group = autoLinkGroups.Item(1)
+     *   }
+     *  }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/AutoLinkGroups/Methods/Item
      */
     Item(Index?: any): AutoLinkGroup;
   }
@@ -303,6 +708,15 @@ declare namespace AirScript {
      * 检查当前用户是否拥有编辑自动化任务的权限（内部调用 `OpenAPI.hasEditAutoTaskPermission()`）。
      *
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *     const hasPermission = Application.AutoTask.HasEditPermission();
+     *     console.log(hasPermission);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/AutoTask/Methods/HasEditPermission
      */
     HasEditPermission(): boolean;
     /**
@@ -312,6 +726,16 @@ declare namespace AirScript {
      * 2. 用户需具备编辑自动化任务权限（`HasEditPermission()`）；否则返回 `You don't have permission to open the automated process panel`。
      *
      * 校验通过后派发 `DB_AUTO_TASK` 自定义事件以打开面板。
+     *
+     * @example
+     * ```javascript
+     * async function main() {
+     *     const result = await Application.AutoTask.OpenPanel();
+     *     console.log(result.Code, result.Message);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/AutoTask/Methods/OpenPanel
      */
     OpenPanel(): any;
   }
@@ -322,19 +746,86 @@ declare namespace AirScript {
   interface AutomationField {
     /**
      * 自动任务字段的通知联系人字段
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const sheet = Application.Sheets(1)
+     *   const field = await sheet.FieldDescriptors(11)
+     *   const automation = await field.Automation
+     *   // 设置 自动化任务的属性
+     *   automation.Type = "DueDateNotifyContact"
+     *   automation.ContactField = sheet.FieldId("联系人")
+     *   // 更新字段
+     *   field.Apply()
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/AutomationField/Properties/ContactField
      */
     ContactField: string;
     /**
      * 当自动任务字段的类型为 DueDateNotifyContact，可设置指定触发时间通知联系人
      * 格式为当前日期 + 执行时间, 时间为当天经过的秒数
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const sheet = Application.Sheets(1)
+     *   const field = await sheet.FieldDescriptors(11)
+     *   const automation = await field.Automation
+     *   // 设置 自动化任务的属性
+     *   automation.Type = "DueDateNotifyContact"
+     *   automation.ExecuteTime = 3600
+     *   // 更新字段
+     *   field.Apply()
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/AutomationField/Properties/ExecuteTime
      */
     ExecuteTime: number;
     /**
      * 自动任务字段的触发字段，当Type为CheckedNotifyContact时，触发字段是复选框字段，当Type为DueDateNotifyContact时，触发字段为日期字段
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const sheet = Application.Sheets(1)
+     *   const field = await sheet.FieldDescriptors(11)
+     *   const automation = await field.Automation
+     *   // 设置 自动化任务的属性
+     *   automation.Type = "DueDateNotifyContact"
+     *   automation.TriggerField = sheet.FieldId("日期")
+     *   // 更新字段
+     *   field.Apply()
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/AutomationField/Properties/TriggerField
      */
     TriggerField: string;
     /**
      * 自动任务字段的类型，有三种类型，参考枚举值 DbAutomationPresetType ，分别为CheckedNotifyContact，UpdatedNotifyContact，DueDateNotifyContact
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const contactField = FieldDescriptor("Contact","联系人字段")
+     *     Sheets(1).FieldDescriptors.AddField(contactField)
+     *     const dateField = FieldDescriptor("Date","日期字段")
+     *     Sheets(1).FieldDescriptors.AddField(dateField)
+     *     const newField = FieldDescriptor("Automations","自动任务字段")
+     *     const automation = newField.Automation
+     *     automation.Type = "DueDateNotifyContact"
+     *     automation.TriggerField = dateField.Id
+     *     automation.ContactField = contactField.Id
+     *     automation.ExecuteTime = 3600
+     *     Sheets(1).FieldDescriptors.AddField(newField)
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/AutomationField/Properties/Type
      */
     Type: string;
   }
@@ -345,22 +836,81 @@ declare namespace AirScript {
   interface ButtonField {
     /**
      * 按钮字段的填充颜色
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *    const field = Application.Sheets("数据表").FieldDescriptors("@按钮")
+     *    const prop = field.Button
+     *    prop.BackgroundColor = "#1f00ff"
+     *    field.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/ButtonField/Properties/BackgroundColor
      */
     BackgroundColor: string;
     /**
      * 按钮字段的图标,可使用枚举值[DbButtonIcon](/app-integration-dev/guide/dbsheet/Api/Api/Enum/DbButtonIcon)
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *    const field = Application.Sheets("数据表").FieldDescriptors("@按钮")
+     *    field.Button.Icon = Enum.DbButtonIcon.CalendarCheckIn
+     *    field.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/ButtonField/Properties/Icon
      */
     Icon: string;
     /**
      * 点击按钮字段后的提示文本
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *    const field = Application.Sheets("数据表").FieldDescriptors("@按钮")
+     *    const prop = field.Button
+     *    prop.SuccessText = "点击按钮成功"
+     *    field.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/ButtonField/Properties/SuccessText
      */
     SuccessText: string;
     /**
      * 按钮字段 按钮显示的文本
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *    const field = Application.Sheets("数据表").FieldDescriptors("@按钮")
+     *    const prop = field.Button
+     *    prop.Text = "Click"
+     *    field.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/ButtonField/Properties/Text
      */
     Text: string;
     /**
      * 按钮字段 按钮显示的文本颜色
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *    const field = Application.Sheets("数据表").FieldDescriptors("@按钮")
+     *    const prop = field.Button
+     *    prop.TextColor = "#ff00ff"
+     *    field.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/ButtonField/Properties/TextColor
      */
     TextColor: string;
   }
@@ -371,26 +921,92 @@ declare namespace AirScript {
   interface CalendarView extends View {
     /**
      * 开始日期字段，值为字段 ID.
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const view = Application.Sheets(1).Views(1);
+     *     console.log(view.BeginField);
+     *     view.BeginField = 's';
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/CalendarView/Properties/BeginField
      */
     BeginField: string;
     /**
      * 结束日期字段，值为字段 ID.
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const view = Application.Sheets(1).Views(1);
+     *     console.log(view.EndField);
+     *     view.EndField = 's';
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/CalendarView/Properties/EndField
      */
     EndField: string;
     /**
      * 事件线颜色，值为Hex格式的RGB颜色值，如：#FF0000。
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const view = Application.Sheets(1).Views(1);
+     *     console.log(view.TimelineColor);
+     *     view.TimelineColor = '#97E4E4';
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/CalendarView/Properties/TimelineColor
      */
     TimelineColor: string;
     /**
      * 事件线颜色跟随字段，值为字段Id。
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const view = Application.Sheets(1).Views(1);
+     *     console.log(view.TimelineColorFollowField);
+     *     view.TimelineColorFollowField = 'E';
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/CalendarView/Properties/TimelineColorFollowField
      */
     TimelineColorFollowField: string;
     /**
      * 事件线颜色类型，值为'Custom'(自定义颜色)或'Follow'(跟随单选项字段)
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const view = Application.Sheets(1).Views(1);
+     *     console.log(view.TimelineColorType);
+     *     view.TimelineColor = 'Follow';
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/CalendarView/Properties/TimelineColorType
      */
     TimelineColorType: string;
     /**
      * 日历视图设置标题字段，值为字段 ID.
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const CalendarView = Application.Sheets(1).Views(1);
+     *     console.log(CalendarView.TitleField);
+     *     CalendarView.TitleField = 's';
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/CalendarView/Properties/TitleField
      */
     TitleField: string;
   }
@@ -401,6 +1017,8 @@ declare namespace AirScript {
   interface CardViewUI {
     /**
      * 卡片视图的模式，注意：设置值时为以下之一：'Grid','Card'
+     *
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/CardViewUI/Properties/ViewMode
      */
     ViewMode: string;
   }
@@ -412,14 +1030,66 @@ declare namespace AirScript {
   interface CascadeField {
     /**
      * 级联字段的选项，最多可以设置4级
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const fieldDescriptor = Application.Sheets("数据表").FieldDescriptors("@级联选项")
+     *   const prop = fieldDescriptor.Cascade
+     *   const allCascade =  CascadeOptions();
+     *   const o1 = allCascade.Add("级联1")
+     *   o1.Children.Add("级联1_1")
+     *   o1.Children.Add("级联1_2")
+     *   const o2 = allCascade.Add("级联2")
+     *   o2.Children.Add("级联2_1")
+     *   o2.Children.Add("级联2_2")
+     *   const o3 = allCascade.Add("级联3")
+     *   o3.Children.Add("级联3_1")
+     *   o3.Children.Add("级联3_2")
+     *   const o4 = allCascade.Add("级联4")
+     *   o4.Children.Add("级联4_1")
+     *   const o4_2 = o4.Children.Add("级联4_2")
+     *   o4_2.Children.Add("级联4_2_1")
+     *   o4_2.Children.Add("级联4_2_2")
+     *
+     *   prop.AllCascadeOption = allCascade
+     *   fieldDescriptor.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/CascadeField/Properties/AllCascadeOption
      */
     AllCascadeOption: CascadeOptions;
     /**
      * 级联字段是否显示完整的选择路径
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *    const fieldDescriptor = Application.Sheets("数据表").FieldDescriptors("@级联选项")
+     *    const prop = fieldDescriptor.Cascade
+     *    prop.IsDisplayAllLevel = true
+     *    fieldDescriptor.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/CascadeField/Properties/IsDisplayAllLevel
      */
     IsDisplayAllLevel: boolean;
     /**
      * 级联选项各级选项的标题，最多可以设置四级标题
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const fieldDescriptor = Application.Sheets(1).FieldDescriptors(2)
+     *   const prop = await fieldDescriptor.Cascade
+     *   prop.Title = ["第一级标题","第二级标题","第三级标题"]
+     *   fieldDescriptor.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/CascadeField/Properties/Title
      */
     Title: any[];
   }
@@ -430,14 +1100,48 @@ declare namespace AirScript {
   interface CascadeOption {
     /**
      * 级联字段选项的子选项集合
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *  const options = CascadeOptions();
+     *  options.Add("test1")
+     *  options.Add("test2")
+     *  const desc = FieldDescriptor("Cascade","级联字段")
+     *  desc.AllCascadeOption = options
+     *  Application.Sheets(1).FieldDescriptors.AddField(desc, 1)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/CascadeOption/Properties/Children
      */
     Children: CascadeOptions;
     /**
      * 返回级联字段选项的Id
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const cascadeOptions = Application.Sheets(1).FieldDescriptors(2).AllCascadeOption
+     *   console.log(cascadeOptions.Item(1).Id)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/CascadeOption/Properties/Id
      */
     Id: string;
     /**
      * 返回级联字段选项的值
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const cascadeOptions = Application.Sheets(1).FieldDescriptors(2).AllCascadeOption
+     *   console.log(cascadeOptions.Item(1).Value)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/CascadeOption/Properties/Value
      */
     Value: string;
   }
@@ -450,6 +1154,21 @@ declare namespace AirScript {
     (Index?: number | string): CascadeOption;
     /**
      * 级联字段的选项数
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const descript = Application.Sheets(1).FieldDescriptors(2)
+     *   const CascadeOption = descript.AllCascadeOption
+     *   const count = CascadeOption.Count
+     *   if (count === 0) {
+     *     CascadeOption.Add("ADD 1")
+     *     descript.Apply()
+     *   }
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/CascadeOptions/Properties/Count
      */
     Count: number;
 
@@ -458,6 +1177,19 @@ declare namespace AirScript {
      *
      * @param Value 选项值
      * @returns CascadeOption
+     * @example
+     * ```javascript
+     * function main() {
+     *  const options = CascadeOptions();
+     *  options.Add("test1")
+     *  options.Add("test2")
+     *  const desc = FieldDescriptor("Cascade","级联字段")
+     *  desc.AllCascadeOption = options
+     *  Application.Sheets(1).FieldDescriptors.AddField(desc, 1)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/CascadeOptions/Methods/Add
      */
     Add(Value?: string): CascadeOption;
     /**
@@ -465,6 +1197,20 @@ declare namespace AirScript {
      *
      * @param Index 选项索引从1开始
      * @returns CascadeOption
+     * @example
+     * ```javascript
+     * function main() {
+     *  const options = CascadeOptions();
+     *  options.Add("test1")
+     *  options.Add("test2")
+     *  const desc = FieldDescriptor("Cascade","级联字段")
+     *  desc.AllCascadeOption = options
+     *  Application.Sheets(1).FieldDescriptors.AddField(desc, 1)
+     *  console.log(options.Item(1).Value)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/CascadeOptions/Methods/Item
      */
     Item(Index?: number): CascadeOption;
   }
@@ -475,14 +1221,49 @@ declare namespace AirScript {
   interface Chart {
     /**
      * 返回图表的Id
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const chart = Application.Sheets(1).Charts.Item(1)
+     *     // 返回Id
+     *     console.log(chart.Id)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Chart/Properties/Id
      */
     readonly Id: string;
     /**
      * 返回图表的名称
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const chart = Application.Sheets(1).Charts.Item(1)
+     *     // 返回Id
+     *     console.log(chart.Name)
+     *     chart.Name = '图1'
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Chart/Properties/Name
      */
     Name: string;
     /**
      * 返回图表的类型，切换图表类型
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const chart = Application.Sheets(1).Charts.Item(1)
+     *     // 返回Id
+     *     console.log(chart.Type)
+     *     chart.Type = 'Value'
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Chart/Properties/Type
      */
     Type: string;
 
@@ -490,12 +1271,30 @@ declare namespace AirScript {
      * 复制图表
      *
      * @returns ApiResult
+     * @example
+     * ```javascript
+     * function main() {
+     *     const chart = Application.Sheets(1).Charts.Item(1)
+     *     chart.Copy()
+     *  }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Chart/Methods/Copy
      */
     Copy(): ApiResult;
     /**
      * 删除图表
      *
      * @returns ApiResult
+     * @example
+     * ```javascript
+     * function main() {
+     *     const chart = Application.Sheets(1).Charts.Item(1)
+     *     chart.Delete()
+     *  }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Chart/Methods/Delete
      */
     Delete(): ApiResult;
   }
@@ -508,6 +1307,17 @@ declare namespace AirScript {
     (Index?: number | string): Chart;
     /**
      * 返回图表的数量
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const count = Application.Sheets(1).Charts.Count
+     *     // 图表个数
+     *     console.log(count)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Charts/Properties/Count
      */
     readonly Count: number;
 
@@ -517,6 +1327,15 @@ declare namespace AirScript {
      * @param Type 图表类型:BasicBar、BasicLine、HorizBar、BasicPie、Value、BarLine
      * @param Name 图表名称
      * @returns Chart
+     * @example
+     * ```javascript
+     * function main() {
+     *     const sheet = Application.Sheets.Item(1)
+     *     const chart = sheet.Charts.Add('BasicBar','图表1')
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Charts/Methods/Add
      */
     Add(Type: string, Name?: string): Chart;
     /**
@@ -524,6 +1343,15 @@ declare namespace AirScript {
      *
      * @param Index 索引从 1 开始
      * @returns Chart
+     * @example
+     * ```javascript
+     * function main() {
+     *     const sheet = Application.Sheets.Item(1)
+     *     const chart = await sheet.Charts.Item(1)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Charts/Methods/Item
      */
     Item(Index: number): Chart;
   }
@@ -542,6 +1370,14 @@ declare namespace AirScript {
      * @param OnOK 点击确定回调
      * @param OnCancel 点击取消回调
      * @param ShouldConfirmClose 为 true 时根据 OnOK 返回值决定是否关闭
+     * @example
+     * ```javascript
+     * function main() {
+     *     // 仅浏览器环境
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Components/Methods/ShowConfirm
      */
     ShowConfirm(Title: string, Text: any, OnOK?: (...args: any[]) => any, OnCancel?: (...args: any[]) => any, ShouldConfirmClose?: boolean): any;
     /**
@@ -551,6 +1387,14 @@ declare namespace AirScript {
      * @param Text 提示文案
      * @param Duration 展示时长（毫秒）
      * @param Btn 可选按钮：{ text, onClick }
+     * @example
+     * ```javascript
+     * function main() {
+     *     // 仅浏览器环境
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Components/Methods/ShowToast
      */
     ShowToast(Type: string, Text: string, Duration?: number, Btn?: any): any;
   }
@@ -561,10 +1405,34 @@ declare namespace AirScript {
   interface ContactField {
     /**
      * 字段类型为联系人时，通过此属性可以设置是否允许向单元格插入多个联系人
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const fieldDescriptor = Application.Sheets("数据表").FieldDescriptors("@联系人")
+     *     const prop = fieldDescriptor.Contact
+     *     prop.IsSupportMulti = true
+     *     fieldDescriptor.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/ContactField/Properties/IsSupportMulti
      */
     IsSupportMulti: boolean;
     /**
      * 字段类型为联系人时，通过此属性可以设置是否允许向新插入的联系人发送通知
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const fieldDescriptor = Application.Sheets("数据表").FieldDescriptors("@联系人")
+     *     const prop = fieldDescriptor.Contact
+     *     prop.IsSupportNotice = true
+     *     fieldDescriptor.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/ContactField/Properties/IsSupportNotice
      */
     IsSupportNotice: boolean;
   }
@@ -579,6 +1447,24 @@ declare namespace AirScript {
      * |---|---|
      * |columnNumber|列号，从1开始|
      * |fieldId|字段id|
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *      // 添加一个筛选条件
+     *     const filters = Application.Sheets(1).Views(1).Filters;
+     *     const criteria = Application.Criteria(1, 'Equals', ['1'])
+     *     const filter = filters.Add(criteria);
+     *
+     *     // 读取添加的筛选条件规则
+     *     const criteria = Application.Sheets(1).Views(1).Filters(1).Criteria
+     *     console.log(criteria.Op) // "Equals"
+     *     console.log(criteria.Field) // 1
+     *     console.log(criteria.Value) // [{type: 'Text', value: '1'}]
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Criteria/Properties/Field
      */
     Field: any;
     /**
@@ -600,6 +1486,24 @@ declare namespace AirScript {
      * |Intersected|指定值|
      * |Empty|为空|
      * |NotEmpty|不为空|
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     // 添加一个筛选条件
+     *     const filters = Application.Sheets(1).Views(1).Filters;
+     *     const criteria = Application.Criteria(1, 'Equals', ['1'])
+     *     const filter = filters.Add(criteria);
+     *
+     *     // 读取添加的筛选条件规则
+     *     const criteria = Application.Sheets(1).Views(1).Filters(1).Criteria
+     *     console.log(criteria.Op) // "Equals"
+     *     console.log(criteria.Field) // 1
+     *     console.log(criteria.Value) // [{type: 'Text', value: '1'}]
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Criteria/Properties/Op
      */
     Op: any;
     /**
@@ -643,6 +1547,24 @@ declare namespace AirScript {
      * // value是一个结构体，指定type为 SelectItem, value 为选项的ID
      * const dateValue = {"type":"SelectItem", value:"B"}
      * ```
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     // 添加一个筛选条件
+     *     const filters = Application.Sheets(1).Views(1).Filters;
+     *     const criteria = Application.Criteria(1, 'Equals', ['1'])
+     *     const filter = filters.Add(criteria);
+     *
+     *     // 读取添加的筛选条件规则
+     *     const criteria = Application.Sheets(1).Views(1).Filters(1).Criteria
+     *     console.log(criteria.Op) // "Equals"
+     *     console.log(criteria.Field) // 1
+     *     console.log(criteria.Value) // [{type: 'Text', value: '1'}]
+     *  }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Criteria/Properties/Value
      */
     Value: any;
   }
@@ -657,6 +1579,8 @@ declare namespace AirScript {
   interface DBCellValue {
     /**
      * 返回固定字符串 `DBCellValue`，用于标识该包装对象类型。
+     *
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/DBCellValue/Properties/ClassName
      */
     ClassName: string;
     /**
@@ -689,22 +1613,32 @@ declare namespace AirScript {
      * ```
      * DBCellValue([{fileData: url/base64, fileName: ""}])
      * ```
+     *
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/DBCellValue/Properties/Value
      */
     Value: any;
     /**
      * 当内部值为超链接对象且包含 `address` 字段时，返回链接 URL；否则返回 `null`。
+     *
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/DBCellValue/Properties/address
      */
     address: string | null;
     /**
      * 当内部值为地址等对象且包含 `detail` 字段时，返回详细地址；否则返回 `null`。
+     *
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/DBCellValue/Properties/detail
      */
     detail: string | null;
     /**
      * 当内部值为超链接对象且包含 `display` 字段时，返回显示文本；否则返回 `null`。
+     *
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/DBCellValue/Properties/display
      */
     display: string | null;
     /**
      * 当内部值为地址或级联等对象且包含 `districts` 字段时，返回省市区（或级联层级）数组；否则返回 `null`。
+     *
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/DBCellValue/Properties/districts
      */
     districts: any[];
 
@@ -712,6 +1646,15 @@ declare namespace AirScript {
      * 将内部包装的数据序列化为 JSON 字符串，格式为 `{"Value":...}`。
      *
      * @returns string
+     * @example
+     * ```javascript
+     * function main() {
+     *     const cell = Application.DBCellValue({ address: "wps.cn", display: "wps" });
+     *     console.log(cell.toString());
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/DBCellValue/Methods/toString
      */
     toString(): string;
   }
@@ -727,6 +1670,15 @@ declare namespace AirScript {
      * @param OfficeType 在线表格文件的类型：d 代表多维表格，k 代表智能表格
      * @param SheetIds 在线表格文件的 stId 数组
      * @returns Sheet[]
+     * @example
+     * ```javascript
+     * function main() {
+     *   const syncSheets = Application.DataSource.CreateDBSyncSheets('100127684526', 'd', [1])
+     *   console.log(syncSheets)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/DataSource/Methods/CreateDBSyncSheets
      */
     CreateDBSyncSheets(FileId: string, OfficeType: 'd' | 'k', SheetIds: number[]): Sheet[];
     /**
@@ -734,6 +1686,17 @@ declare namespace AirScript {
      *
      * @param SummarySourceConfigs 数据源配置对象
      * @returns SummarySheet
+     * @example
+     * ```javascript
+     * function main() {
+     *   // 通过SummarySourceConfigs对象构造符合规范的数据源配置对象，来创建合并表
+     *   const configs = Application.SummarySourceConfigs;
+     *   configs.Add('100138603654', [1])
+     *   const sheet = Application.DataSource.CreateSummarySheet(configs)
+     *   console.log(sheet)
+     * }
+     * main()
+     * ```
      */
     CreateSummarySheet(SummarySourceConfigs: SummarySourceConfigs): SummarySheet;
     /**
@@ -743,6 +1706,14 @@ declare namespace AirScript {
      * @param OfficeType 在线表格文件的类型：d 代表多维表格，k 代表智能表格
      * @param SheetIds 在线表格文件的 stId 数组
      * @returns SyncDBSheet[]
+     * @example
+     * ```javascript
+     * function main() {
+     *   const syncSheets = Application.DataSource.CreateSyncDBSheets('100127684526', 'd', [1])
+     *   console.log(syncSheets)
+     * }
+     * main()
+     * ```
      */
     CreateSyncDBSheets(FileId: string, OfficeType: 'd' | 'k', SheetIds: number[]): SyncDBSheet[];
     /**
@@ -750,6 +1721,19 @@ declare namespace AirScript {
      *
      * @param FileId 在线表格文件的 fileId
      * @returns Sheet[]
+     * @example
+     * ```javascript
+     * function main() {
+     *     try {
+     *         const sheets = Application.DataSource.ImportFromCloud('100127684526')
+     *         console.log(sheets)
+     *     } catch (error) {
+     *         console.log('导入数据表失败', error.message)
+     *     }
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/DataSource/Methods/ImportFromCloud
      */
     ImportFromCloud(FileId: string): Sheet[];
     /**
@@ -757,6 +1741,19 @@ declare namespace AirScript {
      *
      * @param File 本地表格文件对象
      * @returns Sheet[]
+     * @example
+     * ```javascript
+     * function main() {
+     *   try {
+     *     const sheets = Application.DataSource.ImportFromLocal(file)
+     *     console.log(sheets)
+     *   } catch (error) {
+     *     console.log('导入数据表失败', error.message)
+     *   }
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/DataSource/Methods/ImportFromLocal
      */
     ImportFromLocal(File: any): Sheet[];
   }
@@ -767,14 +1764,50 @@ declare namespace AirScript {
   interface DateField {
     /**
      * 只对日期字段有效，是否在选择日期的面板上标识节假日
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const fieldDescriptor = Application.Sheets("数据表").FieldDescriptors("@日期")
+     *   const prop = fieldDescriptor.Date
+     *   prop.IsShowHoliday = true
+     *   fieldDescriptor.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/DateField/Properties/IsShowHoliday
      */
     IsShowHoliday: boolean;
     /**
      * 字段类型为 日期 时，通过此属性可以设置是否显示时间
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const fieldDescriptor = Application.Sheets("数据表").FieldDescriptors("@日期")
+     *   const prop = fieldDescriptor.Date
+     *   prop.IsShowTime = true
+     *   fieldDescriptor.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/DateField/Properties/IsShowTime
      */
     IsShowTime: boolean;
     /**
      * 字段类型为 日期 时，通过此属性设置是否显示星期
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const fieldDescriptor = Application.Sheets("数据表").FieldDescriptors("@日期")
+     *   const prop = fieldDescriptor.Date
+     *   prop.IsShowWeek = true
+     *   fieldDescriptor.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/DateField/Properties/IsShowWeek
      */
     IsShowWeek: boolean;
   }
@@ -785,10 +1818,38 @@ declare namespace AirScript {
   interface DbComment {
     /**
      * 返回评论的Id
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *    const recordComment = ActiveView.RecordComments.Item(1)
+     *    const count = recordComment.Count
+     *    for (let i = 1; i <= count; i++) { 
+     *     const comment = recordComment.Item(i)
+     *     console.log(comment.Id)
+     *    }
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/DbComment/Properties/Id
      */
     readonly Id: string;
     /**
      * 返回评论的文本
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *    const recordComment = ActiveView.RecordComments.Item(1)
+     *    const count = recordComment.Count
+     *    for (let i = 1; i <= count; i++) { 
+     *     const comment = recordComment.Item(i)
+     *     console.log(comment.Text)
+     *    }
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/DbComment/Properties/Text
      */
     readonly Text: string;
 
@@ -796,6 +1857,19 @@ declare namespace AirScript {
      * 删除记录
      *
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *    const recordComment = ActiveView.RecordComments(1)
+     *    const count = recordComment.Count
+     *    for (let i = 1; i <= count; i++) { 
+     *     const comment = recordComment.Item(i)
+     *     comment.Delete()
+     *    }
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/DbComment/Methods/Delete
      */
     Delete(): boolean;
   }
@@ -806,26 +1880,91 @@ declare namespace AirScript {
   interface Field {
     /**
      * 字段的数据定义
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const field = Application.Sheets(1).Views(1).Fields(1);
+     *     const desc = field.FieldDescriptor;
+     *     console.log(desc.Name);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Field/Properties/FieldDescriptor
      */
     readonly FieldDescriptor: FieldDescriptor;
     /**
      * 视图字段的Id
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *  const fields = Application.Sheets(1).Views(1).Fields
+     *  console.log(fields.Item(1).Id)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Field/Properties/Id
      */
     readonly Id: string;
     /**
      * 视图字段的Name
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *  const field = Application.Sheets(1).Views(1).Fields(1)
+     *  const name = field.Name
+     *  console.log(name)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Field/Properties/Name
      */
     readonly Name: string;
     /**
      * 视图字段的Type
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *  const field = Application.Sheets(1).Views(1).Fields(1)
+     *  const type = field.Type
+     *  console.log(type)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Field/Properties/Type
      */
     readonly Type: string;
     /**
      * 视图的字段是否可见
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *  const field = Application.Sheets(1).Views(1).Fields(1)
+     *  const visible = field.Visible
+     *  console.log(visible)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Field/Properties/Visible
      */
     Visible: boolean;
     /**
      * 视图字段的Width
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *  const field = Application.Sheets(1).Views(1).Fields(1)
+     *  const width = field.Width
+     *  console.log(width)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Field/Properties/Width
      */
     readonly Width: string;
 
@@ -835,6 +1974,15 @@ declare namespace AirScript {
      * @param Before 在Before之前插入复制字段
      * @param After 在After之后插入复制字段
      * @returns this
+     * @example
+     * ```javascript
+     * function main() {
+     *  const field = Application.Sheets(1).Views(1).Fields(1)
+     *  field.Copy(3)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Field/Methods/Copy
      */
     Copy(Before?: string | number, After?: string | number): this;
     /**
@@ -843,6 +1991,15 @@ declare namespace AirScript {
      * @param Before 移动到Before字段之前
      * @param After 移动到After字段之后
      * @returns ApiResult
+     * @example
+     * ```javascript
+     * function main() {
+     *  const field = Application.Sheets(1).Views(1).Fields(1)
+     *  field.Move(3)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Field/Methods/Move
      */
     Move(Before?: string | number, After?: string | number): ApiResult;
   }
@@ -881,48 +2038,186 @@ declare namespace AirScript {
      * 设置或读取 关联字段的关系组集合，如果有多个关系组，则这些关系组是或的关系
      *
      * ![alt text](https://cloudcdn.qwps.cn/open/_img/d3038f506e.png)
+     *
+     * @example
+     * ```javascript
+     * function main(){
+     *   const sheet = Application.Sheets(1)
+     *   const fieldId = sheet.FieldId("状态")
+     *   // 获取关联字段
+     *   const linkField = sheet.FieldDescriptors("@关联")
+     *   const prop = linkField.Link
+     *   const linkGroups = Application.AutoLinkGroups()
+     *   const conditions = linkGroups.Conditions
+     *   // 关联的数据表2
+     *   const linkSheet = Application.Sheets(2)
+     *   // 关联数据表2的字段
+     *   const linkSheet_fieldId = linkSheet.FieldId("状态")
+     *   // 生成匹配条件
+     *   conditions.Add(linkSheet_fieldId, [fieldId], "Field", "Equals")
+     *   // 设置关联字段的匹配条件
+     *   prop.AutoLinkGroups = linkGroups
+     *   // 设置自动关联
+     *   prop.IsAutoLink = true
+     *   linkField.Apply()
+     * }
+     * main()
+     * ```
      */
     AutoLinkGroups: AutoLinkGroups;
     /**
      * 设置默认值
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *    const field = Application.Sheets(1).FieldDescriptors(2)
+     *    field.DefaultVal = "1"
+     *    field.Apply()
+     *    console.log(field.DefaultVal)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/FieldDescriptor/Properties/DefaultVal
      */
     DefaultVal: string;
     /**
      * 设置默认值类型
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *    const field = Application.Sheets(1).FieldDescriptors(2)
+     *    field.DefaultValType = Enum.DbFieldDefaultValueType.Normal
+     *    field.Apply()
+     *    console.log(field.DefaultValType)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/FieldDescriptor/Properties/DefaultValType
      */
     DefaultValType: DbFieldDefaultValueType;
     /**
      * 字段的描述信息
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const description = Application.Sheets(1).FieldDescriptors(2).Description
+     *   console.log(description)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/FieldDescriptor/Properties/Description
      */
     Description: string;
     /**
      * 公式字段 返回公式的文本表达式
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const fieldDescriptor = Application.Sheets("数据表").FieldDescriptors("@公式")
+     *   const prop = fieldDescriptor.Formula
+     *   prop.Formula = '=[@日期]+[@日期]'
+     *   fieldDescriptor.Apply()
+     * }
+     * main()
+     * ```
      */
     Formula: string;
     /**
      * 返回字段的ID，用于标识字段
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *    const field = Application.Sheets(1).FieldDescriptors(2)
+     *    console.log(field.Id)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/FieldDescriptor/Properties/Id
      */
     readonly Id: any;
     /**
      * 标记字段是否同步字段
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const field = Application.Sheets(1).FieldDescriptors(2)
+     *   console.log(field.SyncField) 
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/FieldDescriptor/Properties/IsSyncField
      */
     readonly IsSyncField: boolean;
     /**
      * 是否唯一值，禁止重复录入
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const field = Application.Sheets(1).FieldDescriptors(2)
+     *   console.log(field.ValueUnique)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/FieldDescriptor/Properties/IsValueUnique
      */
     IsValueUnique: boolean;
     /**
      * 设置或读取单向关联或双向关联字段的关联表格的Id
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const sheet = Application.Sheets(1)
+     *     const linkField = Application.FieldDescriptor("OneWayLink","单向关联")
+     *     const prop = linkField.Link
+     *     prop.LinkSheet = sheet.StId
+     *     prop.IsAutoLink = false
+     *     sheet.FieldDescriptors.AddField(linkField)
+     * }
+     * main()
+     * ```
      */
     LinkSheet: number;
     /**
      * 设置或读取单向关联或双向关联字段的关联视图的id
      *
      * ![alt text](https://cloudcdn.qwps.cn/open/_img/750d9990de.png)
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const field = Application.Sheets(1).FieldDescriptors(2)
+     *     const prop = field.Link
+     *     prop.LinkView = ActiveView.Id
+     *     field.Apply()
+     *     console.log(prop.LinkView)
+     * }
+     * main()
+     * ```
      */
     LinkView: string;
     /**
      * 字段名称
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const field = Application.Sheets(1).FieldDescriptors(2)
+     *   field.Name = "字段名"
+     *   field.Apply()
+     *
+     *   console.log(await field.Name)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/FieldDescriptor/Properties/Name
      */
     Name: string;
     /**
@@ -971,18 +2266,59 @@ declare namespace AirScript {
      * | 显示结果          | 内建格式          |
      * | ----------------- | ----------------- |
      * | 2023/04/18 10：09 | "yyyy/mm/dd h:mm" |
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const field = Application.Sheets(1).FieldDescriptors(2);
+     *     field.NumberFormat = '0.0000%';
+     *     field.Apply();
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/FieldDescriptor/Properties/NumberFormat
      */
     NumberFormat: string;
     /**
      * 级联选项各级选项的标题，最多可以设置四级标题
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const fieldDescriptor = Application.Sheets(1).FieldDescriptors(2)
+     *   const prop = await fieldDescriptor.Cascade
+     *   prop.Title = ["第一级标题","第二级标题","第三级标题"]
+     *   fieldDescriptor.Apply()
+     * }
+     * main()
+     * ```
      */
     Title: any[];
     /**
      * 返回当前字段类型
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *    const field = Application.Sheets(1).FieldDescriptors(2)
+     *    console.log(field.Type)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/FieldDescriptor/Properties/Type
      */
     Type: DbSheetFieldType;
     /**
      * 是否唯一值，禁止重复录入
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const field = Application.Sheets(1).FieldDescriptors(2)
+     *   console.log(field.ValueUnique)
+     * }
+     * main()
+     * ```
      */
     ValueUnique: boolean;
 
@@ -990,12 +2326,35 @@ declare namespace AirScript {
      * 修改属性后调用Apply()方法使修改生效
      *
      * @returns ApiResult
+     * @example
+     * ```javascript
+     * function main() {
+     *     const app = Application;
+     *     const fieldId = app.Sheets(1).FieldId("修改前字段名")
+     *     const fieldDescriptor = app.Sheets(1).FieldDescriptors(fieldId)
+     *     fieldDescriptor.Name = "修改字段名"
+     *     fieldDescriptor.Apply()
+     *     console.log(fieldDescriptor.Name)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/FieldDescriptor/Methods/Apply
      */
     Apply(): ApiResult;
     /**
      * 删除字段
      *
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *    const app = Application;
+     *    const field = Application.Sheets(1).FieldDescriptors(2)
+     *    field.Delete()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/FieldDescriptor/Methods/Delete
      */
     Delete(RemoveReversedLink?: boolean): boolean;
 
@@ -1003,12 +2362,46 @@ declare namespace AirScript {
      * 为 FieldDescriptor 添加 Delete 事件,当删除 FieldDescriptor 时触发。注意在脚本编辑器中使用时，脚本运行结束就会退出运行，这时可能回调无法被正常触发
      *
      * @param callback 事件回调，data 为事件返回数据
+     * @example
+     * ```javascript
+     * function main() {
+     *     const field = Application.Sheets(1).FieldDescriptors(2);
+     *     let eventContext;
+     *     eventContext = field.OnDelete(data => {
+     *         console.log(data);
+     *         // 取消事件监听
+     *         eventContext.Destroy();
+     *     });
+     *     field.Delete();
+     *     field.Delete();
+     *     //这里会执行OnDelete的回调
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/FieldDescriptor/Events/OnDelete
      */
     OnDelete(callback: (data: FieldDescriptorOnDeleteEventData) => void): EventContext;
     /**
      * 为 FieldDescriptor 添加 Update 事件,当更新 FieldDescriptor 时触发。注意在脚本编辑器中使用时，脚本运行结束就会退出运行，这时可能回调无法被正常触发
      *
      * @param callback 事件回调，data 为事件返回数据
+     * @example
+     * ```javascript
+     * function main() {
+     *     const fieldDescriptor = Application.Sheets(1).FieldDescriptors(1);
+     *     let eventContext
+     *     eventContext = fieldDescriptor.OnUpdate(data => {
+     *         console.log(data);
+     *         // 取消事件监听
+     *         eventContext.Destroy()
+     *     });
+     *     fieldDescriptor.Name = '修改字段名';
+     *     fieldDescriptor.Apply();
+     *     //这里会执行OnUpdate的回调
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/FieldDescriptor/Events/OnUpdate
      */
     OnUpdate(callback: (data: FieldDescriptor) => void): EventContext;
   }
@@ -1021,6 +2414,15 @@ declare namespace AirScript {
     (Index?: number | string): FieldDescriptor;
     /**
      * 字段描述的个数
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const count = Application.Sheets(1).FieldDescriptors.Count
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/FieldDescriptors/Properties/Count
      */
     Count: number;
 
@@ -1030,6 +2432,16 @@ declare namespace AirScript {
      * @param FieldDescriptor 字段属性
      * @param Index Index为string时表示字段ID，number时表示字段索引，插入位置，未指定时插入到末尾
      * @returns ApiResult
+     * @example
+     * ```javascript
+     * function main() {
+     *   const desc = FieldDescriptor("Rating","等级字段")
+     *   desc.MaxRating = 2
+     *   await Application.Sheets(1).FieldDescriptors.AddField(desc, 1)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/FieldDescriptors/Methods/AddField
      */
     AddField(FieldDescriptor: FieldDescriptor, Index?: string | number): ApiResult;
     /**
@@ -1038,6 +2450,15 @@ declare namespace AirScript {
      * @param FieldId 字段Id,可以通过字段名获取Sheet.FieldId(fieldName)
      * @param RemoveReversedLink 是否同时删除引用
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *   const fieldId = Application.Sheets(1).FieldId("数字")
+     *   app.Sheets(1).FieldDescriptors.Delete(fieldId)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/FieldDescriptors/Methods/Delete
      */
     Delete(FieldId: string, RemoveReversedLink?: boolean): boolean;
     /**
@@ -1046,6 +2467,15 @@ declare namespace AirScript {
      * @param Type FieldDescriptor的类型
      * @param Name FieldDescriptor的名称
      * @returns FieldDescriptor
+     * @example
+     * ```javascript
+     * function main() {
+     *   const fieldDescs = Application.Sheets(1).FieldDescriptors
+     *   const fieldDesc = fieldDescs.FieldDescriptor('Phone','电话')
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/FieldDescriptors/Methods/FieldDescriptor
      */
     FieldDescriptor(Type: any, Name: string): FieldDescriptor;
     /**
@@ -1053,6 +2483,15 @@ declare namespace AirScript {
      *
      * @param Index Index为number类型时表示当前字段的索引，Index为字段串类型的时候表示字段的Id或@字段名称
      * @returns FieldDescriptor
+     * @example
+     * ```javascript
+     * function main() {
+     *   const field = Application.Sheets(1).FieldDescriptors(2)
+     *   console.log(await field.Name)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/FieldDescriptors/Methods/Item
      */
     Item(Index?: string | number): FieldDescriptor;
 
@@ -1060,6 +2499,23 @@ declare namespace AirScript {
      * 为 FieldDescriptors 添加 Create 事件,当添加 FieldDescriptors 时触发。注意在脚本编辑器中使用时，脚本运行结束就会退出运行，这时可能回调无法被正常触发
      *
      * @param callback 事件回调，data 为事件返回数据
+     * @example
+     * ```javascript
+     * function main() {
+     *     let eventContext;
+     *     eventContext = Application.Sheets(1).FieldDescriptors.OnCreate(data => {
+     *         console.log(data);
+     *         // 取消事件监听
+     *         eventContext.Destroy();
+     *     });
+     *     const desc = Application.FieldDescriptor('Rating', '等级字段');
+     *     desc.MaxRating = 2;
+     *     Application.Sheets(1).FieldDescriptors.AddField(desc, 1);
+     *     //这里会执行OnCreate的回调
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/FieldDescriptors/Events/OnCreate
      */
     OnCreate(callback: (data: FieldDescriptor) => void): EventContext;
   }
@@ -1072,6 +2528,15 @@ declare namespace AirScript {
     (Index?: number | string): Field;
     /**
      * 字段描述的数量
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const count = Application.Sheets(1).FieldDescriptors.Count
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Fields/Properties/Count
      */
     Count: number;
 
@@ -1080,6 +2545,15 @@ declare namespace AirScript {
      *
      * @param Index Index为number类型时表示当前字段的索引，Index为字段串类型的时候, 如果是以@开头则表示是字段名，否则表示字段的Id
      * @returns Field
+     * @example
+     * ```javascript
+     * function main() {
+     *   const field = Application.Sheets(1).Views(1).Fields.Item(1)
+     *   console.log(field)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Fields/Methods/Item
      */
     Item(Index?: string | number): Field;
   }
@@ -1090,14 +2564,44 @@ declare namespace AirScript {
   interface Filter {
     /**
      * 获取或者设置单条筛选记录的条件
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const criteria = Application.Sheets(1).Views(1).Filters(1).Criteria;
+     *     criteria = Criteria(1, "Equals", ["1"]);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Filter/Properties/Criteria
      */
     Criteria: Criteria;
     /**
      * 获取单条筛选记录的字段 ID
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const filters = Application.Sheets(1).Views(1).Filters;
+     *     const fieldId = filters.Item(1).FieldId;
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Filter/Properties/FieldId
      */
     readonly FieldId: string;
     /**
      * 获取单条筛选记录的ID
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const filters = Application.Sheets(1).Views(1).Filters;
+     *   const filterId = filters.Item(1).FilterId;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Filter/Properties/FilterId
      */
     readonly FilterId: string;
 
@@ -1105,6 +2609,14 @@ declare namespace AirScript {
      * 删除单条筛选记录
      *
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *     const res = Application.Sheets(1).Views(1).Filters(1).Delete();
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Filter/Methods/Delete
      */
     Delete(): boolean;
   }
@@ -1117,10 +2629,31 @@ declare namespace AirScript {
     (Index?: number | string): Filter;
     /**
      * 返回筛选列表的个数
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const filters = Application.Sheets(1).Views(1).Filters;
+     *   const count = filters.Count;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Filters/Properties/Count
      */
     readonly Count: number;
     /**
      * 设置或返回头部筛选条件
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const filters = Application.Sheets(1).Views(1).Filters;
+     *     const operator = filters.Operator;
+     *     operator = FilterOpType.Or;
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Filters/Properties/Operator
      */
     Operator: FilterOpType;
 
@@ -1129,6 +2662,16 @@ declare namespace AirScript {
      *
      * @param Criteria 筛选条件
      * @returns Filter
+     * @example
+     * ```javascript
+     * function main() {
+     *     const filters = Application.Sheets(1).Views(1).Filters;
+     *     const criteria = Application.Criteria(1, 'Equals', ['1'])
+     *     const filter = filters.Add(criteria);
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Filters/Methods/Add
      */
     Add(Criteria: any): Filter;
     /**
@@ -1136,6 +2679,16 @@ declare namespace AirScript {
      *
      * @param FieldId 字段ID
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *   const filters = Application.Sheets(1).Views(1).Filters;
+     *   const result = filters.Clear();
+     * //   const result = filters.Clear('B');
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Filters/Methods/Clear
      */
     Clear(FieldId?: string): boolean;
     /**
@@ -1143,6 +2696,15 @@ declare namespace AirScript {
      *
      * @param Index 索引从 1 开始
      * @returns Filter
+     * @example
+     * ```javascript
+     * function main() {
+     *     const filters = Application.Sheets(1).Views(1).Filters;
+     *     const filter = filters.Item(1);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Filters/Methods/Item
      */
     Item(Index: number): Filter;
   }
@@ -1153,6 +2715,17 @@ declare namespace AirScript {
   interface Font {
     /**
      * 字体颜色属性
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const font = Application.Sheets(1).Views(1).RecordRange(10).Font
+     *     console.log(font.Color)
+     *     font.Color = "#00ff00"
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Font/Properties/Color
      */
     Color: string;
   }
@@ -1163,6 +2736,8 @@ declare namespace AirScript {
   interface FormView extends View {
     /**
      * 表单视图下字段必填属性
+     *
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/FormView/Properties/RequiredFields
      */
     RequiredFields: any[];
   }
@@ -1175,12 +2750,14 @@ declare namespace AirScript {
      * 表单视图【编辑表单】模式
      *
      * @returns ApiResult
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/FormViewUI/Methods/DesignForm
      */
     DesignForm(): ApiResult;
     /**
      * 表单视图【填写表单】模式
      *
      * @returns ApiResult
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/FormViewUI/Methods/FillInForm
      */
     FillInForm(): ApiResult;
   }
@@ -1191,14 +2768,49 @@ declare namespace AirScript {
   interface FormulaField {
     /**
      * 公式字段 返回公式的文本表达式
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const fieldDescriptor = Application.Sheets("数据表").FieldDescriptors("@公式")
+     *   const prop = fieldDescriptor.Formula
+     *   prop.Formula = '=[@日期]+[@日期]'
+     *   fieldDescriptor.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/FormulaField/Properties/Formula
      */
     Formula: string;
     /**
      * 公式字段 “将百分比显示为进度” 属性, 只有当字段属性ValueType 设置为
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const fieldDescriptor = Application.Sheets("数据表").FieldDescriptors("@公式")
+     *   const prop = fieldDescriptor.Formula
+     *   prop.IsShowPercentAsProgress = true
+     *   fieldDescriptor.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/FormulaField/Properties/IsShowPercentAsProgress
      */
     IsShowPercentAsProgress: boolean;
     /**
      * 公式字段返回的格式，根据公式的结果返回相关的类型
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const fieldDescriptor = Application.Sheets("数据表").FieldDescriptors("@公式")
+     *   const prop = fieldDescriptor.Formula
+     *   console.log(prop.ValueType)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/FormulaField/Properties/ValueType
      */
     readonly ValueType: DbFieldValueType;
   }
@@ -1209,30 +2821,116 @@ declare namespace AirScript {
   interface GanttView extends View {
     /**
      * 开始日期字段，值为字段 ID.
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const ganttView = Application.Sheets(1).Views(1);
+     *     console.log(ganttView.BeginField);
+     *     ganttView.BeginField = 's';
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/GanttView/Properties/BeginField
      */
     BeginField: string;
     /**
      * 自定义日历。
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const ganttView = Application.Sheets(1).Views(1);
+     *     console.log(ganttView.Calendars);
+     *     ganttView.Calendars = 
+     *         {
+     *             isDefault: true,
+     *             name: '自定义日历',
+     *             locality: 156,
+     *             weekend: [6, 0],
+     *             customWorkday: [1, 2, 3, 4, 5],
+     *             customHoliday: [],
+     *             ignoreLawHoliday: true,
+     *         }
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/GanttView/Properties/Calendars
      */
     Calendars: any;
     /**
      * 结束日期字段，值为字段 ID.
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const ganttView = Application.Sheets(1).Views(1);
+     *     console.log(ganttView.EndField);
+     *     ganttView.EndField = 's';
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/GanttView/Properties/EndField
      */
     EndField: string;
     /**
      * 是否忽略节假日。
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const ganttView = Application.Sheets(1).Views(1);
+     *     console.log(ganttView.IsOnlyWorkDay);
+     *     ganttView.IsOnlyWorkDay = true;
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/GanttView/Properties/IsOnlyWorkDay
      */
     IsOnlyWorkDay: boolean;
     /**
      * 事件线颜色，值为Hex格式的RGB颜色值，如：#FF0000。
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const ganttView = Application.Sheets(1).Views(1);
+     *     console.log(ganttView.TimelineColor);
+     *     ganttView.TimelineColor = '#97E4E4';
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/GanttView/Properties/TimelineColor
      */
     TimelineColor: string;
     /**
      * 事件线颜色跟随字段，值为字段Id。
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const ganttView = Application.Sheets(1).Views(1);
+     *     console.log(ganttView.TimelineColorFollowField);
+     *     ganttView.TimelineColorFollowField = 'E';
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/GanttView/Properties/TimelineColorFollowField
      */
     TimelineColorFollowField: string;
     /**
      * 事件线颜色类型，值为'Custom'(自定义颜色)或'Follow'(跟随单选项字段)
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const ganttView = Application.Sheets(1).Views(1);
+     *     console.log(ganttView.TimelineColorType);
+     *     ganttView.TimelineColor = 'Follow';
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/GanttView/Properties/TimelineColorType
      */
     TimelineColorType: string;
   }
@@ -1243,10 +2941,14 @@ declare namespace AirScript {
   interface GanttViewUI {
     /**
      * 甘特图字段显示是否折叠
+     *
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/GanttViewUI/Properties/GanttGridFold
      */
     GanttGridFold: boolean;
     /**
      * 甘特视图的模式，注意：设置值时为以下之一：'Week','Month','Quarter','Year' .
+     *
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/GanttViewUI/Properties/ViewMode
      */
     ViewMode: string;
 
@@ -1254,30 +2956,35 @@ declare namespace AirScript {
      * 折叠分组
      *
      * @returns ApiResult
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/GanttViewUI/Methods/FoldAll
      */
     FoldAll(): ApiResult;
     /**
      * 跳转到下一页
      *
      * @returns boolean
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/GanttViewUI/Methods/NextPage
      */
     NextPage(): boolean;
     /**
      * 跳转到前一页
      *
      * @returns boolean
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/GanttViewUI/Methods/PrevPage
      */
     PrevPage(): boolean;
     /**
      * 跳转到今天
      *
      * @returns boolean
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/GanttViewUI/Methods/Today
      */
     Today(): boolean;
     /**
      * 展开分组
      *
      * @returns ApiResult
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/GanttViewUI/Methods/UnFoldAll
      */
     UnFoldAll(): ApiResult;
   }
@@ -1288,10 +2995,31 @@ declare namespace AirScript {
   interface GridView extends View {
     /**
      * 表格视图的冻结列数
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const gridView = Application.Sheets(1).Views(1);
+     *     console.log(gridView.FrozenCols);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/GridView/Properties/FrozenCols
      */
     FrozenCols: number;
     /**
      * 表格视图的行高，注意：设置值时为以下之一：'Short','Medium','Tall','ExtraTall' .
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const gridView = Application.Sheets(1).Views(1);
+     *     console.log(gridView.RowHeight);
+     *     gridView.RowHeight = 'Tall';
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/GridView/Properties/RowHeight
      */
     RowHeight: string;
   }
@@ -1302,14 +3030,41 @@ declare namespace AirScript {
   interface Group {
     /**
      * 分组字段
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const field = Application.Sheets(1).Views(1).Groups(1).Field;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Group/Properties/Field
      */
     Field: Field;
     /**
      * 是否为升序
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const isAscending = Application.Sheets(1).Views(1).Groups(1).IsAscending;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Group/Properties/IsAscending
      */
     IsAscending: boolean;
     /**
      * 返回单个分组条件单位
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const unit = Application.Sheets(1).Views(1).Groups(1).Unit;
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Group/Properties/Unit
      */
     Unit: DbGroupUnit;
 
@@ -1318,12 +3073,28 @@ declare namespace AirScript {
      *
      * @param Index 新分组字段索引/新分组字段ID
      * @returns ApiResult
+     * @example
+     * ```javascript
+     * function main() {
+     *   const res = Application.Sheets(1).Views(1).Groups(1).ChangeField(2);
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Group/Methods/ChangeField
      */
     ChangeField(Index: number | string, Unit: any): ApiResult;
     /**
      * 删除分组条件
      *
      * @returns ApiResult
+     * @example
+     * ```javascript
+     * function main() {
+     *   const res = Application.Sheets(1).Views(1).Groups(1).Delete();
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Group/Methods/Delete
      */
     Delete(): ApiResult;
   }
@@ -1336,14 +3107,41 @@ declare namespace AirScript {
     (Index?: number | string): Group;
     /**
      * 返回分组列表的个数
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const count = await app.Sheets(1).Views(1).Groups.Count;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Groups/Properties/Count
      */
     readonly Count: number;
     /**
      * 是否范围分组
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   cconst isRangeGroup = Application.Sheets(1).Views(1).Groups.IsRangeGroup;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Groups/Properties/IsRangeGroup
      */
     readonly IsRangeGroup: boolean;
     /**
      * 是否支持临时展开分组
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   cconst isTempUnFold = Application.Sheets(1).Views(1).Groups.IsTempUnFold;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Groups/Properties/IsTempUnFold
      */
     readonly IsTempUnFold: boolean;
 
@@ -1353,12 +3151,28 @@ declare namespace AirScript {
      * @param Index 新增的分组字段索引/新增的分组字段ID
      * @param IsAscending 是否是升序
      * @returns Group
+     * @example
+     * ```javascript
+     * function main() {
+     *     const res = Application.Sheets(1).Views(1).Groups.Add(1);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Groups/Methods/Add
      */
     Add(Index: number | string, IsAscending?: boolean): Group;
     /**
      * 折叠分组
      *
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *   const res = Application.Sheets(1).Views(1).Groups.FoldAll();
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Groups/Methods/FoldAll
      */
     FoldAll(): boolean;
     /**
@@ -1366,6 +3180,15 @@ declare namespace AirScript {
      *
      * @param Index 获取的分组字段索引/获取的分组字段ID
      * @returns Group
+     * @example
+     * ```javascript
+     * function main() {
+     *   const res = Application.Sheets(1).Views(1).Groups(1);
+     *   // const res = Application.Sheets(1).Views(1).Groups('B');
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Groups/Methods/Item
      */
     Item(Index: number | string): Group;
     /**
@@ -1373,12 +3196,29 @@ declare namespace AirScript {
      *
      * @param Index 获取的分组字段索引/获取的分组字段ID
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *   const res = Application.Sheets(1).Views(1).Groups.StatisticResult(1);
+     *   // const res = Application.Sheets(1).Views(1).Groups.StatisticResult('B');
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Groups/Methods/StatisticResult
      */
     StatisticResult(Index: number | string): boolean;
     /**
      * 展开分组
      *
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *   const res = Application.Sheets(1).Views(1).Groups.UnFoldAll();
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Groups/Methods/UnFoldAll
      */
     UnFoldAll(): boolean;
   }
@@ -1389,6 +3229,17 @@ declare namespace AirScript {
   interface Interior {
     /**
      * 背景颜色属性
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const interior = Application.Sheets(1).Views(1).RecordRange(10).Interior
+     *     console.log(interior.Color)
+     *     interior.Color = "#00ff00"
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Interior/Properties/Color
      */
     Color: string;
   }
@@ -1401,12 +3252,28 @@ declare namespace AirScript {
      * 移动“未分组”分组到最前面
      *
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *     Application.Sheets(1).Views(1).MoveUnGroupToFirst();
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/KanbanView/Methods/MoveUnGroupToFirst
      */
     MoveUnGroupToFirst(): boolean;
     /**
      * 移动“未分组”分组到最后面
      *
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *     Application.Sheets(1).Views(1).MoveUnGroupToLast();
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/KanbanView/Methods/MoveUnGroupToLast
      */
     MoveUnGroupToLast(): boolean;
     /**
@@ -1414,6 +3281,14 @@ declare namespace AirScript {
      *
      * @param FieldId 字段ID
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *     Application.Sheets(1).Views(1).SetGroupCondition('B');
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/KanbanView/Methods/SetGroupCondition
      */
     SetGroupCondition(FieldId: string): boolean;
   }
@@ -1424,22 +3299,92 @@ declare namespace AirScript {
   interface LinkField {
     /**
      * 关联字段的关系组集合，如果有多个关系组，则这些关系组是或的关系
+     *
+     * @example
+     * ```javascript
+     * function main(){
+     *   const sheet = Application.Sheets(1)
+     *   const linkField = sheet.FieldDescriptors(3)
+     *   const prop = linkField.Link
+     *   const linkGroups = Application.AutoLinkGroups()
+     *   const group = linkGroups.Add()
+     *   const conditions = group.Conditions
+     *   const fieldId =  sheet.FieldId("状态")
+     *   const condition = conditions.Add(fieldId, [fieldId], "Field", "Equals")
+     *   prop.AutoLinkGroups = linkGroups
+     *   prop.IsAutoLink = true
+     *   const result = linkField.Apply()
+     *   console.log("####", result)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/LinkField/Properties/AutoLinkGroups
      */
     AutoLinkGroups: AutoLinkGroups;
     /**
      * 单向关联或双向关联字段是否自动关联
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const field = Application.Sheets(1).FieldDescriptors(2)
+     *     const prop = field.Link
+     *     console.log(prop.IsAutoLink)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/LinkField/Properties/IsAutoLink
      */
     IsAutoLink: boolean;
     /**
      * 单向关联或关联字段是否可以设置允许关联多条记录
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const field = Application.Sheets(1).FieldDescriptors(2)
+     *     const link = field.Link
+     *     link.IsSupportMultiLinks = true
+     * 	field.Apply() 
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/LinkField/Properties/IsSupportMultiLinks
      */
     IsSupportMultiLinks: boolean;
     /**
      * 单向关联或双向关联字段的关联表格的Id
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const sheet = Application.Sheets(1)
+     *     const linkField = Application.FieldDescriptor("OneWayLink","单向关联")
+     *     const prop = linkField.Link
+     *     prop.LinkSheet = sheet.StId
+     *     prop.IsAutoLink = false
+     *     sheet.FieldDescriptors.AddField(linkField)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/LinkField/Properties/LinkSheet
      */
     LinkSheet: number;
     /**
      * 单向关联或双向关联字段的关联视图的id
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const field = Application.Sheets(1).FieldDescriptors(2)
+     *     const prop = field.Link
+     *     prop.LinkView = ActiveView.Id
+     *     field.Apply()
+     *     console.log(prop.LinkView)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/LinkField/Properties/LinkView
      */
     LinkView: string;
   }
@@ -1450,18 +3395,68 @@ declare namespace AirScript {
   interface LookupField {
     /**
      * 引用内容 设置为 关联的字段Id 以联接数据表
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const fieldDescriptor = Sheets("数据表").FieldDescriptors("@查找引用")
+     *   const linkFieldId = Sheets("数据表").FieldDescriptors("@单向关联")
+     *   const prop = fieldDescriptor.Lookup
+     *   prop.LinkFieldId = linkFieldId
+     *   fieldDescriptor.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/LookupField/Properties/LinkFieldId
      */
     LinkFieldId: string;
     /**
      * 引用内容里 引用字段的Id，指向的是引用的数据表的字段（不一定是当前数据表）,需要先从关联的表中读取字段Id。
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const fieldDescriptor = Application.Sheets("数据表").FieldDescriptors("@查找引用")
+     *   const prop = fieldDescriptor.Lookup
+     *   const lookUpSheet = Application.Sheets.ItemById(prop.LookupSheetId)
+     *   const lookupField = lookUpSheet.FieldDescriptors(prop.LookupFieldId)
+     *   console.log(lookupField.Name)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/LookupField/Properties/LookupFieldId
      */
     LookupFieldId: string;
     /**
      * 引用字段里 引用sheet的Id，要通过Sheet Id获取Sheet的实例可以通过 Application.Sheets.ItemById(id)
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const fieldDescriptor = Application.Sheets("数据表").FieldDescriptors("@查找引用")
+     *   const prop = fieldDescriptor.Lookup
+     *   const lookUpSheet = Application.Sheets.ItemById(prop.LookupSheetId)
+     *   const lookupField = lookUpSheet.FieldDescriptors(prop.LookupFieldId)
+     *   console.log(lookupField.Name)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/LookupField/Properties/LookupSheetId
      */
     LookupSheetId: string;
     /**
      * 引用字段的显示方法,查找引用字段不允许配置，只能使用Origin，统计字段不允许设置Origin
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const fieldDescriptor = Application.Sheets("数据表").FieldDescriptors("@查找引用")
+     *   const prop = fieldDescriptor.Lookup
+     *   console.log(prop.LookupType)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/LookupField/Properties/LookupType
      */
     LookupType: DbLookupFunction;
   }
@@ -1474,6 +3469,19 @@ declare namespace AirScript {
      * 根据附件信息获取预览或下载用的 URL。内部调用 `OpenAPI.getAttachmentPreviewUrl`：若传入 `fileId` 与 `uploadId` 之一，会互相补齐；若传入 `fileType`，会写入 `type` 后再请求。
      *
      * @param options 参数对象
+     * @example
+     * ```javascript
+     * async function main() {
+     *     const result = await Application.Misc.GetAttachmentUrl({
+     *         uploadId: 'your-upload-id',
+     *         fileName: 'example.png',
+     *         fileType: 'image/png',
+     *     });
+     *     console.log(result);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Misc/Methods/GetAttachmentUrl
      */
     GetAttachmentUrl(options?: { fileName?: string; source?: string; fileId?: string; linkUrl?: string; uploadId?: string; type?: string; fileType?: string; noCache?: boolean }): any;
   }
@@ -1484,6 +3492,8 @@ declare namespace AirScript {
   interface Navigator {
     /**
      * 导航栏可见性
+     *
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Navigator/Properties/Visible
      */
     Visible: boolean;
   }
@@ -1494,6 +3504,8 @@ declare namespace AirScript {
   interface NoticeBar {
     /**
      * 公告栏可见性
+     *
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/NoticeBar/Properties/Visible
      */
     Visible: boolean;
   }
@@ -1504,6 +3516,18 @@ declare namespace AirScript {
   interface NumberField {
     /**
      * 字段类型为Number时，通过此属性可以快捷的设置是否显示千位符
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const field = Application.Sheets(1).FieldDescriptors("@数字")
+     *   const prop = field.Number
+     *   prop.IsShowThousand = true
+     *   field.Apply()
+     *  }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/NumberField/Properties/IsShowThousand
      */
     IsShowThousand: boolean;
   }
@@ -1520,6 +3544,15 @@ declare namespace AirScript {
      * 设置访客（默认权限组）的保护类型。需具备 `can_protect` 能力；无权限时赋值不生效。
      *
      * 取值见 `Enum.DbProtectType`：`Admin`、`Editor`、`Reader`、`ReaderSubmitter`、`NoPermissions`。
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     Application.Permissions.VisitorProtectType = Application.Enum.DbProtectType.Reader;
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Permission/Properties/VisitorProtectType
      */
     VisitorProtectType: any;
 
@@ -1527,42 +3560,117 @@ declare namespace AirScript {
      * 将用户 ID 列表加入指定类型的权限组。`Type` 为 `Enum.DbProtectTypeNum`（0 管理员～4 无权限）；`Type` 为无权限组或当前用户无管理权限时失败。
      *
      * @param options 参数对象
+     * @example
+     * ```javascript
+     * function main() {
+     *     const res = Application.Permissions.AddUser({
+     *         Type: Application.Enum.DbProtectTypeNum.Editor,
+     *         UserIds: ['283091702'],
+     *     });
+     *     if (res.Code !== 0) {
+     *         console.log(res.Message);
+     *     }
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Permission/Methods/AddUser
      */
     AddUser(options: { Type: number; UserIds: string[] }): ApiResult;
     /**
      * 判断当前用户是否具备管理当前数据表的权限。分享视图、保护模式、自定义角色、只读等场景下可能返回失败，`Message` 为 `Cannot Manage Sheet`。
      *
      * @returns ApiResult
+     * @example
+     * ```javascript
+     * function main() {
+     *     const res = Application.Permissions.CanManageSheet();
+     *     console.log(res.Code, res.Message);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Permission/Methods/CanManageSheet
      */
     CanManageSheet(): ApiResult;
     /**
      * 关闭当前文件的权限保护开关。需具备 `can_protect` 能力。
      *
      * @returns ApiResult
+     * @example
+     * ```javascript
+     * function main() {
+     *     const res = Application.Permissions.Close();
+     *     if (res.Code !== 0) {
+     *         console.log(res.Message);
+     *     }
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Permission/Methods/Close
      */
     Close(): ApiResult;
     /**
      * 从指定类型的权限组中移除一名用户。参数与权限要求同 `AddUser`。
      *
      * @param options 参数对象
+     * @example
+     * ```javascript
+     * function main() {
+     *     const res = Application.Permissions.DeleteUser({
+     *         Type: Application.Enum.DbProtectTypeNum.Editor,
+     *         UserId: '283091702',
+     *     });
+     *     if (res.Code !== 0) {
+     *         console.log(res.Message);
+     *     }
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Permission/Methods/DeleteUser
      */
     DeleteUser(options: { Type: number; UserId: string }): ApiResult;
     /**
      * 检查当前用户是否拥有编辑自动化任务的权限。
      *
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *     console.log(Application.Permissions.HasEditAutoTaskPermission());
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Permission/Methods/HasEditAutoTaskPermission
      */
     HasEditAutoTaskPermission(): boolean;
     /**
      * 检查当前用户是否拥有历史版本回滚权限。
      *
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *     console.log(Application.Permissions.HasHistoryRollbackPermission());
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Permission/Methods/HasHistoryRollbackPermission
      */
     HasHistoryRollbackPermission(): boolean;
     /**
      * 开启当前多维表格文件的保护（权限组）。需具备 `can_protect` 能力；若已有权限组则开启保护开关，否则按默认配置初始化后开启。
      *
      * @returns ApiResult
+     * @example
+     * ```javascript
+     * function main() {
+     *     const res = Application.Permissions.Open();
+     *     if (res.Code !== 0) {
+     *         console.log(res.Message);
+     *     }
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Permission/Methods/Open
      */
     Open(): ApiResult;
   }
@@ -1575,6 +3683,17 @@ declare namespace AirScript {
   interface Permission2 {
     /**
      * 返回【通过链接加入后的默认角色】的协作者列表
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     // 返回协作者列表
+     *     const roleUsers = Application.Permission2.Collaborators;
+     *     console.log(roleUsers.Count);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Permission2/Properties/Collaborators
      */
     readonly Collaborators: User[];
     /**
@@ -1583,6 +3702,21 @@ declare namespace AirScript {
      * 不能设置DefaultRole为系统可管理
      *
      * 获取/设置DefaultRole要求文件开启分享，如果当前文档暂未开启分享，会失败提示Error: can't get/set DefaultRole.
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     // 获取通过链接加入后的默认角色对象
+     *     const defaultRole = Application.Permission2.DefaultRole;
+     *     console.log(defaultRole.Name);
+     *
+     *     // 设置通过链接加入后的默认角色--设置为系统角色可查看
+     *     const role = Application.Permission2.Roles(3);
+     *     Application.Permission2.DefaultRole = role;
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Permission2/Properties/DefaultRole
      */
     DefaultRole: Role;
     /**
@@ -1591,10 +3725,37 @@ declare namespace AirScript {
      * 不能设置GroupDefaultRole为系统可管理，无权限选项可以通过Roles.NoPermissionRole来获取
      *
      * 获取/设置GroupDefaultRole要求是团队文件且当前用户对文件是可管理的，否则会失败提示You don't have permission to perform this operation!
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     // 获取团队成员的默认角色
+     *     const defaultRole = Application.Permission2.GroupDefaultRole;
+     *     console.log(defaultRole.Name);
+     *
+     *     // 设置团队成员的默认角色--设置为系统角色可查看
+     *     const role = Application.Permission2.Roles(3);
+     *     Application.Permission2.GroupDefaultRole = role;
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Permission2/Properties/GroupDefaultRole
      */
     GroupDefaultRole: Role;
     /**
      * 获取文档的自定义内容权限角色列表
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const roles = Application.Permission2.Roles;
+     *     // 打印出第一个系统角色的名称
+     *     const firstRoleName = roles(1).Name
+     *     console.log(firstRoleName)
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Permission2/Properties/Roles
      */
     readonly Roles: Roles;
   }
@@ -1615,6 +3776,19 @@ declare namespace AirScript {
   interface PermissionSetting {
     /**
      * Sheet类型为数据表且权限类型为可编辑时支持读写属性 可查看和编辑的记录范围类型，其他情况下不支持读写
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const customRole = Application.Permission2.Roles.Add("CustomRole");
+     *     // 读取EditableAndViewableRecordsConfigType
+     *     console.log(customRole.PermissionSettings(1).EditableAndViewableRecordsConfigType);
+     *     // 设置EditableAndViewableRecordsConfigType
+     *     customRole.PermissionSettings(1).EditableAndViewableRecordsConfigType = 'Self';
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/PermissionSetting/Properties/EditableAndViewableRecordsConfigType
      */
     EditableAndViewableRecordsConfigType: EditableAndViewableRecordsConfigType;
     /**
@@ -1624,28 +3798,110 @@ declare namespace AirScript {
      *
      *
      * 设置EditableFieldSetting会在相同字段范围设置为可查看，因为可编辑肯定是可查看的，参数是一个字符串数组，用来表示可编辑的字段范围，数组值可以是字段名也可以是字段ID，如果是字段名必须以@开头，如['@文本', '@数字', '@日期']表示将这三列设置为可编辑字段
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const customRole = Application.Permission2.Roles.Add("CustomRole");
+     *     const fieldSetting = ['@文本', '@数字', '@日期'];
+     *     // 设置EditableFieldSetting
+     *     customRole.PermissionSettings(1).EditableFieldSetting = fieldSetting;
+     *     // 读取EditableFieldSetting
+     *     const editableFieldSetting = customRole.PermissionSettings(1).EditableFieldSetting;
+     *     console.log(editableFieldSetting);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/PermissionSetting/Properties/EditableFieldSetting
      */
     EditableFieldSetting: string[];
     /**
      * Sheet类型为数据表且权限类型为可编辑时支持读写属性 可编辑的记录(行)范围，其他情况下不支持读写
      *
      * 当PermissionRecordConfigType为Custom时，EditableRecordSetting才有效表示设置的筛选区域内记录可编辑
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const customRole = Application.Permission2.Roles.Add("CustomRole");
+     *     // 设置EditableRecordSetting
+     *     const criteriaArr = [];
+     *     const criteria = Application.Criteria('@文本', 'Equals', ['1']);
+     *     criteriaArr.push(criteria);
+     *     customRole.PermissionSettings(1).EditableRecordSetting = criteriaArr;
+     *     // 读取EditableRecordSetting
+     *     const editableRecordSetting = customRole.PermissionSettings(1).EditableRecordSetting
+     *     console.log(editableRecordSetting);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/PermissionSetting/Properties/EditableRecordSetting
      */
     EditableRecordSetting: Criteria;
     /**
      * Sheet类型为数据表且权限类型为可编辑时支持读写属性 允许添加记录，其他情况下不支持读写
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const customRole = Application.Permission2.Roles.Add("CustomRole");
+     *     // 读取IsAllowAddRecord
+     *     console.log(customRole.PermissionSettings(1).IsAllowAddRecord);
+     *     // 设置IsAllowAddRecord
+     *     customRole.PermissionSettings(1).IsAllowAddRecord = false;
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/PermissionSetting/Properties/IsAllowAddRecord
      */
     IsAllowAddRecord: boolean;
     /**
      * Sheet类型为数据表且权限类型为可编辑时支持读写属性 允许删除记录，其他情况下不支持读写
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const customRole = Application.Permission2.Roles.Add("CustomRole");
+     *     // 读取IsAllowRemoveRecord
+     *     console.log(customRole.PermissionSettings(1).IsAllowRemoveRecord);
+     *     // 设置IsAllowRemoveRecord
+     *     customRole.PermissionSettings(1).IsAllowRemoveRecord = false;
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/PermissionSetting/Properties/IsAllowRemoveRecord
      */
     IsAllowRemoveRecord: boolean;
     /**
      * 获取或设置自定义角色的内容权限类型
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const customRole = Application.Permission2.Roles.Add("CustomRole");
+     *     // 读取PermissionType
+     *     console.log(customRole.PermissionSettings(1).PermissionType);
+     *     // 设置PermissionType
+     *     customRole.PermissionSettings(1).PermissionType = 'Permission_View';
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/PermissionSetting/Properties/PermissionType
      */
     PermissionType: DbPermissionType;
     /**
      * 获取当前权限设置对应的Sheet对象
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const customRole = Application.Permission2.Roles.Add("CustomRole");
+     *     // 将sheet的名称打印出来
+     *     console.log(customRole.PermissionSettings(1).Sheet.Name);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/PermissionSetting/Properties/Sheet
      */
     readonly Sheet: Sheet;
     /**
@@ -1655,12 +3911,44 @@ declare namespace AirScript {
      *
      *
      * 参数是一个字符串数组，用来表示可查看的字段范围，数组值可以是字段名也可以是字段ID，如果是字段名必须以@开头，如['@文本', '@数字', '@日期']表示将这三列设置为可查看字段
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const customRole = Application.Permission2.Roles.Add("CustomRole");
+     *     const fieldSetting = ['@文本', '@数字', '@日期'];
+     *    // 设置ViewableFieldSetting
+     *     customRole.PermissionSettings(1).ViewableFieldSetting = fieldSetting;
+     *     // 读取ViewableFieldSetting
+     *     const viewableFieldSetting = customRole.PermissionSettings(1).ViewableFieldSetting;
+     *     console.log(viewableFieldSetting);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/PermissionSetting/Properties/ViewableFieldSetting
      */
     ViewableFieldSetting: string[];
     /**
      * Sheet类型为数据表且权限类型为可编辑/可查看时支持读写属性 可查看的记录(行)范围，其他情况下不支持读写
      *
      * 当PermissionRecordConfigType为Custom时，ViewableRecordSetting才有效表示设置的筛选区域内记录可编辑
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const customRole = Application.Permission2.Roles.Add("CustomRole");
+     *     // 设置ViewableRecordSetting
+     *     const criteriaArr = [];
+     *     const criteria = Application.Criteria('@文本', 'Equals', ['1']);
+     *     criteriaArr.push(criteria);
+     *     customRole.PermissionSettings(1).ViewableRecordSetting = criteriaArr;
+     *     // 读取ViewableRecordSetting
+     *     const viewableRecordSetting = customRole.PermissionSettings(1).ViewableRecordSetting
+     *     console.log(viewableRecordSetting);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/PermissionSetting/Properties/ViewableRecordSetting
      */
     ViewableRecordSetting: Criteria;
   }
@@ -1673,6 +3961,17 @@ declare namespace AirScript {
     (Index?: number | string): PermissionSetting;
     /**
      * 获取自定义角色的内容权限设置列表长度
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *      const customRole = Application.Permission2.Roles.Add("CustomRole");
+     *     // 将设置的自定义角色的权限设置列表长度打印出来
+     *     console.log(customRole.PermissionSettings.Count);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/PermissionSettings/Properties/Count
      */
     readonly Count: number;
 
@@ -1681,6 +3980,16 @@ declare namespace AirScript {
      *
      * @param Index 索引从 1 开始
      * @returns PermissionSetting
+     * @example
+     * ```javascript
+     * function main() {
+     *     const customRole = Application.Permission2.Roles.Add("CustomRole");
+     *     // 将设置的自定义角色的第一个内容权限设置类型打印出来
+     *     console.log(customRole.PermissionSettings.Item(1).PermissionType);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/PermissionSettings/Methods/Item
      */
     Item(Index: number): PermissionSetting;
   }
@@ -1691,6 +4000,16 @@ declare namespace AirScript {
   interface QueryView extends View {
     /**
      * 查询视图的背景图，注意：可以设置为 url/base64
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const view = Application.Sheets(1).Views(1);
+     *     view.BackgroundImage = "https://kdocs-om.wpscdn.cn/om/image.png"
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/QueryView/Properties/BackgroundImage
      */
     BackgroundImage: Attachment;
     /**
@@ -1713,6 +4032,16 @@ declare namespace AirScript {
      * 数字/货币/百分比/最后修改时间/等级/进度/创建时间： GreaterEquAndLessEqu， Equals
      * 身份证/电话/自动编号：Intersected，Equals
      * 复选框/单选项/多选项/联系人/创建人/最后修改人/双向关联/单向关联/父记录：Intersected
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const view = Application.Sheets(1).Views(1);
+     *     console.log(view.QueryFields);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/QueryView/Properties/QueryFields
      */
     QueryFields: any[];
   }
@@ -1723,6 +4052,20 @@ declare namespace AirScript {
   interface RatingField {
     /**
      * 只对等级字段有效，设置等级字段最大值，取值范围为1-5
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const field = Application.Sheets(1).FieldDescriptors(2)
+     *   const prop = await field.Rating
+     *   prop.MaxRating = 5
+     *   field.Apply()
+     *
+     *   console.log(prop.MaxRating)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/RatingField/Properties/MaxRating
      */
     MaxRating: number;
   }
@@ -1748,14 +4091,48 @@ declare namespace AirScript {
   interface Record {
     /**
      * 返回整行记录、单个记录字段的Id
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const record = Application.Sheets(1).Views(1).Records(10);
+     *     console.log(record.Id); 
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Record/Properties/Id
      */
     readonly Id: string;
     /**
      * 返回整行记录、单个记录字段的值
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const groups = Application.Sheets(1).Views(1).Groups;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Record/Properties/Text
      */
     readonly Text: string;
     /**
      * 返回整行记录，抑或返回、设置单个记录字段的值。
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const record = Application.Sheets(1).Views(1).Records(10)
+     *     console.log(record.Value) // 获取第10行的记录
+     *
+     *     const info = Application.Sheets(1).Views(1).Records(10, 1)
+     *     console.log(info.Value) // 获取第10行，第一个字段的值
+     *
+     *     info.Value = '1' // 值设为 1
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Record/Properties/Value
      */
     Value: any;
 
@@ -1763,6 +4140,15 @@ declare namespace AirScript {
      * 删除当前行
      *
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *   const record = Application.Sheets(1).Views(1).Records(10)
+     *   record.Delete()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Record/Methods/Delete
      */
     Delete(): boolean;
     /**
@@ -1770,12 +4156,33 @@ declare namespace AirScript {
      *
      * @param Index 索引从1开始/字段ID
      * @returns Record
+     * @example
+     * ```javascript
+     * function main() {
+     *   const record = Application.Sheets(1).Views(1).Records(10)
+     *   const info = record.Item(1) // 获取第10行号的第一个字段
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Record/Methods/Item
      */
     Item(Index: number | string): Record;
     /**
      * 选中某个区域
      *
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *     const record = Application.Sheets(1).Views(1).Records(10)
+     *     record.Select() // 选中第10行的记录
+     *
+     *     const info = Application.Sheets(1).Views(1).Records(10, 1)
+     *     info.Select() // 选中第10行，第一个字段
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Record/Methods/Select
      */
     Select(): boolean;
   }
@@ -1786,6 +4193,20 @@ declare namespace AirScript {
   interface RecordComment {
     /**
      * 返回的记录里包含评论的数量
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *    const recordComment = ActiveView.RecordComments.Item(1)
+     *    const count = recordComment.Count
+     *    for (let i = 1; i <= count; i++) { 
+     *     const comment = recordComment.Item(i)
+     *     console.log(comment.Text)
+     *    }
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/RecordComment/Properties/Count
      */
     readonly Count: number;
 
@@ -1795,6 +4216,20 @@ declare namespace AirScript {
      * @param Text 评论的文本，插入到评论的最前方
      * @param TextLinkRuns 文本的特殊节点属性
      * @returns DbComment
+     * @example
+     * ```javascript
+     * function main() {
+     *    const recordComment = ActiveView.RecordComments.Item(1)
+     *    recordComment.Add("Hello World")
+     *    const count = recordComment.Count
+     *    for (let i = 1; i <= count; i++) { 
+     *     const comment = recordComment.Item(i)
+     *     console.log(comment.Text)
+     *    }
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/RecordComment/Methods/Add
      */
     Add(Text: string, TextLinkRuns?: any[]): DbComment;
     /**
@@ -1802,6 +4237,18 @@ declare namespace AirScript {
      *
      * @param Index 删除记录的索引
      * @returns ApiResult
+     * @example
+     * ```javascript
+     * function main() {
+     *    const recordComment = ActiveView.RecordComments(1)
+     *    const count = recordComment.Count
+     *    for (let i = 1; i <= count; i++) { 
+     *     await recordComment.Delete(i)
+     *    }
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/RecordComment/Methods/Delete
      */
     Delete(Index: number | string): ApiResult;
     /**
@@ -1809,6 +4256,19 @@ declare namespace AirScript {
      *
      * @param Index 传入number时索引从1开始，传入字符串时表示评论id
      * @returns DbComment
+     * @example
+     * ```javascript
+     * function main() {
+     *    const recordComment = ActiveView.RecordComments(1)
+     *    const count = recordComment.Count
+     *    for (let i = 1; i <= count; i++) { 
+     *     const comment = recordComment.Item(i)
+     *     console.log(comment.Text)
+     *    }
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/RecordComment/Methods/Item
      */
     Item(Index?: number | string): DbComment;
   }
@@ -1822,6 +4282,15 @@ declare namespace AirScript {
     (Index?: number | string): RecordComment;
     /**
      * 返回当前RecordComment的数量，因为每条记录都会有一个RecordComment对象，所以返回的是记录的数量。
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const count = Application.ActiveView.RecordComments.Count
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/RecordComments/Properties/Count
      */
     Count: number;
 
@@ -1830,6 +4299,14 @@ declare namespace AirScript {
      *
      * @param Index 传入number时记录索引从1开始，传入字符串时表示记录id
      * @returns this
+     * @example
+     * ```javascript
+     * function main() {
+     *   const values = Application.ActiveView.RecordComments.Item(1).Count
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/RecordComments/Methods/Item
      */
     Item(Index?: number | string): RecordComment;
 
@@ -1862,6 +4339,7 @@ declare namespace AirScript {
      * 可以通过 action 来判断是哪个事件触发的
      *
      * @param callback 事件回调，data 为事件返回数据
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/RecordComments/Events/OnCreate
      */
     OnCreate(callback: (data: DbComment) => void): EventContext;
     /**
@@ -1873,6 +4351,7 @@ declare namespace AirScript {
      * 回调的消息数据包含的内容跟事件返回数据是一致的， 可以通过 action 来判断是哪个事件触发的
      *
      * @param callback 事件回调，data 为事件返回数据
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/RecordComments/Events/OnDelete
      */
     OnDelete(callback: (data: RecordCommentsOnDeleteEventData) => void): EventContext;
   }
@@ -1917,34 +4396,116 @@ declare namespace AirScript {
     (selector?: number | string | number[] | string[], fields?: number | string | number[] | string[]): RecordRange;
     /**
      * 返回当前RecordRange的记录数量，在View里返回View中可见记录数量，在Sheet返回所有的记录数量，如果指定了 RecordRange的范围则返回RecordRange的记录数量
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const viewCount = Application.ActiveView.RecordRange.Count
+     *   const sheetCount = Application.ActiveSheet.RecordRange.Count
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/RecordRange/Properties/Count
      */
     Count: number;
     /**
      * 返回指定RecordRange的字段Id，如果RecordRange未指定数据，则返回undefined
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *    Application.ActiveView.Selection.FieldId
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/RecordRange/Properties/FieldId
      */
     FieldId: any[];
     /**
      * 返回当前RecordRange首个单元格的字体属性[Font](/app-integration-dev/guide/dbsheet/Api/Api/Font/Font)
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const recordRange = Application.Sheets(1).RecordRange(1);
+     *     const font = recordRange.Font
+     *     font.Color = "#ff00ff"
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/RecordRange/Properties/Font
      */
     readonly Font: Font;
     /**
      * 返回指定RecordRange的记录id，如果RecordRange未指定数据，则返回undefined
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *    Application.ActiveView.RecordRange(1).Id
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/RecordRange/Properties/Id
      */
     Id: any[];
     /**
      * 返回指定RecordRange的记录索引，如果RecordRange未指定数据，则返回undefined
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *    const index = Application.ActiveView.RecordRange("a").Index
+     *    if (index && index.length > 0) {
+     *         console.log(index)
+     *    } else {
+     *         console.log("记录不存在")
+     *    }
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/RecordRange/Properties/Index
      */
     Index: any[];
     /**
      * 返回当前RecordRange首个单元格的填充属性[Interior](/app-integration-dev/guide/dbsheet/Api/Api/Interior/Interior)
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const recordRange = Application.Sheets(1).RecordRange(1);
+     *     const Interior = recordRange.Interior
+     *     Interior.Color = "#ff00ff"
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/RecordRange/Properties/Interior
      */
     readonly Interior: Interior;
     /**
      * 返回指定区域的文本值
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   console.log(Application.ActiveSheet.RecordRange([1,2],[1,2]).Text)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/RecordRange/Properties/Text
      */
     readonly Text: string;
     /**
      * RecordRange的值，读取和设置记录数据
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *    Application.Sheets(1).Views(2).RecordRange([5,6], 1).Value = "1111111"
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/RecordRange/Properties/Value
      */
     Value: any;
 
@@ -1955,6 +4516,16 @@ declare namespace AirScript {
      * @param After 在行记录之后添加，Number时指定插入时索引，String时指定插入ID
      * @param Count 一次插入N条数据，未指定时插入1条
      * @returns this
+     * @example
+     * ```javascript
+     * function main() {
+     *   const range = Application.ActiveView.RecordRange.Add(31, null, 5)
+     *   // 将插入的5条记录的名称字段 初始化为 “名称”
+     *   range.Item(undefined, "@名称").Value = "名称"
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/RecordRange/Methods/Add
      */
     Add(Before?: number | string, After?: number | string, Count?: number): this;
     /**
@@ -1963,12 +4534,39 @@ declare namespace AirScript {
      * @param Filters 筛选数据的条件组, 条件组里每个Filter，可以包含多个筛选条件，和设置筛选条件的关系
      * @param FilterOp 筛选数据条件组之间的关系，是同时满足还是只需要满足一条，默认值为And
      * @returns RecordRange
+     * @example
+     * ```javascript
+     * function main() {
+     *   // 创建筛选条件criteria
+     *     const critera1 = Criteria("@名称", "Intersected", ["1", "999", "aaaa"])
+     *     const critera2 = Criteria("@数量", "Equals", ["1"])
+     *     const criterias = []
+     *     criterias.push(critera1)
+     *     criterias.push(critera2)
+     *     // 创建filters
+     *     const filters = []
+     *     const filter = { Criterias: criterias, Op: "OR" }
+     *     filters.push(filter)
+     *     const res = Application.ActiveSheet.Views(1).RecordRange.Condition(filters, "AND")
+     *     console.log(res.Value)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/RecordRange/Methods/Condition
      */
     Condition(Filters: any[], FilterOp?: "And" | "Or"): RecordRange;
     /**
      * 删除记录
      *
      * @returns ApiResult
+     * @example
+     * ```javascript
+     * function main() {
+     *   Application.ActiveView.RecordRange(41).Delete()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/RecordRange/Methods/Delete
      */
     Delete(): ApiResult;
     /**
@@ -2005,12 +4603,30 @@ declare namespace AirScript {
      * @param Index 传入number时索引从1开始，传入字符串时表示id
      * @param Field 传入number时索引从1开始，传入字符串时如果字符串以@开始则表示为字段名称，否则为字段id
      * @returns this
+     * @example
+     * ```javascript
+     * function main() {
+     *   const values = Application.ActiveView.RecordRange.Item(1, ["@名称", "@日期", "@数量"]).Value
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/RecordRange/Methods/Item
      */
     Item(Index?: number | string | any[], Field?: number | string | any[]): RecordRange;
     /**
      * 插入新的记录
      *
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *   const range = Application.ActiveView.RecordRange(1)
+     *   // 将插入的5条记录的名称字段 初始化为 “名称”
+     *   range.Select()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/RecordRange/Methods/Select
      */
     Select(): boolean;
     /**
@@ -2019,6 +4635,18 @@ declare namespace AirScript {
      * @param Values 设置到单元格的值
      * @param ignoreErr 默认值为flase,当设置为true时，输入数据中某一条数据出错，这条数据不写入，其它数据正常写入；当设置为false时，其中一条数据出错，则都不写入
      * @returns ApiResult
+     * @example
+     * ```javascript
+     * function main() {
+     *
+     *   const res = Application.RecordRange("1:2", ["@名称", "@数量"]).SetValues([["1111", 2222]], true)
+     *   if (res.code !== 0) {
+     *     console.log(res.Message)
+     *   }
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/RecordRange/Methods/SetValues
      */
     SetValues(Values: any[], ignoreErr?: boolean): ApiResult;
 
@@ -2026,12 +4654,47 @@ declare namespace AirScript {
      * 为 RecordRange 添加 DeleteRecord 事件,当删除 RecordRange 时触发。注意在脚本编辑器中使用时，脚本运行结束就会退出运行，这时可能回调无法被正常触发
      *
      * @param callback 事件回调，data 为事件返回数据
+     * @example
+     * ```javascript
+     * function main() {
+     *     let eventContext;
+     *     eventContext = Application.Sheets(1)
+     *         .Views(1)
+     *         .RecordRange(1)
+     *         .OnDeleteRecord(data => {
+     *             console.log(data);
+     *             // 取消事件监听
+     *             eventContext.Destroy();
+     *         });
+     *     Application.Sheets(1).Views(1).RecordRange(1).Delete();
+     *     //这里会执行OnDeleteRecord的回调
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/RecordRange/Events/OnDeleteRecord
      */
     OnDeleteRecord(callback: (data: RecordRangeOnDeleteRecordEventData) => void): EventContext;
     /**
      * 为 RecordRange 添加 Update 事件,当更新 RecordRange 时触发。注意在脚本编辑器中使用时，脚本运行结束就会退出运行，这时可能回调无法被正常触发
      *
      * @param callback 事件回调，data 为事件返回数据
+     * @example
+     * ```javascript
+     * function main() {
+     *     let eventContext;
+     *     eventContext = Application.Sheets(1)
+     *         .Views(1)
+     *         .RecordRange(1)
+     *         .OnUpdate(data => {
+     *             console.log(data);
+     *             // 取消事件监听
+     *             eventContext.Destroy();
+     *         });
+     *     Application.Sheets(1).Views(1).RecordRange(1).Value = ['名称111', 4, '选项1'];
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/RecordRange/Events/OnUpdate
      */
     OnUpdate(callback: (data: RecordRange) => void): EventContext;
   }
@@ -2049,6 +4712,20 @@ declare namespace AirScript {
     (Index?: number | string): Record;
     /**
      * 返回Records列表的数量
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const records = Application.Sheets(1).Views(1).Records
+     *     // 返回记录数量
+     *     console.log(records.Count)
+     *     const insertRecords = Application.Sheets(1).Views(1).Records.Add(10, undefined, 2) // 在第10行，向上方添加2条记录
+     *     // 输出 2
+     *     console.log(insertRecords.Count)
+     *  }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Records/Properties/Count
      */
     readonly Count: number;
 
@@ -2059,6 +4736,16 @@ declare namespace AirScript {
      * @param After 指定的记录对象（索引从1开始/记录ID），新建的记录将基于此之后
      * @param Count 插入多少条记录，默认值为1条
      * @returns ApiResult
+     * @example
+     * ```javascript
+     * function main() {
+     *     const records = Application.Sheets(1).Views(1).Records.Add(10, undefined, 2) // 在第10行，向上方添加2条记录
+     *     // 在插入的第一条记录的首字段填入 "123"
+     *     records.Item(1, 1).Value = "123"
+     *  }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Records/Methods/Add
      */
     Add(Before?: number | string, After?: number | string, Count?: number): ApiResult;
     /**
@@ -2066,6 +4753,19 @@ declare namespace AirScript {
      *
      * @param Index 索引从1开始/记录ID
      * @returns ApiResult
+     * @example
+     * ```javascript
+     * function main() {
+     *     // 删除视图上的第一条数据
+     *     Application.Sheets(1).Views(1).Records.Delete(1)
+     *     // 在第10行，向上方添加2条记录
+     *     const records = Application.Sheets(1).Views(1).Records.Add(10, undefined, 2) 
+     *     // 删除刚插入的第一条数据
+     *     records.Delete(1)
+     *  }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Records/Methods/Delete
      */
     Delete(Index: number | string): ApiResult;
     /**
@@ -2074,6 +4774,14 @@ declare namespace AirScript {
      *
      * @param What 查找值
      * @returns Record | null
+     * @example
+     * ```javascript
+     * function main() {
+     *   const record = Application.Sheets(1).Views(1).Records.FindNext('查找值');
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Records/Methods/FindNext
      */
     FindNext(What: string): Record | null;
     /**
@@ -2082,6 +4790,14 @@ declare namespace AirScript {
      *
      * @param What 查找值
      * @returns Record | null
+     * @example
+     * ```javascript
+     * function main() {
+     *   const record = Application.Sheets(1).Views(1).Records.FindPrevious('查找值');
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Records/Methods/FindPrevious
      */
     FindPrevious(What?: string): Record | null;
     /**
@@ -2089,6 +4805,18 @@ declare namespace AirScript {
      *
      * @param Index 索引从1开始/记录ID
      * @returns Record
+     * @example
+     * ```javascript
+     * function main() {
+     *     const record = Application.Sheets(1).Views(1).Records.Item(10)
+     *     // 返回字段的文本表示
+     *     console.log(record.Text)
+     *     // 返回字段的值
+     *     console.log(record.Value)
+     *  }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Records/Methods/Item
      */
     Item(Index: number | string): Record;
   }
@@ -2099,32 +4827,117 @@ declare namespace AirScript {
   interface Role {
     /**
      * 获取权限角色描述信息
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const description = Application.Permission2.Roles(1).Description;
+     *     // 将第一个角色描述打印出来
+     *     console.log(description);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Role/Properties/Description
      */
     readonly Description: string;
     /**
      * 获取权限角色ID
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const id = Application.Permission2.Roles(1).Id;
+     *     // 将角色id打印出来
+     *     console.log(id);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Role/Properties/Id
      */
     readonly Id: number;
     /**
      * 是否为系统角色
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const isBuiltIn = Application.Permission2.Roles(1).IsBuiltIn;
+     *     // 将结果打印出来
+     *     console.log(isBuiltIn);
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Role/Properties/IsBuiltIn
      */
     readonly IsBuiltIn: boolean;
     /**
      * 获取权限角色名称
+     *
+     * @example
+     * ```javascript
+     * // 获取权限角色名称
+     * function main() {
+     *     const roleName = Application.Permission2.Roles(1).Name;
+     *     // 将第一个权限角色名称打印出来
+     *     console.log(roleName);
+     * }
+     *
+     * // 设置权限角色名称---只能设置自定义角色的名称，系统角色名称不支持自定义设置
+     * function main() {
+     *     const customRole = Application.Permission2.Roles.Add("自定义名字");
+     *      // 将刚添加的自定义角色名改为CustomName
+     *     customRole.Name = 'CustomName';
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Role/Properties/Name
      */
     readonly Name: string;
     /**
      * 获取角色的内容权限设置列表
      *
      * 每个角色下的内容权限设置列表是当前文档下所有的Sheet的内容权限设置集合，系统角色不支持该属性，自定义角色支持该属性。
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const customRole = Application.Permission2.Roles.Add("CustomRole");
+     *     // 将设置的自定义角色的权限设置列表长度打印出来
+     *     console.log(customRole.PermissionSettings.Count);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Role/Properties/PermissionSettings
      */
     readonly PermissionSettings: PermissionSettings;
     /**
      * 获取权限角色类型
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const type = Application.Permission2.Roles(1).Type;
+     *     // 将第一个角色权限类型打印出来
+     *     console.log(type);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Role/Properties/Type
      */
     readonly Type: RoleBuiltInType;
     /**
      * 获取角色的协作者列表
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const systemManageRole = Application.Permission2.Roles(1);
+     *     // 将可管理系统角色下的协作者人数打印出来
+     *     console.log(systemManageRole.Users.Count);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Role/Properties/Users
      */
     readonly Users: User[];
 
@@ -2137,6 +4950,17 @@ declare namespace AirScript {
      *
      * @param Users 权限角色中需要添加的协作者数组
      * @returns User
+     * @example
+     * ```javascript
+     * function main() {
+     *     const users = [];
+     *     const user1 = Application.User("283091702", "企业用户_283031898", "http://avatar.qwps.cn/avatar/5LyB5Lia55So5oi3XzI4MzAzMTg5OA==");
+     *     users.push(user1);
+     *     Application.Permission2.Roles.Item(2).AddUser(users);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Role/Methods/AddUser
      */
     AddUser(Users: User): User;
     /**
@@ -2146,6 +4970,27 @@ declare namespace AirScript {
      *
      * @param Index 将准备删除的自定义角色下的协作者放到参数Index对应的角色下
      * @returns ApiResult
+     * @example
+     * ```javascript
+     * function main() {
+     *     const customName = "自定义设置的角色";
+     *     // 添加自定义角色下的协作者
+     *     const role = Application.Permission2.Roles.Add(customName);
+     *     const userArray = [];
+     *     const user1 = Application.User("283091702");
+     *     userArray.push(user1);
+     *     const user2 = Application.User("283093318");
+     *     userArray.push(user2);
+     *     const user3 = Application.User("283108459");
+     *     userArray.push(user3);
+     *     role.AddUser(userArray);
+     *     // 将自定义角色删除，删除自定义角色后，该角色下的协作者被放到了系统可编辑角色下
+     *     const result = role.DeleteAndReplacedBy(2);
+     *     console.log(result);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Role/Methods/DeleteAndReplacedBy
      */
     DeleteAndReplacedBy(Index: string | number): ApiResult;
     /**
@@ -2153,6 +4998,20 @@ declare namespace AirScript {
      *
      * @param User 权限角色中需要删除的协作者
      * @returns ApiResult
+     * @example
+     * ```javascript
+     * function main() {
+     *     const users = [];
+     *     const user1 = Application.User("283091702", "企业用户_283031898", "http://avatar.qwps.cn/avatar/5LyB5Lia55So5oi3XzI4MzAzMTg5OA==");
+     *     users.push(user1);
+     *     const editRole = Application.Permission2.Roles.Item(2);
+     *     editRole.AddUser(users);
+     *     const result = editRole.DeleteUser(user1);
+     *     console.log(result.Code === 0); // 删除成功
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Role/Methods/DeleteUser
      */
     DeleteUser(User: User): ApiResult;
   }
@@ -2169,10 +5028,30 @@ declare namespace AirScript {
     (Index?: number | string): Role;
     /**
      * 获取文档的自定义内容权限角色列表个数(不包括NoPermissionRole)
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const count = Application.Permission2.Roles.Count;
+     *     console.log(count);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Roles/Properties/Count
      */
     readonly Count: number;
     /**
      * 无权限角色，作为设置团队成员的默认角色的一个选项，也是一个Role对象，但是不能修改角色名称、添加删除协作者、被删除等
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const name = Application.Permission2.Roles.NoPermissionRole.Name;
+     *     console.log(name);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Roles/Properties/NoPermissionRole
      */
     readonly NoPermissionRole: Role;
 
@@ -2187,6 +5066,17 @@ declare namespace AirScript {
      *
      * @param Name 添加的角色名称(角色名不能为空，长度不能超过20，不能是列表中已经存在的角色名)
      * @returns Role
+     * @example
+     * ```javascript
+     * function main() {
+     *     const customName = "自定义设置的角色";
+     *     const role = Application.Permission2.Roles.Add(customName);
+     *     // 打印出返回权限角色名
+     *     console.log(role.Name);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Roles/Methods/Add
      */
     Add(Name: string): Role;
     /**
@@ -2194,6 +5084,17 @@ declare namespace AirScript {
      *
      * @param Index 索引从 1 开始/角色名
      * @returns Role
+     * @example
+     * ```javascript
+     * function main() {
+     *     // const role = Application.Permission2.Roles.Item('可管理');
+     *     const role = Application.Permission2.Roles.Item(1);
+     *      // 打印出列表中第一个权限角色名
+     *     console.log(role.Name);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Roles/Methods/Item
      */
     Item(Index: number | string): Role;
   }
@@ -2204,10 +5105,38 @@ declare namespace AirScript {
   interface SelectField {
     /**
      * 当字段类型为单选项或多选项时，可以通过设置 IsAddItemWhenInputting 属性设置允许填写时添加选项。当字段类型不是单选项或多选项时，属性无效。
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *    const field = Application.Sheets(1).FieldDescriptors(2)
+     *    const prop = field.Select
+     *    prop.AllowAddItemWhenInputting = true
+     *    field.Apply()
+     *    console.log(prop.AllowAddItemWhenInputing)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/SelectField/Properties/IsAddItemWhenInputting
      */
     IsAddItemWhenInputting: boolean;
     /**
      * 设置多项式字段的可选项
+     *
+     * @example
+     * ```javascript
+     * function main(){
+     *   const filed = Application.Sheets(1).FieldDescriptors("@状态")
+     *   const prop = field.Select
+     *   const Items = prop.Items
+     *   // 加一项
+     *   Items.push({"value":"未开始233", "colorHex":"#0081C2"})
+     *   prop.Items = Items
+     *   filed.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/SelectField/Properties/Items
      */
     Items: any[];
   }
@@ -2220,12 +5149,30 @@ declare namespace AirScript {
      * 获取选区的类型
      *
      * @returns string
+     * @example
+     * ```javascript
+     * function main() {
+     *     const selection = app.ActiveDBSheet.Selection;
+     *     const type = selection.GetSelectionType();
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Selection/Methods/GetSelectionType
      */
     GetSelectionType(): string;
     /**
      * 判断当前选区是否是单元格
      *
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *     const selection = app.ActiveDBSheet.Selection;
+     *     const isCell = selection.IsCell();
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Selection/Methods/IsCell
      */
     IsCell(): boolean;
     /**
@@ -2233,6 +5180,15 @@ declare namespace AirScript {
      *
      * @param Index 索引从 1 开始/名称
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *     const selection = app.ActiveDBSheet.Selection;
+     *     const isSelected = selection.IsRowSelect(1);
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Selection/Methods/IsRowSelect
      */
     IsRowSelect(Index: number): boolean;
     /**
@@ -2240,12 +5196,30 @@ declare namespace AirScript {
      *
      * @param Row 索引从 1 开始/名称，单元格的行【x 坐标】
      * @param Col 索引从 1 开始/名称，单元格的列【y 坐标】
+     * @example
+     * ```javascript
+     * function main() {
+     *     const selection = app.ActiveDBSheet.Selection;
+     *     selection.SelectCell(1, 1);
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Selection/Methods/SelectCell
      */
     SelectCell(Row: number, Col: number): void;
     /**
      * 选中列
      *
      * @param Index 索引从 1 开始/名称，单元格的列【y 坐标】
+     * @example
+     * ```javascript
+     * function main() {
+     *     const selection = app.ActiveDBSheet.Selection;
+     *     selection.SelectCol(1);
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Selection/Methods/SelectCol
      */
     SelectCol(Index: number): void;
     /**
@@ -2255,12 +5229,30 @@ declare namespace AirScript {
      * @param RowTo 索引从 1 开始/名称，单元格的结束行
      * @param ColFrom 索引从 1 开始/名称，单元格的开始列
      * @param ColTo 索引从 1 开始/名称，单元格的结束列
+     * @example
+     * ```javascript
+     * function main() {
+     *     const selection = app.ActiveDBSheet.Selection;
+     *     selection.SelectRange(1, 4, 3, 6);
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Selection/Methods/SelectRange
      */
     SelectRange(RowFrom: number, RowTo: number, ColFrom: number, ColTo: number): void;
     /**
      * 选中行
      *
      * @param Index 索引从 1 开始/名称，单元格的行【x 坐标】
+     * @example
+     * ```javascript
+     * function main() {
+     *     const selection = app.ActiveDBSheet.Selection;
+     *     selection.SelectRow(1);
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Selection/Methods/SelectRow
      */
     SelectRow(Index: number): void;
   }
@@ -2271,34 +5263,117 @@ declare namespace AirScript {
   interface Sheet {
     /**
      * 读取时返回当前数据表（Sheet）的说明文案；赋值写入时内部调用说明设置逻辑（等同设置表说明）。
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const sheet = Application.Sheets(1);
+     *     console.log(sheet.Description);
+     *     sheet.Description = '表说明示例';
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheet/Properties/Description
      */
     Description: string;
     /**
      * 该表的字段描述集合
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const fieldDescriptors = Application.Sheets(1).FieldDescriptors;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheet/Properties/FieldDescriptors
      */
     FieldDescriptors: FieldDescriptors;
     /**
      * 返回当前数据表的图标
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const sheet = Application.Sheets(1);
+     *     // read
+     *     const sheetIcon =  sheet.Icon;
+     *     // write
+     *     sheet.Icon = '📚';
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheet/Properties/Icon
      */
     Icon: string;
     /**
      * 返回当前数据表的 Id
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const sheetId = Application.Sheets(1).Id;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheet/Properties/Id
      */
     readonly Id: number;
     /**
      * 返回当前数据表的名称
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const sheet = Application.Sheets(1);
+     *     // read
+     *     const sheetName = sheet.Name;
+     *     // write
+     *     sheet.Name = 'newSheetName';
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheet/Properties/Name
      */
     Name: string;
     /**
      * 该数据表的所有记录
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const recordRange = Application.Sheets(1).RecordRange;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheet/Properties/RecordRange
      */
     readonly RecordRange: RecordRange;
     /**
      * 返回当前数据表（Sheet）的类型，取值为 Enum.BaseSheetType，例如数据表 xlEtDataBaseSheet、仪表盘 xlDbDashBoardSheet、说明页 xlEtFlexPaperSheet。
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const sheetType = Application.Sheets(1).Type;
+     *     console.log(sheetType);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheet/Properties/Type
      */
     readonly Type: any;
     /**
      * 返回当前数据表的视图集合
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const views = Application.Sheets(1).Views;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheet/Properties/Views
      */
     readonly Views: Views;
 
@@ -2307,6 +5382,14 @@ declare namespace AirScript {
      *
      * @param Value 待添加的说明文案
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *   Application.Sheets(1).AddDescription('hello');
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheet/Methods/AddDescription
      */
     AddDescription(Value: string): boolean;
     /**
@@ -2314,6 +5397,21 @@ declare namespace AirScript {
      *
      * @param FileId 在线表格文件的 fileId
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *   try {
+     *     const isAppended = Application.Sheets.Item(1).AppendFromCloud(fileId)
+     *     if (isAppended) {
+     *       console.log('“追加数据到数据表成功')
+     *     }
+     *   } catch (error) {
+     *     console.log('“追加数据到数据表失败', error.message)
+     *   }
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheet/Methods/AppendFromCloud
      */
     AppendFromCloud(FileId: string): boolean;
     /**
@@ -2321,6 +5419,21 @@ declare namespace AirScript {
      *
      * @param File 本地表格文件对象
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *   try {
+     *     const isAppended = Application.Sheets.Item(1).AppendFromLocal(file)
+     *     if (isAppended) {
+     *       console.log('“追加数据到数据表成功')
+     *     }
+     *   } catch (error) {
+     *     console.log('“追加数据到数据表失败', error.message)
+     *   }
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheet/Methods/AppendFromLocal
      */
     AppendFromLocal(File: any): boolean;
     /**
@@ -2328,12 +5441,31 @@ declare namespace AirScript {
      *
      * @param Value 创建副本的方式，默认为 false。传 true 复制全部内容；传 false 仅复制空表和视图；复制的sheet为仪表盘时，此参数不传
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *     // 复制全部内容
+     *     Application.Sheets(1).Copy(true);
+     *     // 仅复制空表和视图
+     *     Application.Sheets(1).Copy(false);
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheet/Methods/Copy
      */
     Copy(Value?: boolean): boolean;
     /**
      * 为当前数据表创建字段
      *
      * @param Fields 创建的字段数组
+     * @example
+     * ```javascript
+     * function main() {
+     *     Application.ActiveSheet.CreateFields([{name:'等级',type:'Rating',max:5},{name:'富文本',type:'MultiLineText'}])
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheet/Methods/CreateFields
      */
     CreateFields(Fields: any[]): void;
     /**
@@ -2341,12 +5473,28 @@ declare namespace AirScript {
      *
      * @param HideTip 是否需要隐藏删除确认框
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *   Application.Sheets(1).Delete(true);
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheet/Methods/Delete
      */
     Delete(HideTip?: boolean): boolean;
     /**
      * 删除该数据表的指定 ids 的字段信息
      *
      * @param FiledIds 要删除的字段的 ids(字符串数组)
+     * @example
+     * ```javascript
+     * function main() {
+     *     Application.ActiveSheet.DeleteFields(['B','C']);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheet/Methods/DeleteFields
      */
     DeleteFields(FiledIds: any[]): void;
     /**
@@ -2355,6 +5503,18 @@ declare namespace AirScript {
      * * 当前方法暂时仅支持仪表盘sheet导出
      *
      * @param options 参数对象
+     * @example
+     * ```javascript
+     * async function main() {
+     *     const dashboard = Application.Sheets(1);
+     *     const ok = await dashboard.Export({
+     *         Type: Application.Enum.ExportType.exportAsImage,
+     *     });
+     *     console.log(ok);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheet/Methods/Export
      */
     Export(options: { Type: string }): any;
     /**
@@ -2362,18 +5522,43 @@ declare namespace AirScript {
      *
      * @param Name 字段名称
      * @returns string
+     * @example
+     * ```javascript
+     * function main() {
+     *     const fieldId = Application.Sheets(1).FieldId('字段名'); 
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheet/Methods/FieldId
      */
     FieldId(Name: string): string;
     /**
      * 获取该数据表的所有字段信息
      *
      * @returns Fields
+     * @example
+     * ```javascript
+     * function main() {
+     *     const fields = Application.ActiveSheet.GetFields(); 
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheet/Methods/GetFields
      */
     GetFields(): Fields;
     /**
      * - 当前方法暂时仅支持仪表盘sheet分享
      *
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *     // 分享仪表盘
+     *     Application.Sheets(1).Share(); 
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheet/Methods/Share
      */
     Share(): boolean;
     /**
@@ -2381,6 +5566,15 @@ declare namespace AirScript {
      *
      * @param Fields 要更新的字段数组
      * @returns Fields
+     * @example
+     * ```javascript
+     * ```javascript
+     * function main() {
+     *     Application.Sheets(1).UpdateFields([{ id: 'L', name: '富文本123', type: 'MultiLineText' }]);
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheet/Methods/UpdateFields
      */
     UpdateFields(Fields: any[]): Fields;
 
@@ -2388,18 +5582,64 @@ declare namespace AirScript {
      * 为当前数据表添加 CreateRecord 事件,当新增 Record 时触发。注意在脚本编辑器中使用时，脚本运行结束就会退出运行，这时可能回调无法被正常触发
      *
      * @param callback 事件回调，data 为事件返回数据
+     * @example
+     * ```javascript
+     * function main() {
+     *     let eventContext;
+     *     eventContext = Application.Sheets(1).OnCreateRecord(data => {
+     *         console.log(data);
+     *         // 取消事件监听
+     *         eventContext.Destroy();
+     *     });
+     *     Application.Sheets(1).Views(1).RecordRange.Add(1, undefined, 5);
+     *     //这里会执行OnCreateRecord的回调
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheet/Events/OnCreateRecord
      */
     OnCreateRecord(callback: (data: RecordRange) => void): EventContext;
     /**
      * 为当前数据表添加 Delete 事件,当删除 Sheet 时触发。注意在脚本编辑器中使用时，脚本运行结束就会退出运行，这时可能回调无法被正常触发
      *
      * @param callback 事件回调，data 为事件返回数据
+     * @example
+     * ```javascript
+     * function main() {
+     *     Application.Sheets.Add({ Type: 'xlEtDataBaseSheet' });
+     *     let eventContext;
+     *     eventContext = Application.Sheets(1).OnDelete(data => {
+     *         console.log(data);
+     *         // 取消事件监听
+     *         eventContext.Destroy();
+     *     });
+     *     Application.Sheets(1).Delete(true);
+     *     //这里会执行OnDelete的回调
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheet/Events/OnDelete
      */
     OnDelete(callback: (data: SheetOnDeleteEventData) => void): EventContext;
     /**
      * 为当前数据表添加 Rename 事件,当被修改 Name 时触发。注意在脚本编辑器中使用时，脚本运行结束就会退出运行，这时可能回调无法被正常触发
      *
      * @param callback 事件回调，data 为事件返回数据
+     * @example
+     * ```javascript
+     * function main() {
+     *     let eventContext;
+     *     eventContext = Application.Sheets(1).OnRename(data => {
+     *         console.log(data);
+     *         // 取消事件监听
+     *         eventContext.Destroy();
+     *     });
+     *     Application.Sheets(1).Name = 'newName';
+     *     //这里会执行OnRename的回调
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheet/Events/OnRename
      */
     OnRename(callback: (data: SheetOnRenameEventData) => void): EventContext;
   }
@@ -2421,6 +5661,34 @@ declare namespace AirScript {
      * @param Type "xlEtFlexPaperSheet"(说明页面)(暂不支持)、"xlEtDataBaseSheet"（数据表）、"xlDbDashBoardSheet"（仪表盘）
      * @param Config 数据表专属配置，结构：Config:{ fields : Field[] ,  name ?: string ,  views ?: View[] }；
      * @returns Sheet
+     * @example
+     * ```javascript
+     * function main() {
+     *   Application.Sheets.Add(
+     *     1,null,'xlEtDataBaseSheet',
+     *         {
+     *             fields:
+     *                 [
+     *                     {fieldType:'SingleLineText',args:{fieldName:'文本',fieldWidth:15}},
+     *                     {fieldType:'MultiLineText',args:{fieldName:'多行文本',fieldWidth:15}},
+     *                     {fieldType:'Date',args:{fieldName:'日期',numberFormat:'yyyy/mm/dd;@',fieldWidth:15}},
+     *                     {fieldType:'SingleSelect',args:{fieldName:'单选项',fieldWidth:15,
+     *                         listItems:[{value: '选项1', color: 4283466178},{value: '选项2',color: 4281378020}]}},
+     *                     {fieldType:'Number',args:{fieldName:'数字',fieldWidth:15}},
+     *                     {fieldType:'Rating',args:{fieldName:'等级',maxRating:6,fieldWidth:15}},
+     *                 ],
+     *             name:'数据表',
+     *             views:
+     *                 [
+     *                     {name:'表格视图',type:'Grid'},
+     *                     {name:'表单视图',type:'Form'}
+     *                 ]
+     *         }
+     *     )
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheets/Methods/Add
      */
     Add(Before: number | string | null, After: number | string | null, Type: SheetType, Config?: SheetAddConfig): Sheet;
     /**
@@ -2428,18 +5696,42 @@ declare namespace AirScript {
      *
      * @param Index 索引从 1 开始/数据表名
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *   Application.Sheets.Delete(1);
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheets/Methods/Delete
      */
     Delete(Index: number | string): boolean;
     /**
      * 获取当前激活数据表的表 Id
      *
      * @returns number
+     * @example
+     * ```javascript
+     * function main() {
+     *   const sheetId = Application.Sheets.GetActiveSheetId();
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheets/Methods/GetActiveSheetId
      */
     GetActiveSheetId(): number;
     /**
      * 获取当前激活数据表的索引位置
      *
      * @returns number
+     * @example
+     * ```javascript
+     * function main() {
+     *   const sheetIndex = Application.Sheets.GetActiveSheetIndex();
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheets/Methods/GetActiveSheetIndex
      */
     GetActiveSheetIndex(): number;
     /**
@@ -2447,6 +5739,14 @@ declare namespace AirScript {
      *
      * @param Index 索引从 1 开始/名称
      * @returns Sheet
+     * @example
+     * ```javascript
+     * function main() {
+     *   const sheet = Application.Sheets.Item(1);
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheets/Methods/Item
      */
     Item(Index: number | string): Sheet;
     /**
@@ -2454,6 +5754,14 @@ declare namespace AirScript {
      *
      * @param Id 表格Id
      * @returns Sheet
+     * @example
+     * ```javascript
+     * function main() {
+     *   const sheet = Application.Sheets.ItemById(1);
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheets/Methods/ItemById
      */
     ItemById(Id: number | string): Sheet;
     /**
@@ -2463,6 +5771,14 @@ declare namespace AirScript {
      * @param Before 移动到 Before(索引从 1 开始/数据表名)对应 sheet 之前
      * @param After 移动到 After(索引从 1 开始/数据表名)对应 sheet 之后
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *   Application.Sheets.Move(111111, null, 22222);
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheets/Methods/Move
      */
     Move(From: number | string, Before: number | string, After: number | string): boolean;
 
@@ -2470,6 +5786,21 @@ declare namespace AirScript {
      * 为当前数据表集合添加 CreateSheet 事件(当前只支持添加数据表事件，添加说明页和仪表盘不会触发该事件，后续版本更新后支持),当新增 sheet 时触发。注意在脚本编辑器中使用时，脚本运行结束就会退出运行，这时可能回调无法被正常触发
      *
      * @param callback 事件回调，data 为事件返回数据
+     * @example
+     * ```javascript
+     * function main() {
+     *     let eventContext;
+     *     eventContext = Application.Sheets.OnCreateSheet(data => {
+     *         console.log(data);
+     *         // 取消事件监听
+     *         eventContext.Destroy();
+     *     });
+     *     Application.Sheets.Add({ Type: 'xlEtDataBaseSheet' });
+     *     //这里会执行OnCreateSheet的回调
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sheets/Events/OnCreateSheet
      */
     OnCreateSheet(callback: (data: SheetsOnCreateSheetEventData) => void): EventContext;
   }
@@ -2480,14 +5811,45 @@ declare namespace AirScript {
   interface Sort {
     /**
      * 排序字段
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const sorts = Application.Sheets(1).Views(1).Sorts;
+     *     const field = sorts(1).Field;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sort/Properties/Field
      */
     readonly Field: any;
     /**
      * 升序属性
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const sorts = Application.Sheets(1).Views(1).Sorts;
+     *     const isAscending = sorts(1).IsAscending;
+     *     isAscending = false;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sort/Properties/IsAscending
      */
     IsAscending: boolean;
     /**
      * 分组单位
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const sorts = Application.Sheets(1).Views(1).Sorts;
+     *     const unit = sorts(1).Unit;
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sort/Properties/Unit
      */
     readonly Unit: DbGroupUnit;
 
@@ -2496,12 +5858,35 @@ declare namespace AirScript {
      *
      * @param Index 索引从 1 开始/字段 ID
      * @returns ApiResult
+     * @example
+     * ```javascript
+     * function main() {
+     *     const sorts = Application.Sheets(1).Views(1).Sorts;
+     *     const res = sorts(1).ChangeField(2);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sort/Methods/ChangeField
      */
     ChangeField(Index: number | string, Unit: any): ApiResult;
     /**
      * 删除单个排序条件
      *
      * @returns ApiResult
+     * @example
+     * ```javascript
+     * function main() {
+     *     const sorts = Application.Sheets(1).Views(1).Sorts;
+     *     const res = sorts(1).Delete();
+     *     if (res.Code === 0) {
+     *         console.log("成功删除")
+     *     } else {
+     *         console.error("删除错误" + res.Message)
+     *     }
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sort/Methods/Delete
      */
     Delete(): ApiResult;
   }
@@ -2514,10 +5899,31 @@ declare namespace AirScript {
     (Index?: number | string): Sort;
     /**
      * 返回排序列表的个数
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const sorts = Application.Sheets(1).Views(1).Sorts;
+     *     const count = sorts.Count;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sorts/Properties/Count
      */
     readonly Count: number;
     /**
      * 自动排序属性
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const sorts = Application.Sheets(1).Views(1).Sorts;
+     *     const isAuto = sorts.IsAuto;
+     *     isAuto = false;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sorts/Properties/IsAuto
      */
     IsAuto: boolean;
 
@@ -2527,6 +5933,16 @@ declare namespace AirScript {
      * @param Index 新增的排序字段索引/新增的排序字段 ID
      * @param IsAscending 是否为升序
      * @returns Sort
+     * @example
+     * ```javascript
+     * function main() {
+     *     const sorts = Application.Sheets(1).Views(1).Sorts;
+     *     const res = sorts.Add(1);
+     *     //const res = sorts.Add('B');
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sorts/Methods/Add
      */
     Add(Index: number | string, IsAscending?: boolean): Sort;
     /**
@@ -2536,6 +5952,20 @@ declare namespace AirScript {
      * @param BeforeField 目标位置前的排序字段ID/目标位置前的排序字段名称(名称要以@字符作为开始)
      * @param AfterField 目标位置后的排序字段ID/目标位置后的排序字段名称(名称要以@字符作为开始)
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *     const sorts = Application.Sheets(1).Views(1).Sorts;
+     *     // 将公式排序条件移动到日期排序条件的后面
+     *     const res = sorts.ChangeOrder('@公式', undefined, '@日期');
+     *     if (res.Code === 0) {
+     *         console.log("设置排序优先级成功")
+     *     } else {
+     *         console.error("设置排序优先级失败" + res.Message)
+     *     }
+     * }
+     * main()
+     * ```
      */
     ChangeOrder(FromField: string, BeforeField?: string, AfterField?: string): boolean;
     /**
@@ -2543,6 +5973,16 @@ declare namespace AirScript {
      *
      * @param Index 索引从 1 开始/字段 ID
      * @returns Sort
+     * @example
+     * ```javascript
+     * function main() {
+     *     const sorts = Application.Sheets(1).Views(1).Sorts;
+     *     const sort = sorts.Item(1);
+     *     //const sort = sorts.Item('B');
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sorts/Methods/Item
      */
     Item(Index: number | string): Sort;
     /**
@@ -2550,6 +5990,16 @@ declare namespace AirScript {
      *
      * @param FieldIds 排序字段索引列表/排序字段 ID 列表
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *     const sorts = Application.Sheets(1).Views(1).Sorts;
+     *     const res = sorts.Move([3, 2, 1]);
+     *     //const res = sorts.Move('D', 'C', 'B');
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Sorts/Methods/Move
      */
     Move(FieldIds: number | string): boolean;
   }
@@ -2564,24 +6014,65 @@ declare namespace AirScript {
      * 从当前文件（工作簿）自定义存储中读取指定键的值（书级 `stId` 为 `-1`）。若键不存在，返回空字符串。
      *
      * @param options 参数对象
+     * @example
+     * ```javascript
+     * function main() {
+     *     const value = Application.Storage.GetValue({ StorageKey: 'config' });
+     *     console.log(value);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Storage/Methods/GetValue
      */
     GetValue(options: { StorageKey: string }): string;
     /**
      * 与 `GetValue` 相同，但使用插件实例前缀键：`{PluginInstanceId}_{StorageKey}`。
      *
      * @param options 参数对象
+     * @example
+     * ```javascript
+     * function main() {
+     *     const value = Application.Storage.GetValue_Plugin({
+     *         StorageKey: 'token',
+     *         PluginInstanceId: 'plugin-instance-1',
+     *     });
+     *     console.log(value);
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Storage/Methods/GetValue_Plugin
      */
     GetValue_Plugin(options: { StorageKey: string; PluginInstanceId: string }): string;
     /**
      * 在当前文件（工作簿）维度写入自定义存储。键名为 `StorageKey`，值为字符串；未传或传入 `null` / `undefined` 时按空字符串写入。
      *
      * @param options 参数对象
+     * @example
+     * ```javascript
+     * async function main() {
+     *     await Application.Storage.SetValue({ StorageKey: 'config', StorageValue: 'value' });
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Storage/Methods/SetValue
      */
     SetValue(options: { StorageKey: string; StorageValue?: string | null }): any;
     /**
      * 与 `SetValue` 相同，但键名会加上插件实例前缀：`{PluginInstanceId}_{StorageKey}`。
      *
      * @param options 参数对象
+     * @example
+     * ```javascript
+     * async function main() {
+     *     await Application.Storage.SetValue_Plugin({
+     *         StorageKey: 'token',
+     *         StorageValue: 'abc',
+     *         PluginInstanceId: 'plugin-instance-1',
+     *     });
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Storage/Methods/SetValue_Plugin
      */
     SetValue_Plugin(options: { StorageKey: string; StorageValue?: string | null; PluginInstanceId: string }): any;
   }
@@ -2592,10 +6083,32 @@ declare namespace AirScript {
   interface SummarySheet extends SyncDBSheet {
     /**
      * 合并表的数据源配置对象
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *  // 先切到合并表，然后获取合并表配置
+     *  const configs = Application.ActiveSheet.SourceConfigs
+     *  console.log(configs.Item(1).FileId)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/SummarySheet/Properties/SourceConfig
      */
     readonly SourceConfig: SummarySourceConfigs;
     /**
      * 合并表的数据源配置对象
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *  // 先切到合并表，然后获取合并表配置
+     *  const configs = Application.ActiveSheet.SourceConfigs
+     *  console.log(configs.Item(1).FileId)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/SummarySheet/Properties/SourceConfigs
      */
     readonly SourceConfigs: SummarySourceConfigs;
 
@@ -2603,12 +6116,32 @@ declare namespace AirScript {
      * 刷新数据
      *
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *  // 切到某个合并表，获取该合并表的实例对象
+     *  const summarySheet = Application.ActiveSheet
+     *  summarySheet.RefreshSyncSheet()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/SummarySheet/Methods/RefreshSyncSheet
      */
     RefreshSyncSheet(): boolean;
     /**
      * 解除同步关系
      *
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *  // 切到某个合并表，获取该合并表的实例对象
+     *  const summarySheet = Application.ActiveSheet
+     *  summarySheet.RemoveSheetSyncLink()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/SummarySheet/Methods/RemoveSheetSyncLink
      */
     RemoveSheetSyncLink(): boolean;
   }
@@ -2620,10 +6153,41 @@ declare namespace AirScript {
   interface SummarySourceConfig {
     /**
      * 合并表中某个源文件配置对象的文件id。注意：修改后，该对象中对应的SheetIds会自动重置为空数组。（只是编辑的本地对象，需要调SummarySourceConfigs对象中的Apply方法才能更新到云上）
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *  const configs = Application.ActiveSheet.SourceConfigs
+     *  const config = configs.Item(1)
+     *  console.log(config.FileId)
+     *  config.FileId = '100139340929'
+     *  console.log(config.FileId)
+     *  config.SheetIds = [1, 3]
+     *  // 将改动后的配置更新到云上
+     *  configs.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/SummarySourceConfig/Properties/FileId
      */
     FileId: string;
     /**
      * 合并表中某个源文件配置对象的选中数据表的id数组。（只是编辑的本地对象，需要调SummarySourceConfigs对象中的Apply方法才能更新到云上）
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *  const configs = Application.ActiveSheet.SourceConfigs
+     *  const config = configs.Item(1)
+     *  console.log(config.SheetIds)
+     *  config.SheetIds = [1, 3]
+     *  console.log(config.SheetIds)
+     *  // 将改动后的配置更新到云上
+     *  configs.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/SummarySourceConfig/Properties/SheetIds
      */
     SheetIds: number[];
 
@@ -2632,6 +6196,20 @@ declare namespace AirScript {
      *
      * @param Sheets 数据表名或索引组成的数组
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *  const configs = Application.ActiveSheet.SourceConfigs
+     *  const config = configs.Item(1)
+     *  console.log(config.SheetIds)
+     *  config.SetSheets([1, '数据表(2)'])
+     *  console.log(config.SheetIds)
+     *  // 将改动后的配置更新到云上
+     *  configs.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/SummarySourceConfig/Methods/SetSheets
      */
     SetSheets(Sheets: number | string[]): boolean;
     /**
@@ -2639,6 +6217,21 @@ declare namespace AirScript {
      *
      * @param Url 文件url
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *  const configs = Application.ActiveSheet.SourceConfigs
+     *  const config = configs.Item(1)
+     *  console.log(config.FileId)
+     *  config.SetUrl("https://www.kdocs.cn/l/ccSvj0b4dC7u?R=L1MvMTI=")
+     *  console.log(config.FileId)
+     *  config.SetSheets([1, 2])
+     *  // 将改动后的配置更新到云上
+     *  configs.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/SummarySourceConfig/Methods/SetUrl
      */
     SetUrl(Url: string): boolean;
   }
@@ -2651,6 +6244,19 @@ declare namespace AirScript {
     (Index?: number | string): SummarySourceConfig;
     /**
      * 合并表数据源配置中，包含的源文件的数量
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *  const configs = Application.ActiveSheet.SourceConfigs
+     *  console.log(configs.Count)
+     *  // 向配置中新加一个源文件配置
+     *  configs.Add("100136699885", [1, 2])
+     *  console.log(configs.Count)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/SummarySourceConfigs/Properties/Count
      */
     readonly Count: number;
 
@@ -2660,12 +6266,36 @@ declare namespace AirScript {
      * @param File 文件id/文件url
      * @param Sheets 数据表数组，支持两种形式，表名和索引（从1开始）
      * @returns SummarySourceConfig
+     * @example
+     * ```javascript
+     * function main() {
+     *  const configs = Application.ActiveSheet.SourceConfigs
+     *  const config = configs.Add("100136699885", [1, 2])
+     *  // 返回配置文件的id
+     *  console.log(config.FileId)
+     *  // 返回文件下选中的数据表id数组
+     *  console.log(config.SheetIds)
+     *  // 将改动后的配置更新到云上
+     *  configs.Apply()
+     * }
+     * main()
+     * ```
      */
     Add(File: string, Sheets: number | string[]): SummarySourceConfig;
     /**
      * 更新本地的数据源配置到云上
      *
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *  const configs = Application.ActiveSheet.SourceConfigs
+     *  configs.Add("100136699885", [1, 2])
+     *  configs.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/SummarySourceConfigs/Methods/Apply
      */
     Apply(): boolean;
     /**
@@ -2673,6 +6303,16 @@ declare namespace AirScript {
      *
      * @param Index 支持索引、文件id和文件url
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *  const configs = Application.ActiveSheet.SourceConfigs
+     *  configs.Delete(1)
+     *  // 将改动后的配置更新到云上
+     *  configs.Apply()
+     * }
+     * main()
+     * ```
      */
     Delete(Index: number | string): boolean;
     /**
@@ -2680,6 +6320,18 @@ declare namespace AirScript {
      *
      * @param Index 索引从1开始/文件id
      * @returns SummarySourceConfig
+     * @example
+     * ```javascript
+     * function main() {
+     *  const config = Application.ActiveSheet.SourceConfigs.Item(1)
+     *  // 返回配置文件的id
+     *  console.log(config.FileId)
+     *  // 返回文件下选中的数据表id数组
+     *  console.log(config.SheetIds)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/SummarySourceConfigs/Methods/Item
      */
     Item(Index: number | string): SummarySourceConfig;
   }
@@ -2692,12 +6344,30 @@ declare namespace AirScript {
      * 刷新数据
      *
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *  // 切到某个同步表，获取该同步表的实例对象
+     *  const syncSheet = Application.ActiveSheet
+     *  syncSheet.RefreshSyncSheet()
+     * }
+     * main()
+     * ```
      */
     RefreshSyncSheet(): boolean;
     /**
      * 解除同步关系
      *
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *  // 切到某个同步表，获取该同步表的实例对象
+     *  const syncSheet = Application.ActiveSheet
+     *  syncSheet.RemoveSheetSyncLink()
+     * }
+     * main()
+     * ```
      */
     RemoveSheetSyncLink(): boolean;
   }
@@ -2708,18 +6378,94 @@ declare namespace AirScript {
   interface TextLinkRun {
     /**
      * 返回文本链接的地址
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *    const recordComment = ActiveView.RecordComments.Item(1)
+     *    const count = recordComment.Count
+     *    for (let i = 1; i <= count; i++) { 
+     *     const comment = recordComment.Item(i)
+     *     const textLinkRuns = comment.TextLinkRuns
+     *     const linkCount =  textLinkRuns.Count
+     *     for (let j = 1; j <= linkCount; j++) {
+     *      const textLinkRun = textLinkRuns.Item(j)
+     *      console.log(textLinkRun.Address)
+     *     }
+     *    }
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/TextLinkRun/Properties/Address
      */
     readonly Address: string;
     /**
      * 返回的文本链接的长度
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *    const recordComment = ActiveView.RecordComments.Item(1)
+     *    const count = recordComment.Count
+     *    for (let i = 1; i <= count; i++) { 
+     *     const comment = recordComment.Item(i)
+     *     const textLinkRuns = comment.TextLinkRuns
+     *     const linkCount =  textLinkRuns.Count
+     *     for (let j = 1; j <= linkCount; j++) {
+     *      const textLinkRun = textLinkRuns.Item(j)
+     *      console.log(textLinkRun.Length)
+     *     }
+     *    }
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/TextLinkRun/Properties/Length
      */
     readonly Length: number;
     /**
      * 返回文本链接的类型
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *    const recordComment = ActiveView.RecordComments.Item(1)
+     *    const count = recordComment.Count
+     *    for (let i = 1; i <= count; i++) { 
+     *     const comment = recordComment.Item(i)
+     *     const textLinkRuns = comment.TextLinkRuns
+     *     const linkCount =  textLinkRuns.Count
+     *     for (let j = 1; j <= linkCount; j++) {
+     *      const textLinkRun = textLinkRuns.Item(j)
+     *      console.log(textLinkRun.LinkRunsType)
+     *     }
+     *    }
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/TextLinkRun/Properties/LinkRunsType
      */
     readonly LinkRunsType: string;
     /**
      * 返回链接的开始位置，以字符为单位。
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *    const recordComment = ActiveView.RecordComments.Item(1)
+     *    const count = recordComment.Count
+     *    for (let i = 1; i <= count; i++) { 
+     *     const comment = recordComment.Item(i)
+     *     const textLinkRuns = comment.TextLinkRuns
+     *     const linkCount =  textLinkRuns.Count
+     *     for (let j = 1; j <= linkCount; j++) {
+     *      const textLinkRun = textLinkRuns.Item(j)
+     *      console.log(textLinkRun.Pos)
+     *     }
+     *    }
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/TextLinkRun/Properties/Pos
      */
     readonly Pos: number;
   }
@@ -2732,6 +6478,25 @@ declare namespace AirScript {
     (Index?: number | string): TextLinkRun;
     /**
      * 返回的记录里包含TextLinkRun的数量
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *    const recordComment = ActiveView.RecordComments.Item(1)
+     *    const count = recordComment.Count
+     *    for (let i = 1; i <= count; i++) { 
+     *     const comment = recordComment.Item(i)
+     *     const textLinkRuns = comment.TextLinkRuns
+     *     const linkCount =  textLinkRuns.Count
+     *     for (let j = 1; j <= linkCount; j++) {
+     *      const textLinkRun = textLinkRuns.Item(j)
+     *      console.log(textLinkRun.Address)
+     *     }
+     *    }
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/TextLinkRuns/Properties/Count
      */
     readonly Count: number;
 
@@ -2740,6 +6505,19 @@ declare namespace AirScript {
      *
      * @param Index 传入number时索引从1开始
      * @returns TextLinkRun
+     * @example
+     * ```javascript
+     * function main() {
+     *    const recordComment = ActiveView.RecordComments(1)
+     *    const count = recordComment.Count
+     *    for (let i = 1; i <= count; i++) { 
+     *     const comment = recordComment.Item(i)
+     *     console.log(comment.Text)
+     *    }
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/TextLinkRuns/Methods/Item
      */
     Item(Index?: number): TextLinkRun;
   }
@@ -2750,10 +6528,38 @@ declare namespace AirScript {
   interface UrlField {
     /**
      * 只对超链接字段有效，超链接字段设置显示的文本，如果设置了 HyperLinkText ，超链接字段显示样式就会以按钮形式显示
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const field = Application.Sheets(1).FieldDescriptors("@超链接")
+     *   const prop = field.Url
+     *   prop.DisplayText = "Go"
+     *   field.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/UrlField/Properties/DisplayText
      */
     DisplayText: string;
     /**
      * 只对超链接字段有效，超链接字段设置显示的文本，如果设置了 HyperLinkText ，超链接字段显示样式就会以按钮形式显示
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const field = Application.Sheets(1).FieldDescriptors("@超链接")
+     *   const prop = field.Url
+     *   // 以按钮形式显示 "Go"
+     *   prop.HyperLinkText = "Go"
+     *   field.Apply()
+     *
+     *   // 以超链接形式显示
+     *   prop.HyperLinkText = ""
+     *   field.Apply()
+     * }
+     * main()
+     * ```
      */
     HyperLinkText: string;
   }
@@ -2766,22 +6572,32 @@ declare namespace AirScript {
   interface User {
     /**
      * 用户头像地址。读取时优先 `subject_avatar`，否则为构造时传入的 `avatar`。
+     *
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/User/Properties/Avatar
      */
     Avatar: string;
     /**
      * 用户所属企业 ID。若内部数据未提供，返回空字符串。
+     *
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/User/Properties/CompanyId
      */
     CompanyId: string;
     /**
      * 用户唯一标识。读取时优先 `subject_id`，否则为构造时传入的 `id`。
+     *
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/User/Properties/Id
      */
     Id: string;
     /**
      * 用户显示名称。读取时优先 `subject_name`，否则为构造时传入的 `name`。
+     *
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/User/Properties/Name
      */
     Name: string;
     /**
      * 协作者主体类型，例如用户、部门、用户组等。若未设置 `subject_type`，默认为 `user`。
+     *
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/User/Properties/Type
      */
     Type: string;
   }
@@ -2792,50 +6608,172 @@ declare namespace AirScript {
   interface View {
     /**
      * 视图说明
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const view = Application.Sheets(1).Views(1);
+     *   const description = view.Description;
+     *   view.Description = '新视图说明';
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/View/Properties/Description
      */
     Description: string;
     /**
      * 获取当前视图下的字段列表
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const fields = Application.Sheets(1).Views(1).Fields;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/View/Properties/Fields
      */
     readonly Fields: Fields;
     /**
      * 获取当前视图下的筛选器
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const filters = Application.Sheets(1).Views(1).Filters;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/View/Properties/Filters
      */
     readonly Filters: Filters;
     /**
      * 获取指定视图下面的分组列表
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const view = Application.Sheets(1).Views(1);
+     *   const groups = view.Groups;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/View/Properties/Groups
      */
     readonly Groups: Groups;
     /**
      * 视图Id
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const viewId = Application.Sheets(1).Views(1).Id;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/View/Properties/Id
      */
     Id: string;
     /**
      * 快速访问视图
+     *
+     * @example
+     * ```javascript
+     * function getFavView() {
+     *     const view = Application.Sheets(1).Views(1);
+     *     const isFavView = view.IsFavView; // 若为快速访问视图返回true，若不为快速访问视图返回false
+     * }
+     * function setFavView() {
+     *     const view = Application.Sheets(1).Views(1);
+     *     view.IsFavView = false; // 取消设置为快速访问视图
+     *     view.IsFavView = true; // 设置为快速访问视图
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/View/Properties/IsFavView
      */
     IsFavView: boolean;
     /**
      * 公共视图
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const view = Application.Sheets(1).Views(1);
+     *   const isPublicView = !view.IsPersonal;
+     *   view.IsPersonal = false; // 设置为公共视图
+     *   view.IsPersonal = true; // 设置为个人视图
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/View/Properties/IsPersonal
      */
     IsPersonal: boolean;
     /**
      * 视图名称
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const view = Application.Sheets(1).Views(1);
+     *   const name = view.Name;
+     *   view.Name = '新视图名称';
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/View/Properties/Name
      */
     Name: string;
     /**
      * 视图的RecordRange
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const recordRange = Application.Sheets(1).Views(1).RecordRange;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/View/Properties/RecordRange
      */
     RecordRange: RecordRange;
     /**
      * 视图的Records
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const records = Application.Sheets(1).Views(1).Records;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/View/Properties/Records
      */
     Records: Records;
     /**
      * 该视图的选中的RecordRange
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const recordRange = Application.Sheets(1).Views(1).Selection;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/View/Properties/Selection
      */
     Selection: RecordRange;
     /**
      * 获取或设置当前视图下的排序条件列表
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const sorts = Application.Sheets(1).Views(1).Sorts;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/View/Properties/Sorts
      */
     Sorts: Sorts;
     /**
@@ -2847,27 +6785,73 @@ declare namespace AirScript {
      * 'Gantt', // 甘特视图
      * 'Query', // 查询视图
      * 'Calendar', // 日历视图
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const view = Application.Sheets(1).Views(1);
+     *   const type = view.Type;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/View/Properties/Type
      */
     Type: string;
     /**
      * 该视图的视图分享
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const viewShare = Application.Sheets(1).Views(1).ViewShare;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/View/Properties/ViewShare
      */
     ViewShare: ViewShare;
 
     /**
      * 激活该视图
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     Application.Sheets(1).Views(1).Activate();
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/View/Methods/Activate
      */
     Activate(): void;
     /**
      * 复制视图
      *
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *   const view = Application.Sheets(1).Views(1);
+     *   const newView = view.Copy();
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/View/Methods/Copy
      */
     Copy(): boolean;
     /**
      * 删除视图
      *
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *   const view = Application.Sheets(1).Views(1);
+     *   view.Delete();
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/View/Methods/Delete
      */
     Delete(): boolean;
 
@@ -2875,12 +6859,46 @@ declare namespace AirScript {
      * 为当前视图添加 Delete 事件,当删除 View 时触发。注意在脚本编辑器中使用时，脚本运行结束就会退出运行，这时可能回调无法被正常触发
      *
      * @param callback 事件回调，data 为事件返回数据
+     * @example
+     * ```javascript
+     * function main() {
+     *     let eventContext;
+     *     eventContext = Application.Sheets(1)
+     *         .Views(1)
+     *         .OnDelete(data => {
+     *             console.log(data);
+     *             // 取消事件监听
+     *             eventContext.Destroy();
+     *         });
+     *     Application.Sheets(1).Views(1).Delete();
+     *     //这里会执行OnDelete的回调
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/View/Events/OnDelete
      */
     OnDelete(callback: (data: ViewOnDeleteEventData) => void): EventContext;
     /**
      * 为当前视图添加 Rename 事件,当被修改 Name 时触发。注意在脚本编辑器中使用时，脚本运行结束就会退出运行，这时可能回调无法被正常触发
      *
      * @param callback 事件回调，data 为事件返回数据
+     * @example
+     * ```javascript
+     * function main() {
+     *     let eventContext;
+     *     eventContext = Application.Sheets(1)
+     *         .Views(1)
+     *         .OnRename(data => {
+     *             console.log(data);
+     *             // 取消事件监听
+     *             eventContext.Destroy();
+     *         });
+     *     Application.Sheets(1).Views(1).Name = 'newName';
+     *     //这里会执行OnRename的回调
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/View/Events/OnRename
      */
     OnRename(callback: (data: ViewOnRenameEventData) => void): EventContext;
   }
@@ -2891,30 +6909,121 @@ declare namespace AirScript {
   interface ViewShare {
     /**
      * 返回当前分享视图高级权限中，是否允许添加记录
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const viewShare = Application.Sheets(1).Views(1).ViewShare
+     *     // read
+     *     const canAddRecords = viewShare.CanAddRemoveRecords;
+     *     // write
+     *     viewShare.CanAddRemoveRecords = true;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/ViewShare/Properties/CanAddRemoveRecords
      */
     CanAddRemoveRecords: boolean;
     /**
      * 返回当前分享视图高级权限中，允许编辑的字段id
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const view = Application.Sheets(1).Views(1);
+     *     const viewShare = view.ViewShare
+     *
+     *     // read
+     *     const editableFieldsInfo = viewShare.EditableFieldsInfo;
+     *
+     *     // write
+     *     // 所有字段可编辑
+     *     viewShare.EditableFieldsInfo = {type: 'All'}
+     *
+     *     // 当前视图中索引为1的字段，在分享视图中可编辑
+     *     const fields = view.Fields;
+     *     const fieldId = fields(1).Id
+     *     viewShare.EditableFieldsInfo = {
+     *         type: 'Custom',
+     *         ids: [fieldId]
+     *     }
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/ViewShare/Properties/EditableFieldsInfo
      */
     EditableFieldsInfo: any;
     /**
      * 返回当前分享视图高级权限中，可编辑的记录范围
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const viewShare = Application.Sheets(1).Views(1).ViewShare;
+     *     // read
+     *     const visible = viewShare.EditableRecType;
+     *     // write
+     *     viewShare.EditableRecType = 'Self';
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/ViewShare/Properties/EditableRecType
      */
     readonly EditableRecType: DbSharedCriteriaType;
     /**
      * 返回当前分享视图的shareId
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const viewShareId = Application.Sheets(1).Views(1).ViewShare.ShareId;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/ViewShare/Properties/ShareId
      */
     readonly ShareId: string;
     /**
      * 返回当前分享视图的分享链接
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const viewShareUrl = Application.Sheets(1).Views(1).ViewShare.ShareUrl;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/ViewShare/Properties/ShareUrl
      */
     readonly ShareUrl: string;
     /**
      * 返回当前分享视图的信息
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const sharedLinkInfo = Application.Sheets(1).Views(1).ViewShare.SharedLinkInfo;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/ViewShare/Properties/SharedLinkInfo
      */
     readonly SharedLinkInfo: any;
     /**
      * 返回当前分享视图高级权限中，可查看的记录范围
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const viewShare = Application.Sheets(1).Views(1).ViewShare;
+     *     // read
+     *     const visible = viewShare.VisibleRecType;
+     *     // write
+     *     viewShare.VisibleRecType = 'Self';
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/ViewShare/Properties/VisibleRecType
      */
     VisibleRecType: DbSharedCriteriaType;
 
@@ -2928,6 +7037,18 @@ declare namespace AirScript {
      * @param UserId 联系人 ID
      * @param UserType 联系人类型，见 `Enum.DbPermissionUserType`（`user` / `dept` / `group`）
      * @returns ApiResult
+     * @example
+     * ```javascript
+     * function main() {
+     *     const viewShare = Application.Sheets(1).Views(1).ViewShare;
+     *     const res = viewShare.AddContact('283091702', Application.Enum.DbPermissionUserType.User);
+     *     if (res.Code !== 0) {
+     *         console.log(res.Message);
+     *     }
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/ViewShare/Methods/AddContact
      */
     AddContact(UserId: string, UserType?: string): ApiResult;
     /**
@@ -2936,6 +7057,15 @@ declare namespace AirScript {
      * @param RangeType 分享的协作者范围
      * @param PermissionType 分享的协作者权限
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *     const viewShare = Application.Sheets(1).Views(1).ViewShare;
+     *     const res = viewShare.ChangePermission('assigned', 'edit')
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/ViewShare/Methods/ChangePermission
      */
     ChangePermission(RangeType: SharedLinkToType, PermissionType: SharedLinkPermissionType): boolean;
     /**
@@ -2948,6 +7078,18 @@ declare namespace AirScript {
      * @param UserId 联系人 ID
      * @param UserType 联系人类型，见 `Enum.DbPermissionUserType`
      * @returns ApiResult
+     * @example
+     * ```javascript
+     * function main() {
+     *     const viewShare = Application.Sheets(1).Views(1).ViewShare;
+     *     const res = viewShare.DeleteContact('283091702', Application.Enum.DbPermissionUserType.User);
+     *     if (res.Code !== 0) {
+     *         console.log(res.Message);
+     *     }
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/ViewShare/Methods/DeleteContact
      */
     DeleteContact(UserId: string, UserType?: string): ApiResult;
     /**
@@ -2955,6 +7097,15 @@ declare namespace AirScript {
      *
      * @param Enable 切换分享视图的开关，true就是开，false就是关
      * @returns boolean
+     * @example
+     * ```javascript
+     * function main() {
+     *     const viewShare = Application.Sheets(1).Views(1).ViewShare;
+     *     const res = viewShare.SetEnable(true)
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/ViewShare/Methods/SetEnable
      */
     SetEnable(Enable: boolean): boolean;
   }
@@ -2967,10 +7118,28 @@ declare namespace AirScript {
     (Index?: number | string): AnyView;
     /**
      * 获取当前激活的视图
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const count = Application.Sheets(1).Views.ActiveView;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Views/Properties/ActiveView
      */
     ActiveView: View;
     /**
      * 获取视图集合的个数
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *   const count = Application.Sheets(1).Views.Count;
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Views/Properties/Count
      */
     Count: number;
 
@@ -2980,12 +7149,36 @@ declare namespace AirScript {
      * @param Type 视图类别。
      * @param Name 视图名称
      * @returns View | GridView | GanttView
+     * @example
+     * ```javascript
+     * function main() {
+     *   const views = Application.Sheets(1).Views;
+     *   const gridView = views.Add('Grid', '表格视图');
+     *   console.log(gridView.RowHeight);
+     *   views.Add('Kanban', '看板视图');
+     *   views.Add('Gallery', '画册视图');
+     *   views.Add('Form', '表单视图');
+     *   views.Add('Query', '查询视图');
+     *   const ganttView = views.Add('Gantt', '甘特视图');
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Views/Methods/Add
      */
     Add(Type: 'Grid' | 'Kanban' | 'Gallery' | 'Form' | 'Query' | 'Gantt', Name: string): View | GridView | GanttView;
     /**
      * 根据索引/Id 删除视图
      *
      * @param Index 索引从 1 开始/视图ID
+     * @example
+     * ```javascript
+     * function main() {
+     *   const views = Application.Sheets(1).Views;
+     *   views.Delete(1);
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Views/Methods/Delete
      */
     Delete(Index: number | string): void;
     /**
@@ -2993,6 +7186,14 @@ declare namespace AirScript {
      *
      * @param Index 索引从 1 开始/ 视图名称
      * @returns View | GridView | GanttView | QueryView
+     * @example
+     * ```javascript
+     * function main() {
+     *   const view = Application.Sheets(1).Views.Item(1);
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Views/Methods/Item
      */
     Item(Index: number | string): AnyView;
     /**
@@ -3000,6 +7201,14 @@ declare namespace AirScript {
      *
      * @param Id 视图Id
      * @returns View | GridView | GanttView | QueryView
+     * @example
+     * ```javascript
+     * function main() {
+     *   const view = Application.Sheets(1).Views.ItemById("A");
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Views/Methods/ItemById
      */
     ItemById(Id: string): View | GridView | GanttView | QueryView;
 
@@ -3007,6 +7216,21 @@ declare namespace AirScript {
      * 为 Views 添加 Create 事件,当添加 View 时触发。注意在脚本编辑器中使用时，脚本运行结束就会退出运行，这时可能回调无法被正常触发
      *
      * @param callback 事件回调，data 为事件返回数据
+     * @example
+     * ```javascript
+     * function main() {
+     *     let eventContext;
+     *     eventContext = Application.Sheets(1).Views.OnCreate(data => {
+     *         console.log(data);
+     *         // 取消事件监听
+     *         eventContext.Destroy();
+     *     });
+     *     Application.Sheets(1).Views.Add('Grid', '表格视图');
+     *     //这里会执行OnCreate的回调
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Views/Events/OnCreate
      */
     OnCreate(callback: (data: View) => void): EventContext;
   }
@@ -3017,10 +7241,36 @@ declare namespace AirScript {
   interface WatchedField {
     /**
      * 最后修改人/最后修改时间，是否监听 所有字段的修改
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const fieldDescriptor = Application.Sheets("数据表").FieldDescriptors("@最后修改时间")
+     *     const prop = fieldDescriptor.Watch
+     *     prop.IsWatchedAll = true
+     *     fieldDescriptor.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/WatchedField/Properties/IsWatchedAll
      */
     IsWatchedAll: boolean;
     /**
      * 最后修改人/最后修改时间，监听某些字段的修改情况, 如果需要监听某些特定的字段，需要将属性 IsWatchedAll 设置为false, 否则这个设置不生效
+     *
+     * @example
+     * ```javascript
+     * function main() {
+     *     const fieldDescriptor = Application.Sheets("数据表").FieldDescriptors("@最后修改时间")
+     *     const watchId = await Application.Sheets("数据表").FieldDescriptors("@文本").Id
+     *     const prop = fieldDescriptor.Watch
+     *     prop.IsWatchedAll = false
+     *     prop.WatchedFields = [watchId]
+     *     fieldDescriptor.Apply()
+     * }
+     * main()
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/WatchedField/Properties/WatchedFields
      */
     WatchedFields: any[];
   }
@@ -3031,22 +7281,32 @@ declare namespace AirScript {
   interface Window {
     /**
      * 返回表单视图的界面设置，如果当前视图不是表单视图，则返回undefined
+     *
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Window/Properties/FormViewUI
      */
     FormViewUI: FormViewUI;
     /**
      * 返回甘特视图的界面设置，如果当前视图不是甘特视图，则返回undefined
+     *
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Window/Properties/GanttViewUI
      */
     GanttViewUI: GanttViewUI;
     /**
      * 返回表格视图的界面设置，如果当前视图不是表格视图，则返回undefined
+     *
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Window/Properties/GridViewUI
      */
     GridViewUI: GridViewUI;
     /**
      * 窗口导航栏
+     *
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Window/Properties/Navigator
      */
     Navigator: Navigator;
     /**
      * 窗口公告栏
+     *
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Window/Properties/NoticeBar
      */
     NoticeBar: NoticeBar;
 
@@ -3058,12 +7318,21 @@ declare namespace AirScript {
      * 仅适用于浏览器环境（与 `Window` 对象相同，脚本编辑器服务端无界面）。
      *
      * @returns Record | null
+     * @example
+     * ```javascript
+     * function main() {
+     *     // Window 对象不适用于脚本编辑器服务端环境
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Window/Methods/ActiveDetailRecord
      */
     ActiveDetailRecord(): Record | null;
     /**
      * 对特定的界面元素进行代理，代理方法返回true，则不显示原界面
      *
      * @param CmbId 界面ID
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Window/Methods/BailHook
      */
     BailHook(CmbId: string): void;
     /**
@@ -3072,12 +7341,21 @@ declare namespace AirScript {
      * 仅适用于浏览器环境。
      *
      * @param imageUrl 图片地址 URL
+     * @example
+     * ```javascript
+     * function main() {
+     *     // Window 对象不适用于脚本编辑器服务端环境
+     * }
+     * main();
+     * ```
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Window/Methods/DisplayImageModal
      */
     DisplayImageModal(imageUrl: string): void;
     /**
      * 设置该视图是否为经典布局
      *
      * @param isClassic 是否为经典布局
+     * @see https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/Api/Api/Window/Methods/SetLayout
      */
     SetLayout(isClassic: boolean): void;
   }
