@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.4.4
+
+- 读取 `jsconfig.json` / `tsconfig.json` 时去除 UTF-8 BOM；Windows PowerShell 的 `Set-Content -Encoding utf8` 会写 BOM，此前会导致配置解析失败、初始化中止。
+- 增加 GitHub Actions CI：smoke 测试、TypeScript 4.9.5 / 5.9.2 类型检查与 VSIX 打包检查。
+- 仅运行时配置解析与 CI 变化，`engines.vscode` 仍为 `^1.77.0`。
+
 ## 2.4.3
 
 - 初始化/切换模型写入 `.vscode/airscript.code-snippets` 前，检测该文件是否被用户改过；非扩展生成的内容先备份为 `airscript.code-snippets.bak`，避免自定义片段被静默覆盖。已有 `.bak` 不会被再次覆盖。

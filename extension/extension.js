@@ -244,7 +244,11 @@ function removeTrailingCommas(text) {
 }
 
 function readExistingJsonc(filePath) {
-  const raw = fs.readFileSync(filePath, 'utf8');
+  let raw = fs.readFileSync(filePath, 'utf8');
+  // Windows PowerShell 的 UTF-8 输出可能带 BOM；JSON.parse 不接受它。
+  if (raw.charCodeAt(0) === 0xfeff) {
+    raw = raw.slice(1);
+  }
   const text = stripJsonComments(raw).trim();
   if (!text) {
     return {};

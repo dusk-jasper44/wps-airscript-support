@@ -263,6 +263,18 @@ function readJson(file) {
     'comma inside JSON string preserved'
   );
 
+  // 2f4. UTF-8 BOM 的 jsconfig 也必须能解析。
+  fs.writeFileSync(
+    path.join(workspace, 'jsconfig.json'),
+    '\uFEFF' + JSON.stringify({ compilerOptions: { lib: ['ES2020'] } })
+  );
+  await commands['airscript.init']();
+  assert.strictEqual(errors.length, 0, 'BOM config initialized without errors');
+  assert.ok(
+    readJson(path.join(workspace, 'jsconfig.json')).compilerOptions.checkJs === true,
+    'BOM config merged'
+  );
+
   settings.apiVersion = '1.0';
   settings.checkJs = true;
   await commands['airscript.init']();

@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Smoke test the extension
+        run: node test/smoke-extension.js
+
+      - name: Type-check with TypeScript 4.9 (VS Code 1.77 era)
+        run: npx -y -p typescript@4.9.5 tsc -p test/jsconfig.json
+
+      - name: Strict type-check with TypeScript 4.9
+        run: npx -y -p typescript@4.9.5 tsc -p test/jsconfig.json --strict
+
+      - name: Type-check with TypeScript 5.9
+        run: npx -y -p typescript@5.9.2 tsc -p test/jsconfig.json
+
+      - name: Package the VSIX
+        working-directory: extension
+        run: npx -y @vscode/vsce@3 package --no-dependencies --out ../dist/ci.vsix
