@@ -1,4 +1,4 @@
-# WPS AirScript Support 2.3.0 — 优化说明
+# WPS AirScript Support 2.3.1 — 优化说明
 
 这是对 WPScomate 生成的 `wps-airscript-support-1.1.1` 的重建版本。旧插件源没有被修改，交付物全部在本目录。
 
@@ -9,7 +9,7 @@
 
 > 仓库不包含 `docs/` 下 634 篇 WPS 官方文档原文，避免再分发；需要重新生成时运行 `python tools/crawl_docs.py`。VSIX 已内置生成后的声明，安装时不需要联网。
 
-2.3.0 支持三套模型，可在工作区设置或状态栏里随时切换：
+2.3.1 支持三套模型，可在工作区设置或状态栏里随时切换：
 
 | 设置值 | 模型 | 核心对象 |
 |---|---|---|
@@ -18,6 +18,13 @@
 | `2.0` | 表格（Excel 对象模型） | `Application.ActiveWorkbook`、`Worksheets`、`Range` |
 
 官方 1.0 同时存在“多维表格”和“数据表 / 工作表”两套对象；2.0 目前只提供工作表模型，多维表格仍用 1.0。
+
+## 2.3.1：兼容 VS Code 1.77
+
+- `engines.vscode` 从 `^1.80.0` 下调到 `^1.77.0`，VS Code 1.77.0 可直接安装。
+- 复核扩展实际调用的 API：`workspace.getConfiguration`、`ConfigurationTarget.WorkspaceFolder`、`createStatusBarItem`、`QuickPick`、`showInputBox`、`showInformationMessage`、`openTextDocument`、`env.openExternal` 等均为 1.77 之前已有接口，不依赖 1.78+ 新 API。
+- 运行时代码保持 Node 16 兼容（VS Code 1.77 自带 Node 16），只使用 `fs`/`path` 与可选链，不使用更新的内置模块能力。
+- 功能与 2.3.0 相同：三套模型、类型声明、片段、初始化与切换。
 
 ## 旧版的核心问题
 
@@ -31,7 +38,7 @@
 | 6 | 初始化逻辑只处理第一个工作区根目录，且 `jsconfig.json` 已存在就直接跳过 | 多根工作区无效；已有配置的项目可能根本不会加载 `.airscript` 类型；`globals.d.ts` 自身不在 `include` 中，是无效文件 |
 | 7 | `air-ext/` 没有 `.vscodeignore`，目录里还混着 3 个旧 `.vsix` | 打包会把旧插件和 `node_modules` 一起打进去 |
 
-## 2.3.0 新增：数据表 1.0
+## 数据表 1.0（2.3.0 起）
 
 - 新增设置值 `"1.0-databook"`，对应 WPS 数据表 / 工作表的 1.0 对象模型。
 - 类型来自 `wps-airscript-types@1.0.0` 的 `ApiV1.d.ts`（MIT，happyuz），由 `tools/prepare_databook.py` 清洗：
@@ -73,20 +80,21 @@
 - 数据表 1.0：`test/make-databook-project.js` 生成真实项目，`sheet.Field.GetFields()`、`sheet.Record.GetRecords()`、`CreateRecords`、`UpdateRecords`、`DeleteRecords`、`Range`、`Sheets.Add`、`HTTP` → `tsc` 0 error。
 - `node test/smoke-extension.js` → 通过（新建项目、JSONC 合并/备份、重复初始化、损坏配置保护、新建脚本、DOM 分支、三套模型切换、按模型写入片段）。
 - VSIX 只含声明、代码与文档，无 `node_modules`、无旧 `.vsix`。
-- `code --install-extension` 安装成功；`code --list-extensions` 显示 `airscript-tools.wps-airscript-support@2.3.0`。
+- `code --install-extension` 安装成功；`code --list-extensions` 显示 `airscript-tools.wps-airscript-support@2.3.1`。
+- 真实 **VS Code 1.77.0**（win32-x64，commit `7f329fe6c66b0f86ae1574c2911b681ad5a45d63`）中安装同一 VSIX 成功，`--list-extensions` 显示 `airscript-tools.wps-airscript-support@2.3.1`；引擎检查 `^1.77.0`。
 
 ## 安装
 
-从 [Releases](https://github.com/dusk-jasper44/wps-airscript-support/releases/latest) 下载 `wps-airscript-support-2.3.0.vsix` 后：
+从 [Releases](https://github.com/dusk-jasper44/wps-airscript-support/releases/latest) 下载 `wps-airscript-support-2.3.1.vsix` 后：
 
 ```powershell
-code --install-extension .\wps-airscript-support-2.3.0.vsix --force
+code --install-extension .\wps-airscript-support-2.3.1.vsix --force
 ```
 
 或直接使用仓库内产物：
 
 ```powershell
-code --install-extension dist\wps-airscript-support-2.3.0.vsix --force
+code --install-extension dist\wps-airscript-support-2.3.1.vsix --force
 ```
 
 安装后打开脚本项目，执行命令 **AirScript: 初始化 / 更新工作区**。
@@ -109,7 +117,7 @@ tar -xzf wps-airscript-types-1.0.0.tgz
 python tools\prepare_databook.py --src package\types\ApiV1.d.ts --out extension\types\databook\ApiV1.d.ts
 
 cd extension
-npx @vscode/vsce package --no-dependencies --allow-missing-repository --out ..\dist\wps-airscript-support-2.3.0.vsix
+npx @vscode/vsce package --no-dependencies --allow-missing-repository --out ..\dist\wps-airscript-support-2.3.1.vsix
 ```
 
 2.0 的类型文件同样来自 `wps-airscript-types`，修补了缺失的 `lib.kso.d.ts`、两个顶层枚举的 `declare`、以及 `URL`/`Default`/`Buffer` 环境类型。

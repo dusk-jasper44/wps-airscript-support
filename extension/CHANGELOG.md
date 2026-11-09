@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.3.1
+
+- 将 `engines.vscode` 从 `^1.80.0` 下调到 `^1.77.0`，支持 VS Code 1.77.0 安装。
+- 复核扩展使用的 API：`workspace.getConfiguration`、`ConfigurationTarget.WorkspaceFolder`、`StatusBarItem`、`QuickPick`、`showInformationMessage` 等均为 1.77 之前已有接口；扩展运行时不依赖新 API。
+- 功能与 2.3.0 相同（三套模型、类型声明、片段、测试）。
+
 ## 2.3.0
 
 - 新增第三套模型 **API 1.0 · 数据表 / 工作表**，设置值 `1.0-databook`：`Application.ActiveSheet.Field` / `.Record`、`Range`、`ActiveWorkbook`、`Workbook`、`HTTP`、`SMTP`、`KSDrive`。

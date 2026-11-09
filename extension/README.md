@@ -28,9 +28,11 @@
 
 ## 安装与首次使用
 
-1. 安装 `wps-airscript-support-2.3.0.vsix`：
+> 要求 VS Code **1.77.0** 或更高版本。
+
+1. 安装 `wps-airscript-support-2.3.1.vsix`：
    - VSCode 扩展面板右上角 `...` → **从 VSIX 安装**；或
-   - 命令行：`code --install-extension wps-airscript-support-2.3.0.vsix`
+   - 命令行：`code --install-extension wps-airscript-support-2.3.1.vsix`
 2. 打开你的脚本项目文件夹。
 3. 执行命令 **AirScript: 初始化 / 更新工作区**（`Ctrl+Shift+P`）。
 4. 打开任意 `.js` 文件，输入 `Application.` 即可看到补全；把鼠标悬停在成员上可查看中文说明。

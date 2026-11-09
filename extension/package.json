@@ -2,11 +2,11 @@
   "name": "wps-airscript-support",
   "displayName": "WPS AirScript 支持",
   "description": "WPS AirScript（多维表格 1.0 / 数据表 1.0 / 表格 2.0）的 API 类型声明、代码片段与工作区初始化，提供补全、悬停文档和 checkJs 类型检查。",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "publisher": "airscript-tools",
   "license": "MIT",
   "engines": {
-    "vscode": "^1.80.0"
+    "vscode": "^1.77.0"
   },
   "categories": [
     "Programming Languages",
