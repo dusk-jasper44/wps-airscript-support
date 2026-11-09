@@ -25,6 +25,7 @@
 - **2.4.4 BOM 兼容**：读取 `jsconfig.json` / `tsconfig.json` 时自动去掉 UTF-8 BOM，修复 Windows PowerShell 写出的配置无法解析、初始化中止的问题。
 - **2.4.5 片段保留**：检测到 `.vscode/airscript.code-snippets` 是用户自定义内容后，初始化/切换模型不再覆盖，只备份一次为 `.bak`。
 - **2.4.6 配置注释保留**：合并已有 `tsconfig.json` / `jsconfig.json` 时使用 `jsonc-parser`，只修改必要节点，保留用户注释、缩进与键顺序。
+- **2.4.7 数组注释与 DOM 隔离**：追加 `include` / `lib` 时保留数组元素注释；不再强制删除旧 `.airscript/**/*.d.ts`，DOM 工作区直接不复制 builtins，避免 `Crypto`/`console` 冲突。
 - **高级服务**（1.0 多维表格）：`HTTP`、`SQL`、`SMTP`、`KSDrive`、`Context` 的声明与注释；数据表声明也内置 `HTTP`、`SMTP`、`KSDrive`。
 - **内置能力**（1.0 多维表格）：`Crypto`、`Buffer`、`Time`、`Arguments`、`console`。
 - **按版本写入代码片段**：初始化/切换时生成 `.vscode/airscript.code-snippets`，多维表格 18 个、数据表 10 个、2.0 表格 8 个。
@@ -37,9 +38,9 @@
 
 > 要求 VS Code **1.77.0** 或更高版本。
 
-1. 安装 `wps-airscript-support-2.4.6.vsix`：
+1. 安装 `wps-airscript-support-2.4.7.vsix`：
    - VSCode 扩展面板右上角 `...` → **从 VSIX 安装**；或
-   - 命令行：`code --install-extension wps-airscript-support-2.4.6.vsix`
+   - 命令行：`code --install-extension wps-airscript-support-2.4.7.vsix`
 2. 打开你的脚本项目文件夹。
 3. 执行命令 **AirScript: 初始化 / 更新工作区**（`Ctrl+Shift+P`）。
 4. 打开任意 `.js` 文件，输入 `Application.` 即可看到补全；把鼠标悬停在成员上可查看中文说明。

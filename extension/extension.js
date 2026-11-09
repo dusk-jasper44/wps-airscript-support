@@ -42,7 +42,6 @@ const ALL_TYPE_TARGETS = [
   'lib.kso.d.ts'
 ];
 const GLOBALS_INCLUDE = '.airscript/globals.d.ts';
-const LEGACY_TYPES_INCLUDE = '.airscript/**/*.d.ts';
 const DOCS_URL =
   'https://open.wps.cn/documents/app-integration-dev/guide/dbsheet/AirScript/AirScript-instro';
 const DOCS_URL_V2 = 'https://airsheet.wps.cn/docs/apiV2/overview.html';
@@ -267,6 +266,38 @@ function sameJson(a, b) {
 }
 
 /**
+ * 按索引修改已有字符串数组，保留数组元素之间的注释。
+ * 只有原值/目标值不是数组时才整体替换。
+ */
+function mergeStringArray(text, pathParts, before, after, formattingOptions) {
+  if (!Array.isArray(before) || !Array.isArray(after)) {
+    return jsonc.applyEdits(text, jsonc.modify(text, pathParts, after, { formattingOptions }));
+  }
+  let output = text;
+  const afterSet = new Set(after);
+  for (let index = before.length - 1; index >= 0; index -= 1) {
+    if (!afterSet.has(before[index])) {
+      output = jsonc.applyEdits(
+        output,
+        jsonc.modify(output, pathParts.concat(index), undefined, { formattingOptions })
+      );
+    }
+  }
+  const beforeSet = new Set(before);
+  let length = before.filter((item) => afterSet.has(item)).length;
+  for (const item of after) {
+    if (!beforeSet.has(item)) {
+      output = jsonc.applyEdits(
+        output,
+        jsonc.modify(output, pathParts.concat(length), item, { formattingOptions })
+      );
+      length += 1;
+    }
+  }
+  return output;
+}
+
+/**
  * 用 jsonc-parser 逐项修改已有配置，保留用户写的注释和缩进。
  * 新配置不经过这里（直接 JSON.stringify）。
  */
@@ -285,18 +316,27 @@ function mergeConfigText(text, original, merged) {
   } else {
     for (const key of Object.keys(afterOptions)) {
       if (!sameJson(beforeOptions[key], afterOptions[key])) {
-        const edits = jsonc.modify(output, ['compilerOptions', key], afterOptions[key], {
-          formattingOptions
-        });
-        output = jsonc.applyEdits(output, edits);
+        if (key === 'lib') {
+          output = mergeStringArray(
+            output,
+            ['compilerOptions', 'lib'],
+            beforeOptions.lib,
+            afterOptions.lib,
+            formattingOptions
+          );
+        } else {
+          const edits = jsonc.modify(output, ['compilerOptions', key], afterOptions[key], {
+            formattingOptions
+          });
+          output = jsonc.applyEdits(output, edits);
+        }
       }
     }
   }
 
   for (const key of ['include', 'exclude']) {
     if (!sameJson(original[key], merged[key])) {
-      const edits = jsonc.modify(output, [key], merged[key], { formattingOptions });
-      output = jsonc.applyEdits(output, edits);
+      output = mergeStringArray(output, [key], original[key], merged[key], formattingOptions);
     }
   }
   return output;
@@ -309,12 +349,6 @@ function addInclude(config, pattern) {
   }
   if (!config.include.includes(pattern)) {
     config.include.push(pattern);
-  }
-}
-
-function removeInclude(config, pattern) {
-  if (Array.isArray(config.include)) {
-    config.include = config.include.filter((item) => item !== pattern);
   }
 }
 
@@ -364,9 +398,6 @@ function buildMergedConfig(existing, options = {}) {
 
   addInclude(config, '**/*.js');
   addInclude(config, '**/*.ts');
-  // 只引用 globals.d.ts，而不是整个 .airscript/**/*.d.ts：
-  // 这样在 lib 含 DOM 的项目里可以有选择地不加载 builtins（console/Crypto）。
-  removeInclude(config, LEGACY_TYPES_INCLUDE);
   addInclude(config, GLOBALS_INCLUDE);
 
   if (!Array.isArray(config.exclude)) {
@@ -376,12 +407,15 @@ function buildMergedConfig(existing, options = {}) {
 }
 
 /** 拷贝 d.ts；返回拷贝的文件名列表。切换版本时会删除另一套类型文件。 */
-function installTypes(extensionPath, rootPath, version) {
+function installTypes(extensionPath, rootPath, version, includeBuiltins = true) {
   const sourceDir = path.join(extensionPath, 'types');
   const targetDir = path.join(rootPath, '.airscript', 'types');
   fs.mkdirSync(targetDir, { recursive: true });
 
-  const selected = TYPE_SETS[version] || TYPE_SETS[API_V1];
+  const selectedAll = TYPE_SETS[version] || TYPE_SETS[API_V1];
+  const selected = includeBuiltins
+    ? selectedAll
+    : selectedAll.filter((item) => item.target !== 'airscript-builtins.d.ts');
   // 先确认源文件齐全，避免删掉旧类型后才发现包损坏。
   for (const item of selected) {
     const source = path.join(sourceDir, item.source);
@@ -659,17 +693,18 @@ async function initialize(folder, options = {}) {
     return false;
   }
 
+  // DOM 自己声明了 console 与 Crypto，加载 builtins 会报 TS2451。
+  // 此时改用 DOM 的声明（console 完整，Crypto 没有 createHash）。
+  const hasDom = libHasDom(result.config);
+
   let copied;
   try {
-    copied = installTypes(extensionPath, rootPath, version);
+    copied = installTypes(extensionPath, rootPath, version, !hasDom);
   } catch (error) {
     vscode.window.showErrorMessage(`AirScript: ${error.message}`);
     log(`安装类型声明失败：${error}`);
     return false;
   }
-  // DOM 自己声明了 console 与 Crypto，加载 builtins 会报 TS2451。
-  // 此时改用 DOM 的声明（console 完整，Crypto 没有 createHash）。
-  const hasDom = libHasDom(result.config);
 
   let snippets = false;
   let createdExample = false;
@@ -848,6 +883,7 @@ async function doctor() {
     `模型：${versionLabel(version)}（${version}）`
   ];
   const issues = [];
+  let hasDom = false;
 
   const configPath = findConfigPath(rootPath);
   const configName = path.basename(configPath);
@@ -862,6 +898,7 @@ async function doctor() {
       issues.push(`${configName} 无法解析：${error.message}`);
     }
     if (config) {
+      hasDom = libHasDom(config);
       const co = config.compilerOptions || {};
       if (co.checkJs !== true) {
         issues.push(`${configName} 的 compilerOptions.checkJs 不是 true，JS 文件不会做类型检查。`);
@@ -922,7 +959,10 @@ async function doctor() {
   }
 
   const typeDir = path.join(rootPath, '.airscript', 'types');
-  for (const target of expectedTypeFiles(version)) {
+  const expected = expectedTypeFiles(version).filter(
+    (target) => !(hasDom && target === 'airscript-builtins.d.ts')
+  );
+  for (const target of expected) {
     if (!fs.existsSync(path.join(typeDir, target))) {
       issues.push(`缺少类型文件 .airscript/types/${target}`);
     }

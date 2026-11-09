@@ -155,6 +155,10 @@ function readJson(file) {
     !fs.readFileSync(path.join(workspace, '.airscript/globals.d.ts'), 'utf8').includes('airscript-builtins.d.ts'),
     'builtins skipped with DOM'
   );
+  assert.ok(
+    !fs.existsSync(path.join(workspace, '.airscript/types/airscript-builtins.d.ts')),
+    'builtins file removed with DOM'
+  );
   assert.ok(warnings.some((message) => message.includes('DOM')), 'DOM warning shown');
 
   // 2c. 切到 API 2.0：安装 ApiV2/lib.kso，删除 v1 类型，globals 只引用 ApiV2。
@@ -339,6 +343,27 @@ function readJson(file) {
   assert.strictEqual(mergedCommentTs.compilerOptions.strict, true, 'strict kept after comment merge');
   assert.strictEqual(mergedCommentTs.compilerOptions.checkJs, true, 'checkJs added with comments');
   assert.ok(mergedCommentTs.include.includes('**/*.js'), 'include added with comments');
+
+  // 2g3. 只追加数组元素时，元素内部注释必须保留。
+  const tsconfigArrayComments = `{
+  "compilerOptions": {
+    "lib": [
+      "ES2019" // lib 元素注释必须保留
+    ]
+  },
+  "include": [
+    "src/**/*.ts" // include 元素注释必须保留
+  ]
+}
+`;
+  fs.writeFileSync(path.join(workspace, 'tsconfig.json'), tsconfigArrayComments);
+  await commands['airscript.init']();
+  const tsconfigArrayText = fs.readFileSync(path.join(workspace, 'tsconfig.json'), 'utf8');
+  assert.ok(tsconfigArrayText.includes('lib 元素注释必须保留'), 'lib element comment kept');
+  assert.ok(tsconfigArrayText.includes('include 元素注释必须保留'), 'include element comment kept');
+  const mergedArrayTs = readJson(path.join(workspace, 'tsconfig.json'));
+  assert.ok(mergedArrayTs.include.includes('**/*.js'), 'JS include added to commented array');
+  assert.ok(mergedArrayTs.compilerOptions.lib.includes('ES2020'), 'ES2020 lib added to commented array');
 
   // 2h. airscript.checkJs=false 只影响新建配置。
   settings.checkJs = false;

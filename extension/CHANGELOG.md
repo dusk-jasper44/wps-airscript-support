@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.4.7
+
+- 合并配置时按数组索引追加 `include` / `lib` 项，保留数组元素之间的注释；不再为了删除旧 `.airscript/**/*.d.ts` 而整体重写 `include`。
+- DOM 工作区不再复制 `airscript-builtins.d.ts`，从根源避免旧的 `.airscript/**/*.d.ts` include 把 `Crypto`/`console` 重复加载；Doctor 也不会误报缺少 builtins。
+- 修正根 README 中“数据表 JSDoc 已损坏/被移除”的过时说明；数据表声明实际完整保留上游注释。
+- 保持 VS Code 1.77.0+、TypeScript 4.9.5 / 5.9.2、Node 16 兼容；类型声明不变。
+
 ## 2.4.6
 
 - 合并已有 `jsconfig.json` / `tsconfig.json` 时保留用户的注释、缩进与键顺序：内置 `jsonc-parser`（MIT），只修改 `compilerOptions`、`include`、`exclude` 的必要节点。

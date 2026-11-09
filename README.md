@@ -1,4 +1,4 @@
-# WPS AirScript Support 2.4.6 — 优化说明
+# WPS AirScript Support 2.4.7 — 优化说明
 
 这是对 WPScomate 生成的 `wps-airscript-support-1.1.1` 的重建版本。旧插件源没有被修改，交付物全部在本目录。
 
@@ -9,7 +9,7 @@
 
 > 仓库不包含 `docs/` 下 634 篇 WPS 官方文档原文，避免再分发；需要重新生成时运行 `python tools/crawl_docs.py`。VSIX 已内置生成后的声明，安装时不需要联网。
 
-2.4.6 支持三套模型，可在工作区设置或状态栏里随时切换：
+2.4.7 支持三套模型，可在工作区设置或状态栏里随时切换：
 
 | 设置值 | 模型 | 核心对象 |
 |---|---|---|
@@ -18,6 +18,13 @@
 | `2.0` | 表格（Excel 对象模型） | `Application.ActiveWorkbook`、`Worksheets`、`Range` |
 
 官方 1.0 同时存在“多维表格”和“数据表 / 工作表”两套对象；2.0 目前只提供工作表模型，多维表格仍用 1.0。
+
+## 2.4.7：数组注释与 DOM 隔离
+
+- 追加 `include` / `compilerOptions.lib` 时按索引插入，保留已有数组元素之间的 `//`、`/* */` 注释。
+- 不再为了删掉旧 `.airscript/**/*.d.ts` 而整体重写 `include`；DOM 工作区直接不复制 `airscript-builtins.d.ts`，从根源避免 `Crypto` / `console` 重复声明。
+- Doctor 会按 DOM 配置跳过 builtins 检查，不再误报。
+- 修正数据表声明“JSDoc 被移除”的过时说明：实际上游注释完整保留。
 
 ## 2.4.6：配置合并保留注释
 
@@ -137,23 +144,23 @@
 - 2.0：`test/make-v2-project.js` 生成真实项目，`Application.ActiveSheet.Range("A1")`、`ActiveWorkbook.Worksheets.Count` → `tsc` 0 error；`--strict` 也 0 error（4.9.5 与 5.9.2）。
 - 数据表 1.0：`test/make-databook-project.js` 生成真实项目，`sheet.Field.GetFields()`、`sheet.Record.GetRecords()`、`CreateRecords`、`UpdateRecords`、`DeleteRecords`、`Range`、`Sheets.Add`、`HTTP` → `tsc` 0 error；`--strict` 也 0 error（4.9.5 与 5.9.2）。
 - `node test/smoke-extension.js` → 通过（新建项目、JSONC 合并/备份、tsconfig 优先、`checkJs` 开关、Doctor、重复初始化、损坏配置保护、新建脚本、DOM 分支、三套模型切换、按模型写入片段、自定义片段备份、带注释配置合并）。
-- VSIX 只含声明、代码、文档与内置解析器，无 `node_modules`、无旧 `.vsix`；26 文件，221.5 KB（226,811 B）。
-- `wps-airscript-support-2.4.6.vsix` SHA256：`8E132FE53743FA8631A53B298B1106C742416722562DE3C24FA58BFF6F0A6243`（见 `dist/SHA256SUMS.txt`）。
-- `code --install-extension` 安装成功；`code --list-extensions` 显示 `airscript-tools.wps-airscript-support@2.4.6`。
-- `engines.vscode` 保持 `^1.77.0`；2.4.6 已在真实 VS Code 1.77.0（commit `7f329fe6c66b0f86ae1574c2911b681ad5a45d63`）便携实例上安装验证，`--list-extensions` 显示 `@2.4.6`。
+- VSIX 只含声明、代码、文档与内置解析器，无 `node_modules`、无旧 `.vsix`；26 文件，222.1 KB（227,457 B）。
+- `wps-airscript-support-2.4.7.vsix` SHA256：`457CF7810633C458FF7B4E04AFEF9076327F19134167DDAEFD229CACCECF524D`（见 `dist/SHA256SUMS.txt`）。
+- `code --install-extension` 安装成功；`code --list-extensions` 显示 `airscript-tools.wps-airscript-support@2.4.7`。
+- `engines.vscode` 保持 `^1.77.0`；2.4.7 已在真实 VS Code 1.77.0（commit `7f329fe6c66b0f86ae1574c2911b681ad5a45d63`）便携实例上安装验证，`--list-extensions` 显示 `@2.4.7`。
 
 ## 安装
 
-从 [Releases](https://github.com/dusk-jasper44/wps-airscript-support/releases/latest) 下载 `wps-airscript-support-2.4.6.vsix` 后：
+从 [Releases](https://github.com/dusk-jasper44/wps-airscript-support/releases/latest) 下载 `wps-airscript-support-2.4.7.vsix` 后：
 
 ```powershell
-code --install-extension .\wps-airscript-support-2.4.6.vsix --force
+code --install-extension .\wps-airscript-support-2.4.7.vsix --force
 ```
 
 或直接使用仓库内产物：
 
 ```powershell
-code --install-extension dist\wps-airscript-support-2.4.6.vsix --force
+code --install-extension dist\wps-airscript-support-2.4.7.vsix --force
 ```
 
 安装后打开脚本项目，执行命令 **AirScript: 初始化 / 更新工作区**。
@@ -176,7 +183,7 @@ tar -xzf wps-airscript-types-1.0.0.tgz
 python tools\prepare_databook.py --src package\types\ApiV1.d.ts --out extension\types\databook\ApiV1.d.ts
 
 cd extension
-npx -y @vscode/vsce@3 package --no-dependencies --out ..\dist\wps-airscript-support-2.4.6.vsix
+npx -y @vscode/vsce@3 package --no-dependencies --out ..\dist\wps-airscript-support-2.4.7.vsix
 ```
 
 2.0 的类型文件同样来自 `wps-airscript-types`，修补了缺失的 `lib.kso.d.ts`、两个顶层枚举的 `declare`、以及 `URL`/`Default`/`Buffer` 环境类型。
@@ -200,7 +207,7 @@ wps-airscript-support/
 - 数据表 1.0（`1.0-databook`）同样不能与 `lib: ["DOM"]` 同时使用，原因同上；扩展切换时会检测并提示。
 - 项目若安装 `@types/node`，其 `Buffer`/`Crypto`/`console` 可能与 AirScript 内置声明冲突；在 `jsconfig.json` 设置 `"types": []`，或使用独立工作区。
 - 多维表格 1.0 且 `lib` 含 DOM 时，扩展会跳过 `airscript-builtins.d.ts`（DOM 自带 `console`/`Crypto`），代价是 `Crypto.createHash` 没有类型提示。
-- 数据表声明来自社区包，原文件的 JSDoc 注释已损坏，生成时被移除；数据表成员的中文悬停说明因此比多维表格少，但类型签名完整。
+- 数据表声明来自社区包，完整保留了上游中文 JSDoc（约 177 KB）；仅修正 `Record` 接口重名、`ESaveResult` / `Enum` 的 `declare` 修饰符并补环境类型。
 - 浏览器专用 API（`Components`、`Window.ActiveDetailRecord` 等）在 JSDoc 中已注明，只在浏览器环境可用。
 - 扩展只提供静态类型与片段，不连接 WPS，也不执行脚本。
 
